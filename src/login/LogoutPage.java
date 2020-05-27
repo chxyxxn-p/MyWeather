@@ -7,9 +7,9 @@ import main.Page;
 
 public class LogoutPage extends Page {
 
-	public LogoutPage(MainDrive mainDrive, String title, int width, int height, Color color, boolean showFlag) {
-
-		super(mainDrive, title, width, height, color, showFlag);
-
+	public LogoutPage(MainDrive mainDrive, String title, int width, int height, String bgImgPath, boolean showFlag) {
+		
+		super(mainDrive, title, width, height, bgImgPath, showFlag);
+		
 	}
 }

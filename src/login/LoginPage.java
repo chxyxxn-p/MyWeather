@@ -7,9 +7,9 @@ import main.Page;
 
 public class LoginPage extends Page {
 			
-	public LoginPage(MainDrive mainDrive, String title, int width, int height, Color color, boolean showFlag){
+	public LoginPage(MainDrive mainDrive, String title, int width, int height, String bgImgPath, boolean showFlag) {
 		
-		super(mainDrive, title, width, height, color,showFlag);
+		super(mainDrive, title, width, height, bgImgPath, showFlag);
 		
 	}
 }
