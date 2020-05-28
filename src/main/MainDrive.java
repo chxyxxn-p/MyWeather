@@ -59,35 +59,12 @@ public class MainDrive extends JFrame {
 	 Thread fcstApiThread;
 
 	public MainDrive() {
-		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-		SimpleDateFormat timeformat = new SimpleDateFormat("HHmm");
-		
-		searchNcstDate = searchFcstDate = dateFormat.format(new Date());
-		searchTimeSetting(Integer.parseInt(timeformat.format(new Date())));	//현재시간 기준으로 검색할 base time 설정
+
+//		현재시간 기준으로 검색할 base time 설정
+		searchTimeSetting();
 				
 //		api 연결
-		
-		ncstApiThread = new Thread() {	
-			public void run() {
-				ncstApi = new GetApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
-				ncstApi.connectData();
-				ncstApi.setWeatherMap();
-//				ncstApi.printAllWeatherMapValue();				
-			};
-		};
-		
-		fcstApiThread = new Thread() {
-			public void run() {			
-				fcstApi = new GetApi("getVilageFcst", "500", searchFcstDate, searchFcstTime, searchNx, searchNy);
-				fcstApi.connectData();
-				fcstApi.setWeatherMap();
-//				fcstApi.printAllWeatherMapValue();
-			};
-		};
-		
-		ncstApiThread.start();
-		fcstApiThread.start();
+		runApi();
 		
 //		메모리 적재
 		contentsPanel = new JPanel();
@@ -165,9 +142,40 @@ public class MainDrive extends JFrame {
 		}
 	}
 	
-public void searchTimeSetting(int time) {
+public void runApi() {
 		
-		System.out.println("now : " + searchNcstDate + "-" + time);
+		ncstApiThread = new Thread() {	
+			public void run() {
+				ncstApi = new GetApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
+				ncstApi.connectData();
+				ncstApi.setWeatherMap();
+//				ncstApi.printAllWeatherMapValue();				
+			};
+		};
+		
+		fcstApiThread = new Thread() {
+			public void run() {			
+				fcstApi = new GetApi("getVilageFcst", "500", searchFcstDate, searchFcstTime, searchNx, searchNy);
+				fcstApi.connectData();
+				fcstApi.setWeatherMap();
+//				fcstApi.printAllWeatherMapValue();
+			};
+		};
+		
+		ncstApiThread.start();
+		fcstApiThread.start();
+	}
+	
+public void searchTimeSetting() {
+	
+	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+	SimpleDateFormat timeformat = new SimpleDateFormat("HHmm");
+	
+	searchNcstDate = searchFcstDate = dateFormat.format(new Date());
+	
+	int time = Integer.parseInt(timeformat.format(new Date()));
+		
+		System.out.println("now : " + searchNcstDate + " " + time);
 		
 		int hour = time / 100;
 		int minute = time % 100;
@@ -186,7 +194,7 @@ public void searchTimeSetting(int time) {
 				break;
 			}
 		}
-		System.out.println("fcst base : " + searchFcstDate + "-" + searchFcstTime);
+		System.out.println("fcst base : " + searchFcstDate + " " + searchFcstTime);
 	
 //		searchNcstTime
 		if(minute <= 40) {
@@ -200,7 +208,7 @@ public void searchTimeSetting(int time) {
 			searchNcstTime = Integer.toString(hour) + "00";
 		}
 		
-		System.out.println("ncst base : " + searchNcstDate + "-" + searchNcstTime);
+		System.out.println("ncst base : " + searchNcstDate + " " + searchNcstTime);
 
 	}
 	
