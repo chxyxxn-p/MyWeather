@@ -20,21 +20,21 @@ public class LogoutPage extends Page {
 		
 		super(mainDrive, title, width, height, bgImgPath, showFlag);
 		
-		this.setBackground(Color.orange);
+		this.setBackground(Color.PINK);
 		
 		greetingLb = new JLabel(mainDrive.loginUserName + "´Ô, ¹Ý°©½À´Ï´Ù!", JLabel.CENTER);
 		logoutBt = new JButton("LOGOUT");
 		
-		greetingLb.setFont(mainDrive.font);
-		logoutBt.setFont(mainDrive.font);
+		greetingLb.setFont(mainDrive.mainFont);
+		logoutBt.setFont(mainDrive.mainFont);
 		
 		logoutBt.setBackground(Color.white);
 		
 		
 		this.setLayout(null);
 		
-		greetingLb.setBounds(500, 100, 500, 400);
-		logoutBt.setBounds(600, 500, 300, 100);
+		greetingLb.setBounds(width/3, height/8, width/3, height/2);
+		logoutBt.setBounds((width - width/5)/2, height/2 + (height/2-height/8)/2, width/5, height/8);
 		
 		this.add(greetingLb);
 		this.add(logoutBt);
