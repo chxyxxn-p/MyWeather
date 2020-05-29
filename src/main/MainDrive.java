@@ -5,10 +5,14 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -24,8 +28,11 @@ import weather.GetApi;
 import weather.WeatherPage;
 
 public class MainDrive extends JFrame {
+	
 
-	public Font font = new Font("맑은고딕", Font.PLAIN, 20);
+	GraphicsEnvironment ge;
+
+	public Font font;
 
 //	page
 	JPanel contentsPanel;
@@ -34,14 +41,15 @@ public class MainDrive extends JFrame {
 //	menu
 	JPanel menuPanel;
 	MenuIcon[] icons = new MenuIcon[5];
-
+  
 	String resDir = "C:/Users/tjoeun/Dropbox/Java/Park-choyeon_Project/MyWeather/res/";
 	String pageBgImgName = "sky-bg.jpg";
 	String iconBgImgName = "ball_yellow.png";
 
 	GetApi fcstApi;
-	GetApi ncstApi;
-	GetApi api;
+	GetApi ncstTodayApi;
+	GetApi ncstYesterdayApi;
+//	GetApi api;
 
 	String searchFcstDate;
 	String searchNcstDate;
@@ -55,10 +63,14 @@ public class MainDrive extends JFrame {
 	public boolean loginFlag;
 	public String loginUserName; // LoginPage에서 login되면 설정
 
-	Thread ncstApiThread;
+	Thread ncstYesterdayApiThread;
+	Thread ncstTodayApiThread;
 	Thread fcstApiThread;
 
 	public MainDrive() {
+		
+//		폰트 설정
+//		setFont();
 
 //		현재시간 기준으로 검색할 base time 설정
 		searchTimeSetting();
@@ -69,12 +81,12 @@ public class MainDrive extends JFrame {
 //		메모리 적재
 		contentsPanel = new JPanel();
 
-		pages[0] = new HomePage(this, "홈페이지", 1520, 820, resDir + pageBgImgName, false);
-		pages[1] = new WeatherPage(this, "날씨 페이지", 1520, 820, resDir + pageBgImgName, false);
-		pages[2] = new CalendarPage(this, "달력 페이지", 1520, 820, resDir + pageBgImgName, false);
-		pages[3] = new LocationPage(this, "위치 페이지", 1520, 820, resDir + pageBgImgName, false);
-		pages[4] = new LoginPage(this, "로그인 페이지", 1520, 820, resDir + pageBgImgName, false);
-		pages[5] = new LogoutPage(this, "로그아웃 페이지", 1520, 820, resDir + pageBgImgName, false);
+		pages[0] = new HomePage(this, "HOME", 1520, 820, resDir + pageBgImgName, false);
+		pages[1] = new WeatherPage(this, "WEATHER", 1520, 820, resDir + pageBgImgName, false);
+		pages[2] = new CalendarPage(this, "CALENDAR", 1520, 820, resDir + pageBgImgName, false);
+		pages[3] = new LocationPage(this, "LOCATION", 1520, 820, resDir + pageBgImgName, false);
+		pages[4] = new LoginPage(this, "LOGIN", 1520, 820, resDir + pageBgImgName, false);
+		pages[5] = new LogoutPage(this, "LOGOUT", 1520, 820, resDir + pageBgImgName, false);
 
 		menuPanel = new JPanel();
 
@@ -139,29 +151,19 @@ public class MainDrive extends JFrame {
 			});
 		}
 	}
-
-	public void runApi() {
-
-		ncstApiThread = new Thread() {
-			public void run() {
-				ncstApi = new GetApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
-				ncstApi.connectData();
-				ncstApi.setWeatherMap();
-//				ncstApi.printAllWeatherMapValue();				
-			};
-		};
-
-		fcstApiThread = new Thread() {
-			public void run() {
-				fcstApi = new GetApi("getVilageFcst", "500", searchFcstDate, searchFcstTime, searchNx, searchNy);
-				fcstApi.connectData();
-				fcstApi.setWeatherMap();
-//				fcstApi.printAllWeatherMapValue();
-			};
-		};
-
-		ncstApiThread.start();
-//		fcstApiThread.start();
+	
+	public void setFont() {
+		ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		try {
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("neodgm.ttf")));
+		} catch (FontFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		font = new Font("neodgm", Font.PLAIN, 20);
+//		font = new Font("맑은 고딕", Font.PLAIN, 20);
 	}
 
 	public void searchTimeSetting() {
@@ -172,8 +174,6 @@ public class MainDrive extends JFrame {
 		searchNcstDate = searchFcstDate = dateFormat.format(new Date());
 
 		int time = Integer.parseInt(timeformat.format(new Date()));
-
-		System.out.println("now : " + searchNcstDate + " " + time);
 
 		int hour = time / 100;
 		int minute = time % 100;
@@ -194,8 +194,7 @@ public class MainDrive extends JFrame {
 				break;
 			}
 		}
-		System.out.println("fcst base : " + searchFcstDate + " " + searchFcstTime);
-
+		
 //		searchNcstTime
 		if (minute <= 40) {
 			if (hour == 00) {
@@ -207,9 +206,46 @@ public class MainDrive extends JFrame {
 		} else if (minute <= 59) {
 			searchNcstTime = (hour < 10 ? "0" : "") + Integer.toString(hour) + "00";
 		}
+	}
 
-		System.out.println("ncst base : " + searchNcstDate + " " + searchNcstTime);
+	public void runApi() {
+		
+		ncstYesterdayApiThread = new Thread() {
+			public void run() {
+				String yesterdayNcstDate = Integer.toString(Integer.parseInt(searchNcstDate)-1);
+				String yesterdayNcstTime = Integer.toString(Integer.parseInt(searchNcstTime)+200);
+				
+				if(yesterdayNcstTime == "2500")
+					yesterdayNcstTime = "0000";
+				
+				ncstYesterdayApi = new GetApi("getUltraSrtNcst", "500", yesterdayNcstDate, yesterdayNcstTime, searchNx, searchNy);
+				ncstYesterdayApi.connectData();
+				ncstYesterdayApi.setWeatherMap();
+//				ncstYesterdayApi.printAllWeatherMapValue();				
+			};
+		};
 
+		ncstTodayApiThread = new Thread() {
+			public void run() {
+				ncstTodayApi = new GetApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
+				ncstTodayApi.connectData();
+				ncstTodayApi.setWeatherMap();
+//				ncstTodayApi.printAllWeatherMapValue();				
+			};
+		};
+
+		fcstApiThread = new Thread() {
+			public void run() {
+				fcstApi = new GetApi("getVilageFcst", "500", searchFcstDate, searchFcstTime, searchNx, searchNy);
+				fcstApi.connectData();
+				fcstApi.setWeatherMap();
+//				fcstApi.printAllWeatherMapValue();
+			};
+		};
+
+		ncstYesterdayApiThread.start();
+		ncstTodayApiThread.start();
+		fcstApiThread.start();
 	}
 
 	public void changePage(int pageIndex) {

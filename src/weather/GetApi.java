@@ -39,11 +39,13 @@ public class GetApi {
 		this.searchBaseTime = sbt;
 		this.searchNx = snx;
 		this.searchNy = sny;
+		
+		System.out.println(this.searchVersion + "  : " + this.searchBaseDate + " " + this.searchBaseTime);
 	}
 
 	public void connectData() {
 
-		System.out.println("api에 연동 중...");
+		System.out.println(searchVersion + "  api에 연동 중...");
 
 		HttpURLConnection connection = null;
 		BufferedReader reader = null;
@@ -90,7 +92,7 @@ public class GetApi {
 			}
 
 			connectResult = resultSb.toString();
-			System.out.println(connectResult);
+//			System.out.println(connectResult);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -108,16 +110,16 @@ public class GetApi {
 			}
 		}
 
-		System.out.println("api 연동 완료");
+		System.out.println(searchVersion + "  api 연동 완료");
 	}
 
 	public void setWeatherMap() {
 
 		if (connectResult == null) {
-			System.out.println("api에 연동해주세요");
+			System.out.println(searchVersion + " api에 연동해주세요");
 
 		} else {
-			System.out.println("api에서 데이터 가져오는 중...");
+			System.out.println(searchVersion + " api에서 데이터 가져오는 중...");
 
 			JSONParser parser = new JSONParser();
 			JSONObject obj;
@@ -224,7 +226,7 @@ public class GetApi {
 //					map으로부터 받아온 뒤  or 새로 생성하여 값 설정한 wv를 다시 같은 키로 map에 put -> 기존 WeatherValue대신 wv로 덮어씌워지게 됨
 					weatherMap.put(mapKey, wv);
 				}
-				System.out.println("api 데이터 가져오기 완료");
+				System.out.println(searchVersion + " api 데이터 가져오기 완료");
 
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -236,7 +238,7 @@ public class GetApi {
 		Object obj = null;
 
 		if (connectResult == null) {
-			System.out.println("api에 연동해주세요");
+			System.out.println(searchVersion + " api에 연동해주세요");
 
 		} else {
 			long key = Long.parseLong(date + time);
@@ -280,11 +282,11 @@ public class GetApi {
 				}
 
 				if (obj == null) {
-					System.out.println("유효하지 않은 category");
+					System.out.println(searchVersion + " 유효하지 않은 category");
 				}
 
 			} else {
-				System.out.println("유효하지 않은 date, time");
+				System.out.println(searchVersion + " 유효하지 않은 date, time");
 			}
 		}
 		return obj;
@@ -292,7 +294,7 @@ public class GetApi {
 
 	public void printAllWeatherMapValue() {
 		if (connectResult == null) {
-			System.out.println("api에 연동해주세요");
+			System.out.println(searchVersion + " api에 연동해주세요");
 
 		} else {
 			ArrayList<Long> keyList = new ArrayList<Long>();
