@@ -2,14 +2,38 @@ package weather;
 
 import java.awt.Color;
 
+import javax.swing.JPanel;
+
 import main.MainDrive;
 import main.Page;
 
 public class WeatherPage extends Page {
 	
-	public WeatherPage(MainDrive mainDrive, String title, int width, int height, String bgImgPath, boolean showFlag) {
+	JPanel todayPanel;
+	JPanel fcstPanel;
+	
+	public WeatherPage(MainDrive mainDrive, String title, int width, int height, boolean showFlag) {
 		
-		super(mainDrive, title, width, height, bgImgPath, showFlag);
+		super(mainDrive, title, width, height, showFlag);
 		
+//		this.setBackground(Color.orange);
+		this.setBackground(new Color(0, 0, 0, 0));
+
+		
+		todayPanel = new JPanel();
+		fcstPanel = new JPanel();
+		
+		todayPanel.setBackground(Color.magenta);
+		fcstPanel.setBackground(Color.white);
+		
+		this.setLayout(null);
+		
+		todayPanel.setBounds(0, 0, width/3, height);
+		fcstPanel.setBounds(width/3, 0, width/3*2, height);
+		
+		this.add(todayPanel);
+		this.add(fcstPanel);
+		
+				
 	}
 }

@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -29,21 +31,22 @@ import weather.WeatherPage;
 
 public class MainDrive extends JFrame {
 	
-
 	GraphicsEnvironment ge;
 
-	public Font font;
+	public Font mainFont;
 
 //	page
 	JPanel contentsPanel;
 	public Page[] pages = new Page[6];
 
+	JPanel mainPanel;
+	
 //	menu
 	JPanel menuPanel;
 	MenuIcon[] icons = new MenuIcon[5];
   
 	String resDir = "C:/Users/tjoeun/Dropbox/Java/Park-choyeon_Project/MyWeather/res/";
-	String pageBgImgName = "sky-bg.jpg";
+	String mainBgImgName = "sky.jpg";
 	String iconBgImgName = "ball_yellow.png";
 
 	GetApi fcstApi;
@@ -73,20 +76,22 @@ public class MainDrive extends JFrame {
 		setFont();
 
 //		현재시간 기준으로 검색할 base time 설정
-		searchTimeSetting();
+//		searchTimeSetting();
 
 //		api 연결
-		runApi();
+//		runApi();
 
 //		메모리 적재
+		mainPanel = new JPanel();
+		
 		contentsPanel = new JPanel();
 
-		pages[0] = new HomePage(this, "HOME", 1520, 820, resDir + pageBgImgName, false);
-		pages[1] = new WeatherPage(this, "WEATHER", 1520, 820, resDir + pageBgImgName, false);
-		pages[2] = new CalendarPage(this, "CALENDAR", 1520, 820, resDir + pageBgImgName, false);
-		pages[3] = new LocationPage(this, "LOCATION", 1520, 820, resDir + pageBgImgName, false);
-		pages[4] = new LoginPage(this, "LOGIN", 1520, 820, resDir + pageBgImgName, false);
-		pages[5] = new LogoutPage(this, "LOGOUT", 1520, 820, resDir + pageBgImgName, false);
+		pages[0] = new HomePage(this, "HOME", 1000, 700, false);
+		pages[1] = new WeatherPage(this, "WEATHER", 1000, 700, false);
+		pages[2] = new CalendarPage(this, "CALENDAR", 1000, 700, false);
+		pages[3] = new LocationPage(this, "LOCATION", 1000, 700, false);
+		pages[4] = new LoginPage(this, "LOGIN", 1000, 700, false);
+		pages[5] = new LogoutPage(this, "LOGOUT", 1000, 700, false);
 
 		menuPanel = new JPanel();
 
@@ -101,11 +106,16 @@ public class MainDrive extends JFrame {
 //		System.out.println(MainDrive.class.getResource("").getPath());
 
 //		속성
-		menuPanel.setPreferredSize(new Dimension(60, 820));
-		menuPanel.setBackground(Color.WHITE);
+		mainPanel.setPreferredSize(new Dimension(1500, 800));
+		mainPanel.setBackground(Color.ORANGE);
+		
+		menuPanel.setPreferredSize(new Dimension(100, 800));
+//		menuPanel.setBackground(Color.WHITE);
+		menuPanel.setBackground(new Color(0,0,0,0));
 
-		contentsPanel.setPreferredSize(new Dimension(1520, 820));
-		contentsPanel.setBackground(Color.YELLOW);
+		contentsPanel.setPreferredSize(new Dimension(1400, 800));
+//		contentsPanel.setBackground(Color.CYAN);
+		contentsPanel.setBackground(new Color(0,0,0,0));
 
 //		조립		
 		for (int i = 0; i < icons.length; i++) {
@@ -118,8 +128,11 @@ public class MainDrive extends JFrame {
 			contentsPanel.add(pages[i]);
 		}
 
-		add(menuPanel, BorderLayout.WEST);
-		add(contentsPanel);
+		mainPanel.setLayout(new FlowLayout(0, 0, 0));
+		mainPanel.add(menuPanel, BorderLayout.WEST);
+		mainPanel.add(contentsPanel);
+		
+		this.add(mainPanel);
 
 		this.pack();
 		this.setVisible(true);
@@ -169,10 +182,11 @@ public class MainDrive extends JFrame {
 				index = i;
 				break;
 			}
+//			System.out.println(ge.getAvailableFontFamilyNames()[i]);
 		}
 		
-		font = new Font(ge.getAvailableFontFamilyNames()[index], Font.PLAIN, 20);
-//		font = new Font("맑은 고딕", Font.PLAIN, 20);
+		mainFont = new Font(ge.getAvailableFontFamilyNames()[index], Font.PLAIN, 20);
+//		mainFont = new Font("HY견고딕", Font.PLAIN, 20);
 	}
 
 	public void searchTimeSetting() {
@@ -230,7 +244,7 @@ public class MainDrive extends JFrame {
 				ncstYesterdayApi = new GetApi("getUltraSrtNcst", "500", yesterdayNcstDate, yesterdayNcstTime, searchNx, searchNy);
 				ncstYesterdayApi.connectData();
 				ncstYesterdayApi.setWeatherMap();
-//				ncstYesterdayApi.printAllWeatherMapValue();				
+				ncstYesterdayApi.printAllWeatherMapValue();				
 			};
 		};
 
@@ -239,7 +253,7 @@ public class MainDrive extends JFrame {
 				ncstTodayApi = new GetApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
 				ncstTodayApi.connectData();
 				ncstTodayApi.setWeatherMap();
-//				ncstTodayApi.printAllWeatherMapValue();				
+				ncstTodayApi.printAllWeatherMapValue();				
 			};
 		};
 
@@ -248,7 +262,7 @@ public class MainDrive extends JFrame {
 				fcstApi = new GetApi("getVilageFcst", "500", searchFcstDate, searchFcstTime, searchNx, searchNy);
 				fcstApi.connectData();
 				fcstApi.setWeatherMap();
-//				fcstApi.printAllWeatherMapValue();
+				fcstApi.printAllWeatherMapValue();
 			};
 		};
 
@@ -261,6 +275,8 @@ public class MainDrive extends JFrame {
 
 		this.setTitle(pages[pageIndex].title);
 
+		mainPanel.repaint();
+		
 		for (int i = 0; i < pages.length; i++) {
 			pages[i].setVisible(i == pageIndex ? true : false);
 		}

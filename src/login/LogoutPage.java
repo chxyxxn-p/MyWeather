@@ -16,12 +16,13 @@ public class LogoutPage extends Page {
 	JLabel greetingLb;
 	JButton logoutBt;
 
-	public LogoutPage(MainDrive mainDrive, String title, int width, int height, String bgImgPath, boolean showFlag) {
+	public LogoutPage(MainDrive mainDrive, String title, int width, int height, boolean showFlag) {
 		
-		super(mainDrive, title, width, height, bgImgPath, showFlag);
+		super(mainDrive, title, width, height, showFlag);
 		
-		this.setBackground(Color.PINK);
-		
+//		this.setBackground(Color.PINK);
+		this.setBackground(new Color(0, 0, 0, 0));
+
 		greetingLb = new JLabel(mainDrive.loginUserName + "´Ô, ¹Ý°©½À´Ï´Ù!", JLabel.CENTER);
 		logoutBt = new JButton("LOGOUT");
 		

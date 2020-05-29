@@ -26,11 +26,12 @@ public class LoginPage extends Page {
 	
 	boolean loginCheckFlag;
 			
-	public LoginPage(MainDrive mainDrive, String title, int width, int height, String bgImgPath, boolean showFlag) {
+	public LoginPage(MainDrive mainDrive, String title, int width, int height, boolean showFlag) {
 		
-		super(mainDrive, title, width, height, bgImgPath, showFlag);
+		super(mainDrive, title, width, height, showFlag);
 		
 		this.setBackground(Color.blue);
+//		this.setBackground(new Color(0, 0, 0, 0));
 		
 		idLb = new JLabel("ID");
 		pwLb = new JLabel("PW");
