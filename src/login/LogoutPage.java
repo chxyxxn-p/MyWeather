@@ -22,13 +22,12 @@ public class LogoutPage extends Page {
 		
 		this.setBackground(Color.orange);
 		
-		greetingLb = new JLabel();
+		greetingLb = new JLabel(mainDrive.loginUserName + "´Ô, ¹Ý°©½À´Ï´Ù!", JLabel.CENTER);
 		logoutBt = new JButton("LOGOUT");
 		
 		greetingLb.setFont(mainDrive.font);
 		logoutBt.setFont(mainDrive.font);
 		
-//		greetingLb.setText(mainDrive.loginUserName + "´Ô, ¹Ý°©½À´Ï´Ù!");
 		logoutBt.setBackground(Color.white);
 		
 		

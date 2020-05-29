@@ -70,7 +70,7 @@ public class MainDrive extends JFrame {
 	public MainDrive() {
 		
 //		폰트 설정
-//		setFont();
+		setFont();
 
 //		현재시간 기준으로 검색할 base time 설정
 		searchTimeSetting();
@@ -155,14 +155,23 @@ public class MainDrive extends JFrame {
 	public void setFont() {
 		ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		try {
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("neodgm.ttf")));
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(MainDrive.class.getResource(".").getPath() + "/neodgm.ttf")));
 		} catch (FontFormatException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		font = new Font("neodgm", Font.PLAIN, 20);
+		int index = 0;
+		
+		for(int i = 0 ; i < ge.getAvailableFontFamilyNames().length ; i++) {
+			if(ge.getAvailableFontFamilyNames()[i].equals("NeoDunggeunmo")) {
+				index = i;
+				break;
+			}
+		}
+		
+		font = new Font(ge.getAvailableFontFamilyNames()[index], Font.PLAIN, 20);
 //		font = new Font("맑은 고딕", Font.PLAIN, 20);
 	}
 
