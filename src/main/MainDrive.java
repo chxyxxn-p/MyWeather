@@ -90,6 +90,9 @@ public class MainDrive extends JFrame {
 	}
 	
 	public void defaultSetting() {
+		
+		System.out.println("main default setting...");
+		
 //		메모리 적재
 		Image img = new ImageIcon(mainBgImg).getImage();
 
@@ -178,6 +181,9 @@ public class MainDrive extends JFrame {
 				}
 			});
 		}
+		
+		System.out.println("main default set done...");
+
 	}
 	
 	public void setFont() {
@@ -281,9 +287,12 @@ public class MainDrive extends JFrame {
 				defaultSetting();
 			};
 		};
+		
+//		thread 나누니까 빨라도 데이터 안불러왔을때 default Setting 생성해서 데이터 null뜰때가있다
+//		스레드 합치던가, 모든 스레드가 종료된 후 를 알수있는 메소드 있는지 찾아보기
 
 //		ncstYesterdayApiThread.start();
-		ncstTodayApiThread.start();
+//		ncstTodayApiThread.start();
 		fcstApiThread.start();
 		
 	}

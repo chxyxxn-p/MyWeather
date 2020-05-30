@@ -19,7 +19,8 @@ public class WeatherValue {
 	private Object rn1 = null;	//한시간 강수량	//초단기예보 
 	private Object pty = null;	//강수형태	//동네예보,초단기실황,초단기예보	//없음(0), 비(1), 비/눈(진눈개비)(2), 눈(3), 소나기(4)
 	private Object reh = null;	//습도	//동네예보,초단기실황,초단기예보	//%
-	private Object sky = null;	//하늘상태	//동네예보,초단기예보	//맑음(1), 구름많음(3), 흐림(4) 
+	private Object sky = null;	//하늘상태	//동네예보,초단기예보	//맑음(1), 구름많음(3), 흐림(4)
+	private Object vec = null;
 	private Object wsd = null;	//풍속	//동네예보,초단기실황,초단기예보	//m/s	//동(+표기), 서(-표기)
 	
 	public Object getNx() {
@@ -112,6 +113,12 @@ public class WeatherValue {
 	public void setSky(Object sky) {
 		this.sky = sky;
 	}	
+	public Object getVec() {
+		return vec;
+	}
+	public void setVec(Object vec) {
+		this.vec = vec;
+	}
 	public Object getWsd() {
 		return wsd;
 	}

@@ -50,7 +50,7 @@ public class LogoutPage extends Page {
 		if(result == JOptionPane.OK_OPTION) {
 			JOptionPane.showMessageDialog(mainDrive, "로그아웃 되었습니다");
 			this.mainDrive.loginFlag = false;
-			mainDrive.changePage(0);
+			mainDrive.changePage(4);
 		}
 	}
 	
