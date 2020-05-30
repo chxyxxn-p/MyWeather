@@ -11,9 +11,5 @@ public class LocationPage extends Page {
 		
 		super(mainDrive, title, width, height, showFlag);
 		
-//		this.setBackground(Color.green);
-		this.setBackground(new Color(0, 0, 0, 0));
-
-
 	}
 }

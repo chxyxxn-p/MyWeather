@@ -16,10 +16,6 @@ public class WeatherPage extends Page {
 		
 		super(mainDrive, title, width, height, showFlag);
 		
-//		this.setBackground(Color.orange);
-		this.setBackground(new Color(0, 0, 0, 0));
-
-		
 		todayPanel = new JPanel();
 		fcstPanel = new JPanel();
 		

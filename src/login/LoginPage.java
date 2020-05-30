@@ -30,9 +30,6 @@ public class LoginPage extends Page {
 		
 		super(mainDrive, title, width, height, showFlag);
 		
-		this.setBackground(Color.blue);
-//		this.setBackground(new Color(0, 0, 0, 0));
-		
 		idLb = new JLabel("ID");
 		pwLb = new JLabel("PW");
 		idTf = new JTextField();
