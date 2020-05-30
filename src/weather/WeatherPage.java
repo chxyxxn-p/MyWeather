@@ -39,14 +39,13 @@ public class WeatherPage extends Page {
 
 		for(int i = 0 ; i < weatherMap.size() ; i++) {	//예측된 날짜-시간 키 갯수만큼 FcstPanel생성
 			WeatherValue wv = weatherMap.get(keyList.get(i));
-			System.out.println(keyList.get(i));
-			System.out.println(wv.getT3h());
+
 			int imgNum = 0;	//날씨 읽어와서 유형에 맞게 이미지 번호 설정
 			
-			StringBuilder info = new StringBuilder();
-			if(wv.getT3h()!=null) info.append("기온 : " + wv.getT3h() + "℃");
-			System.out.println(info.toString());
+//			StringBuilder info = new StringBuilder();
+//			if(wv.getT3h()!=null) info.append("기온 : " + wv.getT3h() + "℃");
 
+			String info = mainDrive.fcstApi.weatherValueToString(wv);
 			FcstPanel f = new FcstPanel(mainDrive, width/3*2-30, height/6, imgNum, info.toString());
 			fcstPanel.add(f);
 		}

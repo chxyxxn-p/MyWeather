@@ -446,4 +446,148 @@ public class GetApi {
 			}
 		}
 	}
+
+	public String weatherValueToString(WeatherValue wv) {
+		
+		StringBuilder wsb = new StringBuilder();
+		
+		int month = (Integer.parseInt(wv.getFcstDate().toString()) % 10000) / 100;
+		int date = (Integer.parseInt(wv.getFcstDate().toString()) % 10000) % 100;
+		int hour = (Integer.parseInt(wv.getFcstTime().toString()) % 10000) / 100;
+		
+		wsb.append("<html>");
+		
+		wsb.append(month +"월 " + date + "일 " + hour + "시");
+		wsb.append("<br>");
+
+		if (wv.getTmn() != null)
+			wsb.append("\t최저기온 : " + wv.getTmn() + "℃");
+
+		if (wv.getTmx() != null) 
+			wsb.append("\t최고기온 : " + wv.getTmx() + "℃");
+
+		if (wv.getT3h() != null)
+			wsb.append("\t기온 : " + wv.getT3h() + "℃");
+
+		if (wv.getT1h() != null)
+			wsb.append("\t기온 : " + wv.getT1h() + "℃");
+		
+		wsb.append("<br>");
+
+		if (wv.getPop() != null)
+			wsb.append("\t강수 확률 : " + wv.getPop() + "%");
+
+		if (wv.getRn1() != null)
+			wsb.append("\t강수량 : " + wv.getRn1() + "mm");
+
+		if (wv.getPty() != null) {
+			wsb.append("\t강수 형태 : ");
+			switch (wv.getPty().toString()) {
+
+			case "0":
+				wsb.append("없음");
+				break;
+			case "1":
+				wsb.append("비");
+				break;
+			case "2":
+				wsb.append("진눈개비");
+				break;
+			case "3":
+				wsb.append("눈");
+				break;
+			case "4":
+				wsb.append("소나기");
+				break;
+			}
+		}
+
+		if (wv.getReh() != null) 
+			wsb.append("\t습도 : " + wv.getReh() + "%");
+
+		wsb.append("<br>");
+
+		if (wv.getSky() != null) {
+			wsb.append("\t하늘상태 : ");
+			switch (wv.getSky().toString()) {
+
+			case "1":
+				wsb.append("맑음");
+				break;
+			case "3":
+				wsb.append("구름 많음");
+				break;
+			case "4":
+				wsb.append("흐림");
+				break;
+			}
+		}
+
+		if (wv.getVec() != null) {
+			wsb.append("\t풍향 : ");
+
+//				불러온 Object형을 String으로 받아 Double형으로 변환 -> 풍향 계산과정을 거친 후 Math함수를 통해 소수점을 버린 뒤 int형으로 변환
+			int vecCode = (int) Math.floor((Double.parseDouble((String) wv.getVec()) + 22.5 * 0.5) / 22.5);
+
+			switch (vecCode) {
+
+			case 0:
+			case 16:
+				wsb.append("북");
+				break;
+			case 1:
+				wsb.append("북북동");
+				break;
+			case 2:
+				wsb.append("북동");
+				break;
+			case 3:
+				wsb.append("동북동");
+				break;
+			case 4:
+				wsb.append("동");
+				break;
+			case 5:
+				wsb.append("동남동");
+				break;
+			case 6:
+				wsb.append("남동");
+				break;
+			case 7:
+				wsb.append("남남동");
+				break;
+			case 8:
+				wsb.append("남");
+				break;
+			case 9:
+				wsb.append("남남서");
+				break;
+			case 10:
+				wsb.append("남서");
+				break;
+			case 11:
+				wsb.append("서남서");
+				break;
+			case 12:
+				wsb.append("서");
+				break;
+			case 13:
+				wsb.append("서북서");
+				break;
+			case 14:
+				wsb.append("북서");
+				break;
+			case 15:
+				wsb.append("북북서");
+				break;
+			}
+		}
+		if (wv.getWsd() != null) {
+			wsb.append("\t풍속 : " + wv.getWsd() + "m/s");
+		}
+		wsb.append("</html>");
+
+//		System.out.println(wsb.toString());
+		return wsb.toString();
+	}
 }
