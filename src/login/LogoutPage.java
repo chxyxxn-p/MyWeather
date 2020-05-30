@@ -23,8 +23,8 @@ public class LogoutPage extends Page {
 		greetingLb = new JLabel(mainDrive.loginUserName + "´Ô, ¹Ý°©½À´Ï´Ù!", JLabel.CENTER);
 		logoutBt = new JButton("LOGOUT");
 		
-		greetingLb.setFont(mainDrive.mainFont);
-		logoutBt.setFont(mainDrive.mainFont);
+		greetingLb.setFont(mainDrive.getFont(30));
+		logoutBt.setFont(mainDrive.getFont(30));
 		
 		logoutBt.setBackground(Color.white);
 		

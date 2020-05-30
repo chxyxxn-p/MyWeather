@@ -37,7 +37,7 @@ public class FcstPanel  extends JPanel {
 			}
 		};
 		this.infoLb = new JLabel(info);
-		this.infoLb.setFont(mainDrive.mainFont);
+		this.infoLb.setFont(mainDrive.getFont(14));
 		
 		imgPn.setPreferredSize(new Dimension(height-10, height-10));
 		infoLb.setPreferredSize(new Dimension(width - height - 10, height));

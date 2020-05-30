@@ -36,11 +36,11 @@ public class LoginPage extends Page {
 		pwTf = new JPasswordField();
 		loginBt = new JButton("LOGIN");
 		
-		idLb.setFont(mainDrive.mainFont);
-		pwLb.setFont(mainDrive.mainFont);
-		idTf.setFont(mainDrive.mainFont);
-		pwTf.setFont(mainDrive.mainFont);
-		loginBt.setFont(mainDrive.mainFont);
+		idLb.setFont(mainDrive.getFont(30));
+		pwLb.setFont(mainDrive.getFont(30));
+		idTf.setFont(mainDrive.getFont(30));
+		pwTf.setFont(mainDrive.getFont(30));
+		loginBt.setFont(mainDrive.getFont(30));
 		
 		idTf.setBackground(Color.WHITE);
 		pwTf.setBackground(Color.WHITE);
@@ -79,7 +79,7 @@ public class LoginPage extends Page {
 		
 		if(loginCheckFlag) {
 			JLabel tempLb = new JLabel("로그인 되었습니다");
-			tempLb.setFont(mainDrive.mainFont);
+			tempLb.setFont(mainDrive.getFont(10));
 			JOptionPane.showMessageDialog(mainDrive, tempLb);
 			mainDrive.loginFlag = true;	//로그인 성공 표시
 			((LogoutPage)mainDrive.pages[5]).greetingMsg(mainDrive.loginUserName);	//로그아웃 페이지 라벨 텍스트 설정

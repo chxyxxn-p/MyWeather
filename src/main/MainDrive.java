@@ -33,8 +33,7 @@ import weather.WeatherPage;
 public class MainDrive extends JFrame {
 	
 	GraphicsEnvironment ge;
-	public Font mainFont;
-
+	
 //	page
 	JPanel pagePanel;
 	public Page[] pages = new Page[6];
@@ -78,7 +77,7 @@ public class MainDrive extends JFrame {
 	public MainDrive() {
 		
 //		폰트 설정
-//		setFont();
+		setFont();
 
 //		현재시간 기준으로 검색할 base time 설정
 		searchTimeSetting();
@@ -189,24 +188,26 @@ public class MainDrive extends JFrame {
 	public void setFont() {
 		ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		try {
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(MainDrive.class.getResource(".").getPath() + "/neodgm.ttf")));
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(MainDrive.class.getResource(".").getPath() + "/NanumSquareR.ttf")));
 		} catch (FontFormatException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+	}
+	
+	public Font getFont(int size) {
 		int index = 0;
 		
 		for(int i = 0 ; i < ge.getAvailableFontFamilyNames().length ; i++) {
-			if(ge.getAvailableFontFamilyNames()[i].equals("NeoDunggeunmo")) {
+			if(ge.getAvailableFontFamilyNames()[i].equals("나눔스퀘어 Regular")) {
 				index = i;
 				break;
 			}
 //			System.out.println(ge.getAvailableFontFamilyNames()[i]);
 		}
 		
-		mainFont = new Font(ge.getAvailableFontFamilyNames()[index], Font.PLAIN, 20);
+		return new Font(ge.getAvailableFontFamilyNames()[index], Font.PLAIN, size);
 //		mainFont = new Font("HY견고딕", Font.PLAIN, 20);
 	}
 
