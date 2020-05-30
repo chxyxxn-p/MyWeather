@@ -20,7 +20,8 @@ import org.json.simple.parser.ParseException;
 public class GetApi {
 
 	Map<Long, WeatherValue> weatherMap = new HashMap<Long, WeatherValue>();
-
+	ArrayList<Long> keyList;
+	
 	String searchVersion;
 	String searchResult;
 	String searchBaseDate;
@@ -45,7 +46,7 @@ public class GetApi {
 
 	public void connectData() {
 
-		System.out.println(searchVersion + "  api에 연동 중...");
+		System.out.println(searchVersion + " api connecting...");
 
 		HttpURLConnection connection = null;
 		BufferedReader reader = null;
@@ -54,22 +55,14 @@ public class GetApi {
 			StringBuilder urlSb = new StringBuilder(
 					"http://apis.data.go.kr/1360000/VilageFcstInfoService/" + searchVersion); /* URL */
 			urlSb.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "=" + serviceKey); /* Service Key */
-			urlSb.append("&" + URLEncoder.encode("ServiceKey", "UTF-8") + "="
-					+ URLEncoder.encode("-", "UTF-8")); /* 공공데이터포털에서 받은 인증키 */
-			urlSb.append(
-					"&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /* 페이지번호 */
-			urlSb.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "="
-					+ URLEncoder.encode(searchResult, "UTF-8")); /* 한 페이지 결과 수 */
-			urlSb.append("&" + URLEncoder.encode("dataType", "UTF-8") + "="
-					+ URLEncoder.encode("JSON", "UTF-8")); /* 요청자료형식(XML/JSON)Default: XML */
-			urlSb.append("&" + URLEncoder.encode("base_date", "UTF-8") + "="
-					+ URLEncoder.encode(searchBaseDate, "UTF-8")); /* 15년 12월 1일 발표 */
-			urlSb.append("&" + URLEncoder.encode("base_time", "UTF-8") + "="
-					+ URLEncoder.encode(searchBaseTime, "UTF-8")); /* 06시 발표(정시단위) */
-			urlSb.append("&" + URLEncoder.encode("nx", "UTF-8") + "="
-					+ URLEncoder.encode(searchNx, "UTF-8")); /* 예보지점의 X 좌표값 */
-			urlSb.append("&" + URLEncoder.encode("ny", "UTF-8") + "="
-					+ URLEncoder.encode(searchNy, "UTF-8")); /* 예보지점 Y 좌표 */
+			urlSb.append("&" + URLEncoder.encode("ServiceKey", "UTF-8") + "=" + URLEncoder.encode("-", "UTF-8")); /* 공공데이터포털에서 받은 인증키 */
+			urlSb.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /* 페이지번호 */
+			urlSb.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode(searchResult, "UTF-8")); /* 한 페이지 결과 수 */
+			urlSb.append("&" + URLEncoder.encode("dataType", "UTF-8") + "=" + URLEncoder.encode("JSON", "UTF-8")); /* 요청자료형식(XML/JSON)Default: XML */
+			urlSb.append("&" + URLEncoder.encode("base_date", "UTF-8") + "=" + URLEncoder.encode(searchBaseDate, "UTF-8")); /* 15년 12월 1일 발표 */
+			urlSb.append("&" + URLEncoder.encode("base_time", "UTF-8") + "=" + URLEncoder.encode(searchBaseTime, "UTF-8")); /* 06시 발표(정시단위) */
+			urlSb.append("&" + URLEncoder.encode("nx", "UTF-8") + "=" + URLEncoder.encode(searchNx, "UTF-8")); /* 예보지점의 X 좌표값 */
+			urlSb.append("&" + URLEncoder.encode("ny", "UTF-8") + "=" + URLEncoder.encode(searchNy, "UTF-8")); /* 예보지점 Y 좌표 */
 
 			URL url = new URL(urlSb.toString());
 
@@ -110,16 +103,16 @@ public class GetApi {
 			}
 		}
 
-		System.out.println(searchVersion + "  api 연동 완료");
+		System.out.println(searchVersion + " api connect done");
 	}
 
 	public void setWeatherMap() {
 
 		if (connectResult == null) {
-			System.out.println(searchVersion + " api에 연동해주세요");
+			System.out.println("please connect" + searchVersion + " api");
 
 		} else {
-			System.out.println(searchVersion + " api에서 데이터 가져오는 중...");
+			System.out.println(searchVersion + " api data loading...");
 
 			JSONParser parser = new JSONParser();
 			JSONObject obj;
@@ -226,7 +219,21 @@ public class GetApi {
 //					map으로부터 받아온 뒤  or 새로 생성하여 값 설정한 wv를 다시 같은 키로 map에 put -> 기존 WeatherValue대신 wv로 덮어씌워지게 됨
 					weatherMap.put(mapKey, wv);
 				}
-				System.out.println(searchVersion + " api 데이터 가져오기 완료");
+				System.out.println(searchVersion + " api data load done");
+				
+				keyList = new ArrayList<Long>();
+				Iterator<Long> it = weatherMap.keySet().iterator();
+
+				while (it.hasNext()) {
+
+					long key = it.next();
+					keyList.add(key);
+				}
+
+//			iterator로 순서없이 keyList에 add했기 때문에 오름차순 정렬
+				Collections.sort(keyList);
+				
+				System.out.println(searchVersion + " api key sort done");
 
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -238,7 +245,7 @@ public class GetApi {
 		Object obj = null;
 
 		if (connectResult == null) {
-			System.out.println(searchVersion + " api에 연동해주세요");
+			System.out.println("please connect" + searchVersion + " api");
 
 		} else {
 			long key = Long.parseLong(date + time);
@@ -294,20 +301,9 @@ public class GetApi {
 
 	public void printAllWeatherMapValue() {
 		if (connectResult == null) {
-			System.out.println(searchVersion + " api에 연동해주세요");
+			System.out.println("please connect" + searchVersion + " api");
 
 		} else {
-			ArrayList<Long> keyList = new ArrayList<Long>();
-			Iterator<Long> it = weatherMap.keySet().iterator();
-
-			while (it.hasNext()) {
-
-				long key = it.next();
-				keyList.add(key);
-			}
-
-//		iterator로 순서없이 keyList에 add했기 때문에 오름차순 정렬
-			Collections.sort(keyList);
 
 			for (int i = 0; i < keyList.size(); i++) {
 //			map으로부터 가져온 key로 이루어진 list -> key 유효성 검사할 필요 없다
