@@ -33,11 +33,10 @@ import weather.WeatherPage;
 public class MainDrive extends JFrame {
 	
 	GraphicsEnvironment ge;
-
 	public Font mainFont;
 
 //	page
-	JPanel contentsPanel;
+	JPanel pagePanel;
 	public Page[] pages = new Page[6];
 
 	JPanel mainPanel;
@@ -52,9 +51,9 @@ public class MainDrive extends JFrame {
 	String mainBgImg = "./res/sky.jpg";
 	String iconBgImg = "./res/ball_yellow.png";
 
-	GetApi fcstApi;
-	GetApi ncstTodayApi;
-	GetApi ncstYesterdayApi;
+	public GetApi fcstApi;
+	public GetApi ncstTodayApi;
+	public GetApi ncstYesterdayApi;
 //	GetApi api;
 
 	String searchFcstDate;
@@ -66,8 +65,8 @@ public class MainDrive extends JFrame {
 	String searchNx = "60";
 	String searchNy = "127";
 	
-	int mainWidth = 1000;
-	int mainHeight = 500;
+	int pageWidth = 1000;
+	int pageHeight = 500;
 
 	public boolean loginFlag;
 	public String loginUserName; // LoginPage에서 login되면 설정
@@ -82,32 +81,36 @@ public class MainDrive extends JFrame {
 //		setFont();
 
 //		현재시간 기준으로 검색할 base time 설정
-//		searchTimeSetting();
+		searchTimeSetting();
 
 //		api 연결
-//		runApi();
-
+		runApi();
+		
+//		defaultSetting();
+	}
+	
+	public void defaultSetting() {
 //		메모리 적재
 		Image img = new ImageIcon(mainBgImg).getImage();
-		
+
 		mainPanel = new JPanel() {
 			@Override
 			public void paintComponent(Graphics g) {
-				
-				g.drawImage(img, 0, 0, getWidth(), getHeight(), this);				
+
+				g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
 				setOpaque(false);
 				super.paintComponent(g);
 			}
 		};
-		
-		contentsPanel = new JPanel();
 
-		pages[0] = new HomePage(this, "HOME", mainWidth, mainHeight, false);
-		pages[1] = new WeatherPage(this, "WEATHER", mainWidth, mainHeight, false);
-		pages[2] = new CalendarPage(this, "CALENDAR", mainWidth, mainHeight, false);
-		pages[3] = new LocationPage(this, "LOCATION", mainWidth, mainHeight, false);
-		pages[4] = new LoginPage(this, "LOGIN", mainWidth, mainHeight, false);
-		pages[5] = new LogoutPage(this, "LOGOUT", 1000, 700, false);
+		pagePanel = new JPanel();
+
+		pages[0] = new HomePage(this, "HOME", pageWidth, pageHeight, false);
+		pages[1] = new WeatherPage(this, "WEATHER", pageWidth, pageHeight, false);
+		pages[2] = new CalendarPage(this, "CALENDAR", pageWidth, pageHeight, false);
+		pages[3] = new LocationPage(this, "LOCATION", pageWidth, pageHeight, false);
+		pages[4] = new LoginPage(this, "LOGIN", pageWidth, pageHeight, false);
+		pages[5] = new LogoutPage(this, "LOGOUT", pageWidth, pageHeight, false);
 
 		menuPanel = new JPanel();
 
@@ -117,34 +120,35 @@ public class MainDrive extends JFrame {
 		icons[3] = new MenuIcon(this, 50, 50, iconBgImg); // location
 		icons[4] = new MenuIcon(this, 50, 50, iconBgImg); // login/out
 
-		changePage(4); // 처음으로 보여줄 페이지 //#나중에 로그인페이지or홈페이지를 시작으로 변경
+		changePage(1); // 처음으로 보여줄 페이지 //#나중에 로그인페이지or홈페이지를 시작으로 변경
 
 //		속성
-		mainPanel.setPreferredSize(new Dimension(mainWidth, mainHeight));
-		
-		menuPanel.setPreferredSize(new Dimension(100, mainHeight));
-		menuPanel.setBackground(new Color(0,0,0,0));
+		mainPanel.setPreferredSize(new Dimension(pageWidth + 60, pageHeight));
 
-		contentsPanel.setPreferredSize(new Dimension(mainWidth-100, mainHeight));
-		contentsPanel.setBackground(new Color(0,0,0,0));
+		menuPanel.setPreferredSize(new Dimension(60, pageHeight));
+		menuPanel.setBackground(new Color(0, 0, 0, 0));
+
+//		System.out.println(menuPanel.getWidth()); -> 60출력 예상.. 0 출력됨
+		pagePanel.setPreferredSize(new Dimension(pageWidth, pageHeight));
+		pagePanel.setBackground(new Color(0, 0, 0, 0));
 
 //		조립
 		for (int i = 0; i < icons.length; i++) {
 			menuPanel.add(icons[i]);
 		}
 
-		contentsPanel.setLayout(new FlowLayout(0, 0, 0));
+		pagePanel.setLayout(new FlowLayout(0, 0, 0));
 		for (int i = 0; i < pages.length; i++) {
-			contentsPanel.add(pages[i]);
+			pagePanel.add(pages[i]);
 		}
 
 		mainPanel.setLayout(new FlowLayout(0, 0, 0));
 		mainPanel.add(menuPanel, BorderLayout.WEST);
-		mainPanel.add(contentsPanel);
-		
+		mainPanel.add(pagePanel);
+
 		this.add(mainPanel);
 		this.setContentPane(mainPanel);
-		
+
 		this.pack();
 		this.setVisible(true);
 		this.setLocationRelativeTo(null);
@@ -273,13 +277,15 @@ public class MainDrive extends JFrame {
 				fcstApi = new GetApi("getVilageFcst", "500", searchFcstDate, searchFcstTime, searchNx, searchNy);
 				fcstApi.connectData();
 				fcstApi.setWeatherMap();
-				fcstApi.printAllWeatherMapValue();
+//				fcstApi.printAllWeatherMapValue();
+				defaultSetting();
 			};
 		};
 
-		ncstYesterdayApiThread.start();
+//		ncstYesterdayApiThread.start();
 		ncstTodayApiThread.start();
 		fcstApiThread.start();
+		
 	}
 
 	public void changePage(int pageIndex) {
