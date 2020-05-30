@@ -47,8 +47,8 @@ public class MainDrive extends JFrame {
 //	String resDir = "C:/Users/tjoeun/Dropbox/Java/Park-choyeon_Project/MyWeather/res/";
 //	String mainBgImgName = "sky.jpg";
 //	String iconBgImgName = "ball_yellow.png";
-	String mainBgImg = "./res/sky.jpg";
-	String iconBgImg = "./res/ball_yellow.png";
+	String mainBgImgPath = "./res/sky.jpg";
+	String iconBgImgPath = "./res/ball_yellow.png";
 
 	public GetApi fcstApi;
 	public GetApi ncstTodayApi;
@@ -64,7 +64,7 @@ public class MainDrive extends JFrame {
 	String searchNx = "60";
 	String searchNy = "127";
 	
-	int pageWidth = 1000;
+	int pageWidth = 900;
 	int pageHeight = 500;
 
 	public boolean loginFlag;
@@ -93,7 +93,7 @@ public class MainDrive extends JFrame {
 		System.out.println("main default setting...");
 		
 //		메모리 적재
-		Image img = new ImageIcon(mainBgImg).getImage();
+		Image img = new ImageIcon(mainBgImgPath).getImage();
 
 		mainPanel = new JPanel() {
 			@Override
@@ -116,11 +116,11 @@ public class MainDrive extends JFrame {
 
 		menuPanel = new JPanel();
 
-		icons[0] = new MenuIcon(this, 50, 50, iconBgImg); // home
-		icons[1] = new MenuIcon(this, 50, 50, iconBgImg); // weather
-		icons[2] = new MenuIcon(this, 50, 50, iconBgImg); // calendar
-		icons[3] = new MenuIcon(this, 50, 50, iconBgImg); // location
-		icons[4] = new MenuIcon(this, 50, 50, iconBgImg); // login/out
+		icons[0] = new MenuIcon(this, 50, 50, iconBgImgPath); // home
+		icons[1] = new MenuIcon(this, 50, 50, iconBgImgPath); // weather
+		icons[2] = new MenuIcon(this, 50, 50, iconBgImgPath); // calendar
+		icons[3] = new MenuIcon(this, 50, 50, iconBgImgPath); // location
+		icons[4] = new MenuIcon(this, 50, 50, iconBgImgPath); // login/out
 
 		changePage(1); // 처음으로 보여줄 페이지 //#나중에 로그인페이지or홈페이지를 시작으로 변경
 
