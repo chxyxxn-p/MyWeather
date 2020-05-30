@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 public class MenuIcon extends JPanel {
@@ -14,7 +15,6 @@ public class MenuIcon extends JPanel {
 	String bgImgPath;
 	Image backgroundImg;
 
-//	후에 컬러 -> 이미지로 수정
 	public MenuIcon(MainDrive mainDrive, int width, int height, String bgImgPath) {
 		
 		this.mainDrive= mainDrive;
@@ -25,7 +25,7 @@ public class MenuIcon extends JPanel {
 		
 		this.setPreferredSize(new Dimension(width, height));
 		
-		this.backgroundImg = Toolkit.getDefaultToolkit().createImage(bgImgPath);
+		this.backgroundImg = new ImageIcon(bgImgPath).getImage();
 		this.repaint();
 		}
 	
