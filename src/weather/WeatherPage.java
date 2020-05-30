@@ -71,12 +71,17 @@ public class WeatherPage extends Page {
 		
 		nowInfoLb.setFont(mainDrive.getFont(18));
 		
-		nowImgPn.setBackground(Color.red);
-		nowInfoLb.setBackground(Color.pink);
+//		nowImgPn.setBackground(Color.red);
+//		nowInfoLb.setBackground(Color.pink);
+//		nowInfoLb.setOpaque(true);
+//		nowPanel.setBackground(Color.cyan);
+//		fcstPanel.setBackground(Color.magenta);
+		nowImgPn.setBackground(new Color(0,0,0,0));
+		nowInfoLb.setBackground(new Color(0,0,0,0));
 		nowInfoLb.setOpaque(true);
-		nowPanel.setBackground(Color.cyan);
-		fcstPanel.setBackground(Color.magenta);
-		
+		nowPanel.setBackground(new Color(0,0,0,0));
+		fcstPanel.setBackground(new Color(0,0,0,0));
+		fcstScroll.setBackground(new Color(0,0,0,0));
 		nowPanel.setLayout(null);
 		
 		nowImgPn.setBounds(20, 10, width/3-40, width/3-40);

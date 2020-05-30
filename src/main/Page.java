@@ -25,8 +25,8 @@ public class Page extends JPanel {
 		this.height = height;
 		this.showFlag = showFlag;
 		
-//		this.setBackground(new Color(0, 0, 0, 0));
-		this.setBackground(Color.yellow);
+		this.setBackground(new Color(0, 0, 0, 0));
+//		this.setBackground(Color.yellow);
 
 
 		this.setPreferredSize(new Dimension(width, height));
