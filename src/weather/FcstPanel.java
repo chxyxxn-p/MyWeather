@@ -42,7 +42,7 @@ public class FcstPanel  extends JPanel {
 		imgPn.setPreferredSize(new Dimension(height-10, height-10));
 		infoLb.setPreferredSize(new Dimension(width - height - 10, height));
 		
-		this.setBackground(Color.white);
+		this.setBackground(new Color(255,255,255,120));
 		this.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
 		this.add(imgPn);
 		this.add(infoLb);
