@@ -139,11 +139,7 @@ public class WeatherPage extends Page {
 	public String getNowInfoTaText() {
 		return nowInfoTa.getText();
 	}
-
-	public WeatherValue getNwv() {
-		return nwv;
-	}
-
+	
 	public Image getNowImg() {
 		return nowImg;
 	}
