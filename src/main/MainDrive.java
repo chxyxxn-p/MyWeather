@@ -49,7 +49,8 @@ public class MainDrive extends JFrame {
 //	String mainBgImgName = "sky.jpg";
 //	String iconBgImgName = "ball_yellow.png";
 	String mainBgImgPath = "./res/catsky.gif";
-	String iconBgImgPath = "./res/ball_yellow.png";
+	String iconBgImgPath = "./res/ball_darkred.png";
+	public String[] imageName = {"./res/ball_yellow.png", "./res/ball_purple.png", "./res/ball_blue.png", "./res/ball_green.png", "./res/ball_orange.png", "./res/ball_red.png"};
 
 	public GetApi fcstApi;
 	public GetApi ncstTodayApi;
@@ -105,10 +106,10 @@ public class MainDrive extends JFrame {
 
 		pagePanel = new JPanel();
 
-		pages[0] = new HomePage(this, "HOME", pageWidth, pageHeight, false);
 		pages[1] = new WeatherPage(this, "WEATHER", pageWidth, pageHeight, false);
 		pages[2] = new CalendarPage(this, "CALENDAR", pageWidth, pageHeight, false);
 		pages[3] = new LocationPage(this, "LOCATION", pageWidth, pageHeight, false);
+		pages[0] = new HomePage(this, "HOME", pageWidth, pageHeight, false);	//다른 페이지의 값을 받아오기때문에 실행 순서 변경
 		pages[4] = new LoginPage(this, "LOGIN", pageWidth, pageHeight, false);
 		pages[5] = new LogoutPage(this, "LOGOUT", pageWidth, pageHeight, false);
 
