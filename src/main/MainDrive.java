@@ -22,6 +22,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.sun.java.swing.plaf.windows.resources.windows;
+
 import calendar.CalendarPage;
 import home.HomePage;
 import location.LocationPage;
@@ -46,7 +48,7 @@ public class MainDrive extends JFrame {
 //	String resDir = "C:/Users/tjoeun/Dropbox/Java/Park-choyeon_Project/MyWeather/res/";
 //	String mainBgImgName = "sky.jpg";
 //	String iconBgImgName = "ball_yellow.png";
-	String mainBgImgPath = "./res/sky.jpg";
+	String mainBgImgPath = "./res/catsky.gif";
 	String iconBgImgPath = "./res/ball_yellow.png";
 
 	public GetApi fcstApi;
@@ -63,15 +65,15 @@ public class MainDrive extends JFrame {
 	String searchNx = "60";
 	String searchNy = "127";
 	
-	int pageWidth = 900;
-	int pageHeight = 500;
+	int pageWidth = 1000;
+	int pageHeight = 600;
 
 	public boolean loginFlag;
 	public String loginUserName; // LoginPage에서 login되면 설정
 
-	Thread ncstYesterdayApiThread;
-	Thread ncstTodayApiThread;
-	Thread fcstApiThread;
+//	Thread ncstYesterdayApiThread;
+//	Thread ncstTodayApiThread;
+//	Thread fcstApiThread;
 
 	public MainDrive() {
 //		폰트 설정
@@ -256,46 +258,46 @@ public class MainDrive extends JFrame {
 
 	public void runApi() {
 		
-		ncstYesterdayApiThread = new Thread() {
-			public void run() {
-				String yesterdayNcstDate = Integer.toString(Integer.parseInt(searchNcstDate)-1);
-				String yesterdayNcstTime = Integer.toString(Integer.parseInt(searchNcstTime)+200);
-				
-				if(yesterdayNcstTime == "2500")
-					yesterdayNcstTime = "0000";
-				
-				ncstYesterdayApi = new GetApi("getUltraSrtNcst", "500", yesterdayNcstDate, yesterdayNcstTime, searchNx, searchNy);
-				ncstYesterdayApi.connectData();
-				ncstYesterdayApi.setWeatherMap();
-				ncstYesterdayApi.printAllWeatherMapValue();				
-			};
-		};
+//		ncstYesterdayApiThread = new Thread() {
+//			public void run() {
+//				String yesterdayNcstDate = Integer.toString(Integer.parseInt(searchNcstDate)-1);
+//				String yesterdayNcstTime = Integer.toString(Integer.parseInt(searchNcstTime)+200);
+//				
+//				if(yesterdayNcstTime == "2500")
+//					yesterdayNcstTime = "0000";
+//				
+//				ncstYesterdayApi = new GetApi("getUltraSrtNcst", "500", yesterdayNcstDate, yesterdayNcstTime, searchNx, searchNy);
+//				ncstYesterdayApi.connectData();
+//				ncstYesterdayApi.setWeatherMap();
+//				ncstYesterdayApi.printAllWeatherMapValue();				
+//			};
+//		};
 
-		ncstTodayApiThread = new Thread() {
-			public void run() {
+//		ncstTodayApiThread = new Thread() {
+//			public void run() {
 				ncstTodayApi = new GetApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
 				ncstTodayApi.connectData();
 				ncstTodayApi.setWeatherMap();
-				ncstTodayApi.printAllWeatherMapValue();				
-			};
-		};
+//				ncstTodayApi.printAllWeatherMapValue();				
+//			};
+//		};
 
-		fcstApiThread = new Thread() {
-			public void run() {
+//		fcstApiThread = new Thread() {
+//			public void run() {
 				fcstApi = new GetApi("getVilageFcst", "500", searchFcstDate, searchFcstTime, searchNx, searchNy);
 				fcstApi.connectData();
 				fcstApi.setWeatherMap();
 //				fcstApi.printAllWeatherMapValue();
 				defaultSetting();
-			};
-		};
+//			};
+//		};
 		
 //		thread 나누니까 빨라도 데이터 안불러왔을때 default Setting 생성해서 데이터 null뜰때가있다
 //		스레드 합치던가, 모든 스레드가 종료된 후 를 알수있는 메소드 있는지 찾아보기
 
 //		ncstYesterdayApiThread.start();
 //		ncstTodayApiThread.start();
-		fcstApiThread.start();
+//		fcstApiThread.start();
 		
 	}
 
