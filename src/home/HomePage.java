@@ -33,6 +33,8 @@ public class HomePage extends Page {
 	JPanel nowImgPn;
 	JTextArea nowInfoTa;
 	
+	JPanel locationPanel;
+	
 	JPanel recommendPanel;
 	
 	JPanel diaryPanel;
@@ -91,12 +93,25 @@ public class HomePage extends Page {
 				nowPanel.repaint();
 			}
 		});
-			
+		
+		
+//		location
+		locationPanel = new JPanel();
+		
+		locationPanel.setBackground(Color.yellow);
+//		locationPanel.setBackground(new Color(0,0,0,0));
+
+		locationPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				mainDrive.changePage(3);
+			}
+		});
 		
 //		recommend
 		recommendPanel = new JPanel();
 		
-		recommendPanel.setBackground(Color.yellow);
+		recommendPanel.setBackground(Color.magenta);
 //		recommendPanel.setBackground(new Color(0,0,0,0));
 
 		recommendPanel.addMouseListener(new MouseAdapter() {
@@ -138,12 +153,14 @@ public class HomePage extends Page {
 //		page
 		this.setLayout(null);
 		
-		nowPanel.setBounds(0, 0, width/4, height/3*2);
-		diaryPanel.setBounds(width/4 + 10, 0, (width - width/4 + 10 + 10)/2, height/3*2);
-		todoListPanel.setBounds((width/4 + 10) + ((width - width/4 + 10 + 10)/2 + 10), 0, (width - width/4 + 10 + 10)/2, height/3*2);
-		recommendPanel.setBounds(0, height/3*2+10, width, height - (height/3*2+10));
+		nowPanel.setBounds(0, 0, width/4, height/3*2+20);
+		locationPanel.setBounds(width/4 + 10, 0, width - (width/4+10), 50);
+		diaryPanel.setBounds(width/4 + 10, 60, (width - width/4 + 10 + 10)/2, height/3*2-40);
+		todoListPanel.setBounds((width/4 + 10) + ((width - width/4 + 10 + 10)/2 + 10), 60, (width - width/4 + 10 + 10)/2, height/3*2-40);
+		recommendPanel.setBounds(0, height/3*2+30, width, height - (height/3*2+10)-20);
 		
 		this.add(nowPanel);
+		this.add(locationPanel);
 		this.add(diaryPanel);
 		this.add(todoListPanel);
 		this.add(recommendPanel);
