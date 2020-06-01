@@ -26,20 +26,25 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import main.MainDrive;
 import main.Page;
 
 public class WeatherPage extends Page {
 	
-	Map<Long, WeatherValue> weatherMap;
-	ArrayList<Long> keyList;
+	Map<Long, WeatherValue> fcstWeatherMap;
+	ArrayList<Long> fcstKeyList;
+	
+	Map<Long, WeatherValue> ncstTodayWeatherMap;
+	ArrayList<Long> ncstTodayKeyList;
 	
 	JPanel nowPanel;
 	Image nowImg;
 	JPanel nowImgPn;
 	String nowImgPath = "./res/ball_yellow.png";
-	JLabel nowInfoLb;
+	JTextArea nowInfoTa;
 
 	JPanel fcstPanel;
 	JScrollPane fcstScroll;
@@ -49,8 +54,11 @@ public class WeatherPage extends Page {
 		
 		super(mainDrive, title, width, height, showFlag);
 		
-		this.weatherMap = mainDrive.fcstApi.weatherMap;
-		this.keyList = mainDrive.fcstApi.keyList;
+		this.fcstWeatherMap = mainDrive.fcstApi.weatherMap;
+		this.fcstKeyList = mainDrive.fcstApi.keyList;
+		
+		this.ncstTodayWeatherMap = mainDrive.ncstTodayApi.weatherMap;
+		this.ncstTodayKeyList = mainDrive.ncstTodayApi.keyList;
 		
 		nowPanel = new JPanel();
 		nowImg = new ImageIcon(nowImgPath).getImage();
@@ -60,33 +68,34 @@ public class WeatherPage extends Page {
 				g.drawImage(nowImg, 0, 0, width/3-40, width/3-40, mainDrive);
 			}
 		};
-		
-		nowInfoLb = new JLabel("weather information<br>will show here");
+		nowInfoTa = new JTextArea();
+		nowInfoTa.setEditable(false);
+
 		
 		fcstPanel = new JPanel();
 		fcstScroll = new JScrollPane(fcstPanel);
+		
+		nowInfoTa.setText(mainDrive.ncstTodayApi.weatherValueToString(ncstTodayWeatherMap.get(ncstTodayKeyList.get(0)), "\n"));
 
-		for(int i = 0 ; i < weatherMap.size() ; i++) {	//예측된 날짜-시간 키 갯수만큼 FcstPanel생성
-			WeatherValue wv = weatherMap.get(keyList.get(i));
+		for(int i = 0 ; i < fcstWeatherMap.size() ; i++) {	//예측된 날짜-시간 키 갯수만큼 FcstPanel생성
+			WeatherValue wv = fcstWeatherMap.get(fcstKeyList.get(i));
 
 			int imgNum = 0;	//날씨 읽어와서 유형에 맞게 이미지 번호 설정
 			
-			String info = mainDrive.fcstApi.weatherValueToString(wv);
+			String info = mainDrive.fcstApi.weatherValueToString(wv, "\t");
 			
-			FcstPanel f = new FcstPanel(mainDrive, width/3*2-30, height/6, imgNum, info.toString());
+			FcstPanel f = new FcstPanel(mainDrive, width/3*2-30, height/8, imgNum, info.toString());
 			fcstPanel.add(f);
 		}
 		
-		nowInfoLb.setFont(mainDrive.getFont(18));
+		nowInfoTa.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
+		nowInfoTa.setAlignmentY(JTextArea.CENTER_ALIGNMENT);
+
+		nowInfoTa.setFont(mainDrive.getFont(25));
 		
-//		nowImgPn.setBackground(Color.red);
-//		nowInfoLb.setBackground(Color.pink);
-//		nowInfoLb.setOpaque(true);
-//		nowPanel.setBackground(Color.cyan);
-//		fcstPanel.setBackground(Color.magenta);
 		nowImgPn.setBackground(new Color(0,0,0,0));
-		nowInfoLb.setBackground(new Color(0,0,0,0));
-		nowInfoLb.setOpaque(true);
+		nowInfoTa.setBackground(new Color(0,0,0,0));
+		nowInfoTa.setOpaque(true);
 		nowPanel.setBackground(new Color(0,0,0,0));
 		fcstPanel.setBackground(new Color(0,0,0,0));
 		fcstScroll.setBackground(new Color(0,0,0,0));
@@ -94,12 +103,12 @@ public class WeatherPage extends Page {
 		nowPanel.setLayout(null);
 		
 		nowImgPn.setBounds(20, 10, width/3-40, width/3-40);
-		nowInfoLb.setBounds(10, 10+width/3-40+10, width/3-20, height - width/3 +40 - 30);
+		nowInfoTa.setBounds(10, 10+width/3-40+10, width/3-20, height - width/3 +40 - 30);
 		
 		nowPanel.add(nowImgPn);
-		nowPanel.add(nowInfoLb);
+		nowPanel.add(nowInfoTa);
 		
-		fcstPanel.setLayout(new GridLayout(weatherMap.size(), 1, 0, 10));
+		fcstPanel.setLayout(new GridLayout(fcstWeatherMap.size(), 1, 0, 10));
 		
 		nowPanel.setBounds(0, 0, width/3, height);
 		
@@ -111,6 +120,14 @@ public class WeatherPage extends Page {
 		this.add(fcstScroll);
 		
 		
+//		nowInfoLb 건드릴 때마다 새로 그리기
+		nowInfoTa.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				mainDrive.mainPanel.repaint();
+				nowPanel.repaint();
+			}
+		});
 		
 //		FcstPanel 스크롤 움직일때마다 새로 그리기
 		fcstScroll.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
