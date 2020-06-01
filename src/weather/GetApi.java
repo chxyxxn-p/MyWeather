@@ -584,4 +584,29 @@ public class GetApi {
 		
 		return wsb.toString();
 	}
+
+	public int weatherImgNum(WeatherValue wv) {
+		int imgNum = 0;
+		
+//		날씨 케이스에 맞게 조건 설정하기 임시로 랜덤 값 리턴
+		
+//		if(wv.getSky()!= null && wv.getSky().toString().equals("1")) {	//맑음
+//			imgNum = 0;
+//		}
+		imgNum = (int) (Math.random()*6);
+
+		return imgNum;
+	}
+
+	
+	public Map<Long, WeatherValue> getWeatherMap() {
+		return weatherMap;
+	}
+
+	public ArrayList<Long> getKeyList() {
+		return keyList;
+	}
+
+	
+	
 }

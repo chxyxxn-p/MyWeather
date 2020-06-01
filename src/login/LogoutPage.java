@@ -20,7 +20,7 @@ public class LogoutPage extends Page {
 		
 		super(mainDrive, title, width, height, showFlag);
 
-		greetingLb = new JLabel(mainDrive.loginUserName + "´Ô, ¹Ý°©½À´Ï´Ù!", JLabel.CENTER);
+		greetingLb = new JLabel(mainDrive.getLoginUserName() + "´Ô, ¹Ý°©½À´Ï´Ù!", JLabel.CENTER);
 		logoutBt = new JButton("LOGOUT");
 		
 		greetingLb.setFont(mainDrive.getFont(30));
@@ -49,7 +49,7 @@ public class LogoutPage extends Page {
 		int result = JOptionPane.showConfirmDialog(mainDrive, "·Î±×¾Æ¿ô ÇÏ½Ã°Ú½À´Ï±î?");
 		if(result == JOptionPane.OK_OPTION) {
 			JOptionPane.showMessageDialog(mainDrive, "·Î±×¾Æ¿ô µÇ¾ú½À´Ï´Ù");
-			this.mainDrive.loginFlag = false;
+			this.mainDrive.setLoginFlag(false);
 			mainDrive.changePage(4);
 		}
 	}

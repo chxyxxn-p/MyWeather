@@ -81,8 +81,8 @@ public class LoginPage extends Page {
 			JLabel tempLb = new JLabel("로그인 되었습니다");
 			tempLb.setFont(mainDrive.getFont(10));
 			JOptionPane.showMessageDialog(mainDrive, tempLb);
-			mainDrive.loginFlag = true;	//로그인 성공 표시
-			((LogoutPage)mainDrive.pages[5]).greetingMsg(mainDrive.loginUserName);	//로그아웃 페이지 라벨 텍스트 설정
+			mainDrive.setLoginFlag(true);	//로그인 성공 표시
+			((LogoutPage)mainDrive.getPages()[5]).greetingMsg(mainDrive.getLoginUserName());	//로그아웃 페이지 라벨 텍스트 설정
 
 			mainDrive.changePage(5);	//로그아웃페이지로 이동
 			
@@ -96,7 +96,7 @@ public class LoginPage extends Page {
 	public void connectDatabase() {
 		if(idTf.getText().equals("ID") && new String(pwTf.getPassword()).equals("PW")) {		//DB연결 전 임시로 ID, Pw 체크
 			loginCheckFlag = true;	//아이디, 비번이 DB에 있으면
-			mainDrive.loginUserName = "초연";	//DB에서 이름 받아오기 전 임시로 이름 설정
+			mainDrive.setLoginUserName("초연");	//DB에서 이름 받아오기 전 임시로 이름 설정
 			
 		} else {
 			loginCheckFlag = false;	//아이디, 비번이 DB에 없으면

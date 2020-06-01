@@ -12,7 +12,7 @@ public class Page extends JPanel {
 	
 	protected MainDrive mainDrive;
 	
-	public String title;
+	String title;
 	int width, height;
 	boolean showFlag;
 
@@ -32,5 +32,9 @@ public class Page extends JPanel {
 		this.setPreferredSize(new Dimension(width, height));
 		
 		this.setVisible(showFlag);
+	}
+
+	public String getTitle() {
+		return title;
 	}
 }

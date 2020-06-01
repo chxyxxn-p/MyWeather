@@ -31,13 +31,12 @@ public class HomePage extends Page {
 	Image nowImg;
 	JPanel nowImgPn;
 	JTextArea nowInfoTa;
-
 	
 	public HomePage(MainDrive mainDrive, String title, int width, int height, boolean showFlag) {
 		
 		super(mainDrive, title, width, height, showFlag);
 		
-		WeatherPage wp = ((WeatherPage)mainDrive.pages[1]);
+		WeatherPage wp = ((WeatherPage)mainDrive.getPages()[1]);
 		
 		nowPanel = new JPanel();
 		nowImgPn = new JPanel() {
@@ -84,7 +83,7 @@ public class HomePage extends Page {
 		nowInfoTa.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				mainDrive.mainPanel.repaint();
+				mainDrive.getMainPanel().repaint();
 				nowPanel.repaint();
 			}
 		});

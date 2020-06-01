@@ -1,33 +1,20 @@
 package weather;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 import main.MainDrive;
 import main.Page;
@@ -50,18 +37,20 @@ public class WeatherPage extends Page {
 	JScrollPane fcstScroll;
 	ArrayList<FcstPanel> fcstPanels = new ArrayList<FcstPanel>();
 	
+	WeatherValue nwv;
+	int nImgNum;
+	
 	public WeatherPage(MainDrive mainDrive, String title, int width, int height, boolean showFlag) {
 		
 		super(mainDrive, title, width, height, showFlag);
 		
-		this.fcstWeatherMap = mainDrive.fcstApi.weatherMap;
-		this.fcstKeyList = mainDrive.fcstApi.keyList;
+		this.fcstWeatherMap = mainDrive.getFcstApi().getWeatherMap();
+		this.fcstKeyList = mainDrive.getFcstApi().getKeyList();
 		
-		this.ncstTodayWeatherMap = mainDrive.ncstTodayApi.weatherMap;
-		this.ncstTodayKeyList = mainDrive.ncstTodayApi.keyList;
+		this.ncstTodayWeatherMap = mainDrive.getNcstTodayApi().getWeatherMap();
+		this.ncstTodayKeyList = mainDrive.getNcstTodayApi().getKeyList();
 		
 		nowPanel = new JPanel();
-		nowImg = new ImageIcon(nowImgPath).getImage();
 		nowImgPn = new JPanel() {
 			@Override
 			public void paint(Graphics g) {
@@ -70,26 +59,32 @@ public class WeatherPage extends Page {
 		};
 		nowInfoTa = new JTextArea();
 		nowInfoTa.setEditable(false);
-
 		
 		fcstPanel = new JPanel();
 		fcstScroll = new JScrollPane(fcstPanel);
 		
-		nowInfoTa.setText(mainDrive.ncstTodayApi.weatherValueToString(ncstTodayWeatherMap.get(ncstTodayKeyList.get(0)), "\n"));
+//		ncst
+		nwv = ncstTodayWeatherMap.get(ncstTodayKeyList.get(0));
+		
+		nImgNum = mainDrive.getNcstTodayApi().weatherImgNum(nwv);
+		nowImg = new ImageIcon(mainDrive.getImageName()[nImgNum]).getImage();
 
+		nowInfoTa.setText(mainDrive.getNcstTodayApi().weatherValueToString(nwv, "\n"));
+
+//		fcst
 		for(int i = 0 ; i < fcstWeatherMap.size() ; i++) {	//예측된 날짜-시간 키 갯수만큼 FcstPanel생성
-			WeatherValue wv = fcstWeatherMap.get(fcstKeyList.get(i));
+			WeatherValue fwv = fcstWeatherMap.get(fcstKeyList.get(i));
 
-			int imgNum = 0;	//날씨 읽어와서 유형에 맞게 이미지 번호 설정
+			int fImgNum = mainDrive.getFcstApi().weatherImgNum(fwv);	//날씨 읽어와서 유형에 맞게 이미지 번호 설정
 			
-			String info = mainDrive.fcstApi.weatherValueToString(wv, "\t");
+			String info = mainDrive.getFcstApi().weatherValueToString(fwv, "\t");
 			
-			FcstPanel f = new FcstPanel(mainDrive, width/3*2-30, height/8, imgNum, info.toString());
+			FcstPanel f = new FcstPanel(mainDrive, width/3*2-30, height/8, fImgNum, info.toString());
 			fcstPanel.add(f);
 		}
 		
-		nowInfoTa.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
-		nowInfoTa.setAlignmentY(JTextArea.CENTER_ALIGNMENT);
+//		nowInfoTa.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
+//		nowInfoTa.setAlignmentY(JTextArea.CENTER_ALIGNMENT);
 
 		nowInfoTa.setFont(mainDrive.getFont(25));
 		
@@ -124,7 +119,7 @@ public class WeatherPage extends Page {
 		nowInfoTa.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				mainDrive.mainPanel.repaint();
+				mainDrive.getMainPanel().repaint();
 				nowPanel.repaint();
 			}
 		});
@@ -133,11 +128,29 @@ public class WeatherPage extends Page {
 		fcstScroll.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
 			@Override
 			public void adjustmentValueChanged(AdjustmentEvent e) {
-				mainDrive.mainPanel.repaint();
+				mainDrive.getMainPanel().repaint();
 				fcstPanel.repaint();
 
 			}
 		});
 		
 	}
+	
+	public String getNowInfoTaText() {
+		return nowInfoTa.getText();
+	}
+
+	public WeatherValue getNwv() {
+		return nwv;
+	}
+
+	public Image getNowImg() {
+		return nowImg;
+	}
+	
+	
+	
+	
+	
+	
 }

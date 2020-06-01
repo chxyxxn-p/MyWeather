@@ -38,9 +38,9 @@ public class MainDrive extends JFrame {
 	int fontIndex;
 	
 	JPanel pagePanel;
-	public Page[] pages = new Page[6];
+	Page[] pages = new Page[6];
 
-	public JPanel mainPanel;
+	JPanel mainPanel;
 	
 	JPanel menuPanel;
 	MenuIcon[] icons = new MenuIcon[5];
@@ -50,11 +50,11 @@ public class MainDrive extends JFrame {
 //	String iconBgImgName = "ball_yellow.png";
 	String mainBgImgPath = "./res/catsky.gif";
 	String iconBgImgPath = "./res/ball_darkred.png";
-	public String[] imageName = {"./res/ball_yellow.png", "./res/ball_purple.png", "./res/ball_blue.png", "./res/ball_green.png", "./res/ball_orange.png", "./res/ball_red.png"};
+	String[] imageName = {"./res/ball_yellow.png", "./res/ball_purple.png", "./res/ball_blue.png", "./res/ball_green.png", "./res/ball_orange.png", "./res/ball_red.png"};
 
-	public GetApi fcstApi;
-	public GetApi ncstTodayApi;
-	public GetApi ncstYesterdayApi;
+	GetApi fcstApi;
+	GetApi ncstTodayApi;
+	GetApi ncstYesterdayApi;
 //	GetApi api;
 
 	String searchFcstDate;
@@ -69,8 +69,8 @@ public class MainDrive extends JFrame {
 	int pageWidth = 1000;
 	int pageHeight = 600;
 
-	public boolean loginFlag;
-	public String loginUserName; // LoginPage에서 login되면 설정
+	boolean loginFlag;
+	String loginUserName; // LoginPage에서 login되면 설정
 
 //	Thread ncstYesterdayApiThread;
 //	Thread ncstTodayApiThread;
@@ -312,6 +312,43 @@ public class MainDrive extends JFrame {
 		
 		mainPanel.repaint();
 		
+	}
+
+	
+	public Page[] getPages() {
+		return pages;
+	}
+
+	public JPanel getMainPanel() {
+		return mainPanel;
+	}
+
+	public String[] getImageName() {
+		return imageName;
+	}
+
+	public GetApi getFcstApi() {
+		return fcstApi;
+	}
+
+	public GetApi getNcstTodayApi() {
+		return ncstTodayApi;
+	}
+
+	public GetApi getNcstYesterdayApi() {
+		return ncstYesterdayApi;
+	}
+
+	public void setLoginFlag(boolean loginFlag) {
+		this.loginFlag = loginFlag;
+	}
+
+	public String getLoginUserName() {
+		return loginUserName;
+	}
+
+	public void setLoginUserName(String loginUserName) {
+		this.loginUserName = loginUserName;
 	}
 
 	public static void main(String[] args) {
