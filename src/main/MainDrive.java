@@ -33,14 +33,13 @@ import weather.WeatherPage;
 public class MainDrive extends JFrame {
 	
 	GraphicsEnvironment ge;
+	int fontIndex;
 	
-//	page
 	JPanel pagePanel;
 	public Page[] pages = new Page[6];
 
-	JPanel mainPanel;
+	public JPanel mainPanel;
 	
-//	menu
 	JPanel menuPanel;
 	MenuIcon[] icons = new MenuIcon[5];
   
@@ -75,7 +74,6 @@ public class MainDrive extends JFrame {
 	Thread fcstApiThread;
 
 	public MainDrive() {
-		
 //		폰트 설정
 		setFont();
 
@@ -84,8 +82,6 @@ public class MainDrive extends JFrame {
 
 //		api 연결
 		runApi();
-		
-//		defaultSetting();
 	}
 	
 	public void defaultSetting() {
@@ -187,8 +183,24 @@ public class MainDrive extends JFrame {
 	
 	public void setFont() {
 		ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		
 		try {
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(MainDrive.class.getResource(".").getPath() + "/NanumSquareR.ttf")));
+			
+			boolean registFontSuccess = ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("./res/NanumSquareR.ttf")));
+			
+			System.out.println("font regist : " + registFontSuccess);
+			
+			fontIndex = 0;
+			
+			for(int i = 0 ; i < ge.getAvailableFontFamilyNames().length ; i++) {
+				if(ge.getAvailableFontFamilyNames()[i].equals("NanumSquare")||ge.getAvailableFontFamilyNames()[i].equals("나눔스퀘어 Regular")) {
+					fontIndex = i;
+					System.out.println("registed font index : " + fontIndex);
+					break;
+				}
+			}
+			
+			
 		} catch (FontFormatException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -197,18 +209,7 @@ public class MainDrive extends JFrame {
 	}
 	
 	public Font getFont(int size) {
-		int index = 0;
-		
-		for(int i = 0 ; i < ge.getAvailableFontFamilyNames().length ; i++) {
-			if(ge.getAvailableFontFamilyNames()[i].equals("나눔스퀘어 Regular")) {
-				index = i;
-				break;
-			}
-//			System.out.println(ge.getAvailableFontFamilyNames()[i]);
-		}
-		
-		return new Font(ge.getAvailableFontFamilyNames()[index], Font.PLAIN, size);
-//		mainFont = new Font("HY견고딕", Font.PLAIN, 20);
+		return new Font(ge.getAvailableFontFamilyNames()[fontIndex], Font.PLAIN, size);
 	}
 
 	public void searchTimeSetting() {
