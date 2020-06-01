@@ -15,7 +15,6 @@ import main.MainDrive;
 public class FcstPanel  extends JPanel {
 	
 	MainDrive mainDrive;
-	String[] imageName = {"./res/ball_yellow.png"};
 	Image weatherImg;
 	JPanel imgPn;
 	JTextArea infoTa;
@@ -29,7 +28,7 @@ public class FcstPanel  extends JPanel {
 		this.width = width;
 		this.height = height;
 		
-		this.weatherImg = new ImageIcon(imageName[imgNum]).getImage();
+		this.weatherImg = new ImageIcon(mainDrive.imageName[imgNum]).getImage();
 		this.imgPn = new JPanel() {
 			@Override
 			public void paint(Graphics g) {
@@ -39,8 +38,8 @@ public class FcstPanel  extends JPanel {
 		this.infoTa = new JTextArea(info);
 		
 		this.infoTa.setEditable(false);
-		this.infoTa.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
-		this.infoTa.setAlignmentY(JTextArea.CENTER_ALIGNMENT);
+//		this.infoTa.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
+//		this.infoTa.setAlignmentY(JTextArea.CENTER_ALIGNMENT);
 		this.infoTa.setFont(mainDrive.getFont(14));
 		
 		imgPn.setPreferredSize(new Dimension(height-10, height-10));
