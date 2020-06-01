@@ -6,6 +6,16 @@ import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -51,7 +61,7 @@ public class WeatherPage extends Page {
 			}
 		};
 		
-		nowInfoLb = new JLabel("now info");
+		nowInfoLb = new JLabel("weather information<br>will show here");
 		
 		fcstPanel = new JPanel();
 		fcstScroll = new JScrollPane(fcstPanel);
@@ -61,10 +71,8 @@ public class WeatherPage extends Page {
 
 			int imgNum = 0;	//날씨 읽어와서 유형에 맞게 이미지 번호 설정
 			
-//			StringBuilder info = new StringBuilder();
-//			if(wv.getT3h()!=null) info.append("기온 : " + wv.getT3h() + "℃");
-
 			String info = mainDrive.fcstApi.weatherValueToString(wv);
+			
 			FcstPanel f = new FcstPanel(mainDrive, width/3*2-30, height/6, imgNum, info.toString());
 			fcstPanel.add(f);
 		}
@@ -82,12 +90,11 @@ public class WeatherPage extends Page {
 		nowPanel.setBackground(new Color(0,0,0,0));
 		fcstPanel.setBackground(new Color(0,0,0,0));
 		fcstScroll.setBackground(new Color(0,0,0,0));
+		
 		nowPanel.setLayout(null);
 		
 		nowImgPn.setBounds(20, 10, width/3-40, width/3-40);
 		nowInfoLb.setBounds(10, 10+width/3-40+10, width/3-20, height - width/3 +40 - 30);
-		System.out.println(width+"/"+height);
-		System.out.println(10+"/"+ (10+width/3-40+10)+"/"+ (width/3-20)+"/"+ (height - width/3+40 -10-10-10));
 		
 		nowPanel.add(nowImgPn);
 		nowPanel.add(nowInfoLb);
@@ -103,6 +110,17 @@ public class WeatherPage extends Page {
 		this.add(nowPanel);
 		this.add(fcstScroll);
 		
-				
+		
+		
+//		FcstPanel 스크롤 움직일때마다 새로 그리기
+		fcstScroll.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				mainDrive.mainPanel.repaint();
+				fcstPanel.repaint();
+
+			}
+		});
+		
 	}
 }
