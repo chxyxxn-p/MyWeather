@@ -22,13 +22,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import com.sun.java.swing.plaf.windows.resources.windows;
-
 import calendar.CalendarPage;
 import home.HomePage;
 import location.LocationPage;
 import login.LoginPage;
 import login.LogoutPage;
+import recommend.RecommendPage;
 import weather.GetApi;
 import weather.WeatherPage;
 
@@ -38,12 +37,12 @@ public class MainDrive extends JFrame {
 	int fontIndex;
 	
 	JPanel pagePanel;
-	Page[] pages = new Page[6];
+	Page[] pages = new Page[7];
 
 	JPanel mainPanel;
 	
 	JPanel menuPanel;
-	MenuIcon[] icons = new MenuIcon[5];
+	MenuIcon[] icons = new MenuIcon[6];
   
 //	String resDir = "C:/Users/tjoeun/Dropbox/Java/Park-choyeon_Project/MyWeather/res/";
 //	String mainBgImgName = "sky.jpg";
@@ -109,9 +108,10 @@ public class MainDrive extends JFrame {
 		pages[1] = new WeatherPage(this, "WEATHER", pageWidth, pageHeight, false);
 		pages[2] = new CalendarPage(this, "CALENDAR", pageWidth, pageHeight, false);
 		pages[3] = new LocationPage(this, "LOCATION", pageWidth, pageHeight, false);
+		pages[4] = new RecommendPage(this, "recommend", pageWidth, pageHeight, false);
 		pages[0] = new HomePage(this, "HOME", pageWidth, pageHeight, false);	//다른 페이지의 값을 받아오기때문에 실행 순서 변경
-		pages[4] = new LoginPage(this, "LOGIN", pageWidth, pageHeight, false);
 		pages[5] = new LogoutPage(this, "LOGOUT", pageWidth, pageHeight, false);
+		pages[6] = new LoginPage(this, "LOGIN", pageWidth, pageHeight, false);
 
 		menuPanel = new JPanel();
 
@@ -119,9 +119,10 @@ public class MainDrive extends JFrame {
 		icons[1] = new MenuIcon(this, 50, 50, iconBgImgPath); // weather
 		icons[2] = new MenuIcon(this, 50, 50, iconBgImgPath); // calendar
 		icons[3] = new MenuIcon(this, 50, 50, iconBgImgPath); // location
-		icons[4] = new MenuIcon(this, 50, 50, iconBgImgPath); // login/out
+		icons[4] = new MenuIcon(this, 50, 50, iconBgImgPath); // recommend
+		icons[5] = new MenuIcon(this, 50, 50, iconBgImgPath); // login/out
 
-		changePage(1); // 처음으로 보여줄 페이지 //#나중에 로그인페이지or홈페이지를 시작으로 변경
+		changePage(0); // 처음으로 보여줄 페이지 //#나중에 로그인페이지or홈페이지를 시작으로 변경
 
 //		속성
 		mainPanel.setPreferredSize(new Dimension(pageWidth + 60, pageHeight));
