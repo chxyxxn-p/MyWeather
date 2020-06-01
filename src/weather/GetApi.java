@@ -447,41 +447,38 @@ public class GetApi {
 		}
 	}
 
-	public String weatherValueToString(WeatherValue wv) {
+	public String weatherValueToString(WeatherValue wv, String align) {
 		
 		StringBuilder wsb = new StringBuilder();
 		
 		int month = (Integer.parseInt(wv.getFcstDate().toString()) % 10000) / 100;
 		int date = (Integer.parseInt(wv.getFcstDate().toString()) % 10000) % 100;
 		int hour = (Integer.parseInt(wv.getFcstTime().toString()) % 10000) / 100;
-		
-		wsb.append("<html>");
-		
+
 		wsb.append(month +"월 " + date + "일 " + hour + "시");
-		wsb.append("<br>");
-
-		if (wv.getTmn() != null)
-			wsb.append("\t최저기온 : " + wv.getTmn() + "℃");
-
-		if (wv.getTmx() != null) 
-			wsb.append("\t최고기온 : " + wv.getTmx() + "℃");
+		
 
 		if (wv.getT3h() != null)
-			wsb.append("\t기온 : " + wv.getT3h() + "℃");
+			wsb.append("\n*기온\t " + wv.getT3h() + "℃");
 
 		if (wv.getT1h() != null)
-			wsb.append("\t기온 : " + wv.getT1h() + "℃");
+			wsb.append("\n*기온\t " + wv.getT1h() + "℃");
 		
-		wsb.append("<br>");
+		if (wv.getTmn() != null)
+			wsb.append(align + "*최저기온\t " + wv.getTmn() + "℃");
+		
+		if (wv.getTmx() != null) 
+			wsb.append(align + "*최고기온\t " + wv.getTmx() + "℃");
+		
 
 		if (wv.getPop() != null)
-			wsb.append("\t강수 확률 : " + wv.getPop() + "%");
+			wsb.append("\n*강수 확률\t " + wv.getPop() + "%");
 
 		if (wv.getRn1() != null)
-			wsb.append("\t강수량 : " + wv.getRn1() + "mm");
+			wsb.append(align + "*강수량\t " + wv.getRn1() + "mm");
 
 		if (wv.getPty() != null) {
-			wsb.append("\t강수 형태 : ");
+			wsb.append(align + "*강수 형태\t ");
 			switch (wv.getPty().toString()) {
 
 			case "0":
@@ -503,28 +500,11 @@ public class GetApi {
 		}
 
 		if (wv.getReh() != null) 
-			wsb.append("\t습도 : " + wv.getReh() + "%");
+			wsb.append(align + "*습도\t " + wv.getReh() + "%");
 
-		wsb.append("<br>");
-
-		if (wv.getSky() != null) {
-			wsb.append("\t하늘상태 : ");
-			switch (wv.getSky().toString()) {
-
-			case "1":
-				wsb.append("맑음");
-				break;
-			case "3":
-				wsb.append("구름 많음");
-				break;
-			case "4":
-				wsb.append("흐림");
-				break;
-			}
-		}
 
 		if (wv.getVec() != null) {
-			wsb.append("\t풍향 : ");
+			wsb.append("\n*풍향\t ");
 
 //				불러온 Object형을 String으로 받아 Double형으로 변환 -> 풍향 계산과정을 거친 후 Math함수를 통해 소수점을 버린 뒤 int형으로 변환
 			int vecCode = (int) Math.floor((Double.parseDouble((String) wv.getVec()) + 22.5 * 0.5) / 22.5);
@@ -583,11 +563,25 @@ public class GetApi {
 			}
 		}
 		if (wv.getWsd() != null) {
-			wsb.append("\t풍속 : " + wv.getWsd() + "m/s");
+			wsb.append(align + "*풍속\t " + wv.getWsd() + "m/s");
 		}
-		wsb.append("</html>");
+		
+		if (wv.getSky() != null) {
+			wsb.append(align + "*하늘상태\t ");
+			switch (wv.getSky().toString()) {
 
-//		System.out.println(wsb.toString());
+			case "1":
+				wsb.append("맑음");
+				break;
+			case "3":
+				wsb.append("구름 많음");
+				break;
+			case "4":
+				wsb.append("흐림");
+				break;
+			}
+		}
+		
 		return wsb.toString();
 	}
 }

@@ -7,8 +7,8 @@ import java.awt.Graphics;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import main.MainDrive;
 
@@ -18,7 +18,7 @@ public class FcstPanel  extends JPanel {
 	String[] imageName = {"./res/ball_yellow.png"};
 	Image weatherImg;
 	JPanel imgPn;
-	JLabel infoLb;
+	JTextArea infoTa;
 	
 	int width;
 	int height;
@@ -36,18 +36,22 @@ public class FcstPanel  extends JPanel {
 				g.drawImage(weatherImg, 0, 0, height-10, height-10, mainDrive);
 			}
 		};
-		this.infoLb = new JLabel(info);
+		this.infoTa = new JTextArea(info);
 		
-		this.infoLb.setFont(mainDrive.getFont(14));
+		this.infoTa.setEditable(false);
+		this.infoTa.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
+		this.infoTa.setAlignmentY(JTextArea.CENTER_ALIGNMENT);
+		this.infoTa.setFont(mainDrive.getFont(14));
 		
 		imgPn.setPreferredSize(new Dimension(height-10, height-10));
-		infoLb.setPreferredSize(new Dimension(width - height - 10, height));
+		infoTa.setPreferredSize(new Dimension(width - height - 10, height));
 		
+		this.infoTa.setBackground(new Color(0,0,0,0));
 		this.setBackground(new Color(255,255,255,120));
 //		this.setBackground(Color.white);
 		this.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
 		this.add(imgPn);
-		this.add(infoLb);
+		this.add(infoTa);
 		
 		this.setVisible(true);
 	}
