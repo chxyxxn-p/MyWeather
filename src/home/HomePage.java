@@ -8,6 +8,7 @@ import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -78,6 +79,12 @@ public class HomePage extends Page {
 		this.setLayout(null);
 		this.add(nowPanel);
 		
+		nowImgPn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				mainDrive.changePage(1);
+			}
+		});
 		
 //		nowInfoLb 건드릴 때마다 새로 그리기
 		nowInfoTa.addMouseListener(new MouseAdapter() {
