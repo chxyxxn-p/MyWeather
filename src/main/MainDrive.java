@@ -108,7 +108,7 @@ public class MainDrive extends JFrame {
 		pages[1] = new WeatherPage(this, "WEATHER", pageWidth, pageHeight, false);
 		pages[2] = new CalendarPage(this, "CALENDAR", pageWidth, pageHeight, false);
 		pages[3] = new LocationPage(this, "LOCATION", pageWidth, pageHeight, false);
-		pages[4] = new RecommendPage(this, "recommend", pageWidth, pageHeight, false);
+		pages[4] = new RecommendPage(this, "RECOMMEND", pageWidth, pageHeight, false);
 		pages[0] = new HomePage(this, "HOME", pageWidth, pageHeight, false);	//다른 페이지의 값을 받아오기때문에 실행 순서 변경
 		pages[5] = new LogoutPage(this, "LOGOUT", pageWidth, pageHeight, false);
 		pages[6] = new LoginPage(this, "LOGIN", pageWidth, pageHeight, false);
@@ -172,9 +172,9 @@ public class MainDrive extends JFrame {
 						changePage(index);
 					} else {
 						if (loginFlag) {
-							changePage(5);
+							changePage(6);
 						} else {
-							changePage(4);
+							changePage(5);
 						}
 					}
 				}
