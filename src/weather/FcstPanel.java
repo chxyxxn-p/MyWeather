@@ -28,7 +28,7 @@ public class FcstPanel  extends JPanel {
 		this.width = width;
 		this.height = height;
 		
-		this.weatherImg = new ImageIcon(mainDrive.getImageName()[imgNum]).getImage();
+		this.weatherImg = new ImageIcon(mainDrive.getweatherIconImgPathes()[imgNum]).getImage();
 		this.imgPn = new JPanel() {
 			@Override
 			public void paint(Graphics g) {

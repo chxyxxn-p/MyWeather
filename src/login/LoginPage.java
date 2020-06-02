@@ -84,13 +84,14 @@ public class LoginPage extends Page {
 			mainDrive.setLoginFlag(true);	//로그인 성공 표시
 			((LogoutPage)mainDrive.getPages()[5]).greetingMsg(mainDrive.getLoginUserName());	//로그아웃 페이지 라벨 텍스트 설정
 
-			mainDrive.changePage(6);	//로그아웃페이지로 이동
+			mainDrive.changePage(5);	//로그아웃페이지로 이동
 			
 		} else {
 			JOptionPane.showMessageDialog(mainDrive, "아이디, 비밀번호가 올바르지 않습니다");
-			idTf.setText("");
-			pwTf.setText("");	//text field 내용 지워주기
 		}
+		
+		idTf.setText("");
+		pwTf.setText("");	//text field 내용 지워주기
 	}
 	
 	public void connectDatabase() {
