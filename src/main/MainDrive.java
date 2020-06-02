@@ -168,13 +168,13 @@ public class MainDrive extends JFrame {
 			icons[i].addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					if (index != 4) {
+					if (index != 5) {
 						changePage(index);
 					} else {
 						if (loginFlag) {
-							changePage(6);
-						} else {
 							changePage(5);
+						} else {
+							changePage(6);
 						}
 					}
 				}
@@ -338,6 +338,22 @@ public class MainDrive extends JFrame {
 
 	public GetApi getNcstYesterdayApi() {
 		return ncstYesterdayApi;
+	}
+
+	public String getSearchNx() {
+		return searchNx;
+	}
+
+	public void setSearchNx(String searchNx) {
+		this.searchNx = searchNx;
+	}
+
+	public String getSearchNy() {
+		return searchNy;
+	}
+
+	public void setSearchNy(String searchNy) {
+		this.searchNy = searchNy;
 	}
 
 	public void setLoginFlag(boolean loginFlag) {
