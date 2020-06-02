@@ -28,9 +28,8 @@ public class WeatherPage extends Page {
 	ArrayList<Long> ncstTodayKeyList;
 	
 	JPanel nowPanel;
-	Image nowImg;
+	Image nowImg = new ImageIcon(mainDrive.getTransparentImgPath()).getImage();
 	JPanel nowImgPn;
-	String nowImgPath = "./res/ball_yellow.png";
 	JTextArea nowInfoTa;
 
 	JPanel fcstPanel;
@@ -43,12 +42,6 @@ public class WeatherPage extends Page {
 	public WeatherPage(MainDrive mainDrive, String title, int width, int height, boolean showFlag) {
 		
 		super(mainDrive, title, width, height, showFlag);
-		
-		this.fcstWeatherMap = mainDrive.getFcstApi().getWeatherMap();
-		this.fcstKeyList = mainDrive.getFcstApi().getKeyList();
-		
-		this.ncstTodayWeatherMap = mainDrive.getNcstTodayApi().getWeatherMap();
-		this.ncstTodayKeyList = mainDrive.getNcstTodayApi().getKeyList();
 		
 		nowPanel = new JPanel();
 		nowImgPn = new JPanel() {
@@ -63,29 +56,6 @@ public class WeatherPage extends Page {
 		fcstPanel = new JPanel();
 		fcstScroll = new JScrollPane(fcstPanel);
 		
-//		ncst
-		nwv = ncstTodayWeatherMap.get(ncstTodayKeyList.get(0));
-		
-		nImgNum = mainDrive.getNcstTodayApi().weatherImgNum(nwv);
-		nowImg = new ImageIcon(mainDrive.getImageName()[nImgNum]).getImage();
-
-		nowInfoTa.setText(mainDrive.getNcstTodayApi().weatherValueToString(nwv, "\n"));
-
-//		fcst
-		for(int i = 0 ; i < fcstWeatherMap.size() ; i++) {	//예측된 날짜-시간 키 갯수만큼 FcstPanel생성
-			WeatherValue fwv = fcstWeatherMap.get(fcstKeyList.get(i));
-
-			int fImgNum = mainDrive.getFcstApi().weatherImgNum(fwv);	//날씨 읽어와서 유형에 맞게 이미지 번호 설정
-			
-			String info = mainDrive.getFcstApi().weatherValueToString(fwv, "\t");
-			
-			FcstPanel f = new FcstPanel(mainDrive, width/3*2-30, height/8, fImgNum, info.toString());
-			fcstPanel.add(f);
-		}
-		
-//		nowInfoTa.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
-//		nowInfoTa.setAlignmentY(JTextArea.CENTER_ALIGNMENT);
-
 		nowInfoTa.setFont(mainDrive.getFont(25));
 		
 		nowImgPn.setBackground(new Color(0,0,0,0));
@@ -103,13 +73,12 @@ public class WeatherPage extends Page {
 		nowPanel.add(nowImgPn);
 		nowPanel.add(nowInfoTa);
 		
-		fcstPanel.setLayout(new GridLayout(fcstWeatherMap.size(), 1, 0, 10));
 		
 		nowPanel.setBounds(0, 0, width/3, height);
 		
 		fcstPanel.setBounds(width/3, 0, width/3*2, height);
 		fcstScroll.setBounds(width/3, 0, width/3*2, height);
-
+		
 		this.setLayout(null);
 		this.add(nowPanel);
 		this.add(fcstScroll);
@@ -119,7 +88,7 @@ public class WeatherPage extends Page {
 		nowInfoTa.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				mainDrive.getMainPanel().repaint();
+				mainDrive.getMainPn().repaint();
 				nowPanel.repaint();
 			}
 		});
@@ -128,12 +97,47 @@ public class WeatherPage extends Page {
 		fcstScroll.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
 			@Override
 			public void adjustmentValueChanged(AdjustmentEvent e) {
-				mainDrive.getMainPanel().repaint();
+				mainDrive.getMainPn().repaint();
 				fcstPanel.repaint();
-
+				
 			}
 		});
 		
+	}
+	
+	@Override
+	public void afterConnectApi() {
+		super.afterConnectApi();
+		
+		this.fcstWeatherMap = mainDrive.getFcstApi().getWeatherMap();
+		this.fcstKeyList = mainDrive.getFcstApi().getKeyList();
+		
+		this.ncstTodayWeatherMap = mainDrive.getNcstTodayApi().getWeatherMap();
+		this.ncstTodayKeyList = mainDrive.getNcstTodayApi().getKeyList();
+		
+//		ncst
+		nwv = ncstTodayWeatherMap.get(ncstTodayKeyList.get(0));
+		
+		nImgNum = mainDrive.getNcstTodayApi().weatherImgNum(nwv);
+		nowImg = new ImageIcon(mainDrive.getweatherIconImgPathes()[nImgNum]).getImage();
+
+		nowInfoTa.setText(mainDrive.getNcstTodayApi().weatherValueToString(nwv, "\n"));
+
+//		fcst
+		for(int i = 0 ; i < fcstWeatherMap.size() ; i++) {	//예측된 날짜-시간 키 갯수만큼 FcstPanel생성
+			WeatherValue fwv = fcstWeatherMap.get(fcstKeyList.get(i));
+
+			int fImgNum = mainDrive.getFcstApi().weatherImgNum(fwv);	//날씨 읽어와서 유형에 맞게 이미지 번호 설정
+		
+			String info = mainDrive.getFcstApi().weatherValueToString(fwv, "\t");
+			
+			FcstPanel f = new FcstPanel(mainDrive, width/3*2-30, height/8, fImgNum, info.toString());
+			fcstPanel.add(f);
+		}
+		
+		fcstPanel.setLayout(new GridLayout(fcstWeatherMap.size(), 1, 0, 10));
+
+		this.updateUI();
 	}
 	
 	public String getNowInfoTaText() {

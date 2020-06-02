@@ -8,12 +8,14 @@ import java.awt.Toolkit;
 
 import javax.swing.JPanel;
 
+import location.Location;
+
 public class Page extends JPanel {
 	
 	protected MainDrive mainDrive;
 	
 	String title;
-	int width, height;
+	protected int width, height;
 	boolean showFlag;
 
 	public Page(MainDrive mainDrive, String title, int width, int height, boolean showFlag) {
@@ -36,5 +38,9 @@ public class Page extends JPanel {
 
 	public String getTitle() {
 		return title;
+	}
+	
+	public void afterConnectApi() {
+		System.out.println("Page afterConnectApi method");
 	}
 }

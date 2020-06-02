@@ -14,16 +14,25 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
 import calendar.CalendarPage;
 import home.HomePage;
+import location.Location;
 import location.LocationPage;
 import login.LoginPage;
 import login.LogoutPage;
@@ -36,25 +45,22 @@ public class MainDrive extends JFrame {
 	GraphicsEnvironment ge;
 	int fontIndex;
 	
-	JPanel pagePanel;
+	JPanel pagePn;
 	Page[] pages = new Page[7];
 
-	JPanel mainPanel;
+	JPanel mainPn;
 	
-	JPanel menuPanel;
+	JPanel menuPn;
 	MenuIcon[] icons = new MenuIcon[6];
   
-//	String resDir = "C:/Users/tjoeun/Dropbox/Java/Park-choyeon_Project/MyWeather/res/";
-//	String mainBgImgName = "sky.jpg";
-//	String iconBgImgName = "ball_yellow.png";
 	String mainBgImgPath = "./res/catsky.gif";
 	String iconBgImgPath = "./res/ball_darkred.png";
-	String[] imageName = {"./res/ball_yellow.png", "./res/ball_purple.png", "./res/ball_blue.png", "./res/ball_green.png", "./res/ball_orange.png", "./res/ball_red.png"};
-
+	String[] weatherIconImgPathes = {"./res/ball_yellow.png", "./res/ball_purple.png", "./res/ball_blue.png", "./res/ball_green.png", "./res/ball_orange.png", "./res/ball_red.png"};
+	String transparentImgPath = "./res/transparent.png";
+	
 	GetApi fcstApi;
 	GetApi ncstTodayApi;
 	GetApi ncstYesterdayApi;
-//	GetApi api;
 
 	String searchFcstDate;
 	String searchNcstDate;
@@ -71,9 +77,12 @@ public class MainDrive extends JFrame {
 	boolean loginFlag;
 	String loginUserName; // LoginPage에서 login되면 설정
 
-//	Thread ncstYesterdayApiThread;
-//	Thread ncstTodayApiThread;
-//	Thread fcstApiThread;
+	String xlsFilePath = "./res/location.xls";
+	
+	Thread ncstYesterdayApiThread;
+	Thread ncstTodayApiThread;
+	Thread fcstApiThread;
+	Thread afterApiThread;
 
 	public MainDrive() {
 //		폰트 설정
@@ -81,9 +90,12 @@ public class MainDrive extends JFrame {
 
 //		현재시간 기준으로 검색할 base time 설정
 		searchTimeSetting();
-
+		
 //		api 연결
-		runApi();
+		defaultSetting();
+		
+//		검색할 위치 고르는 ComboBox의 items -> xls로 불러오기
+		getLocationFromXls();
 	}
 	
 	public void defaultSetting() {
@@ -93,7 +105,7 @@ public class MainDrive extends JFrame {
 //		메모리 적재
 		Image img = new ImageIcon(mainBgImgPath).getImage();
 
-		mainPanel = new JPanel() {
+		mainPn = new JPanel() {
 			@Override
 			public void paintComponent(Graphics g) {
 
@@ -103,7 +115,7 @@ public class MainDrive extends JFrame {
 			}
 		};
 
-		pagePanel = new JPanel();
+		pagePn = new JPanel();
 
 		pages[1] = new WeatherPage(this, "WEATHER", pageWidth, pageHeight, false);
 		pages[2] = new CalendarPage(this, "CALENDAR", pageWidth, pageHeight, false);
@@ -113,7 +125,7 @@ public class MainDrive extends JFrame {
 		pages[5] = new LogoutPage(this, "LOGOUT", pageWidth, pageHeight, false);
 		pages[6] = new LoginPage(this, "LOGIN", pageWidth, pageHeight, false);
 
-		menuPanel = new JPanel();
+		menuPn = new JPanel();
 
 		icons[0] = new MenuIcon(this, 50, 50, iconBgImgPath); // home
 		icons[1] = new MenuIcon(this, 50, 50, iconBgImgPath); // weather
@@ -125,31 +137,31 @@ public class MainDrive extends JFrame {
 		changePage(0); // 처음으로 보여줄 페이지 //#나중에 로그인페이지or홈페이지를 시작으로 변경
 
 //		속성
-		mainPanel.setPreferredSize(new Dimension(pageWidth + 60, pageHeight));
+		mainPn.setPreferredSize(new Dimension(pageWidth + 60, pageHeight));
 
-		menuPanel.setPreferredSize(new Dimension(60, pageHeight));
-		menuPanel.setBackground(new Color(0, 0, 0, 0));
+		menuPn.setPreferredSize(new Dimension(60, pageHeight));
+		menuPn.setBackground(new Color(0, 0, 0, 0));
 
 //		System.out.println(menuPanel.getWidth()); -> 60출력 예상.. 0 출력됨
-		pagePanel.setPreferredSize(new Dimension(pageWidth, pageHeight));
-		pagePanel.setBackground(new Color(0, 0, 0, 0));
+		pagePn.setPreferredSize(new Dimension(pageWidth, pageHeight));
+		pagePn.setBackground(new Color(0, 0, 0, 0));
 
 //		조립
 		for (int i = 0; i < icons.length; i++) {
-			menuPanel.add(icons[i]);
+			menuPn.add(icons[i]);
 		}
 
-		pagePanel.setLayout(new FlowLayout(0, 0, 0));
+		pagePn.setLayout(new FlowLayout(0, 0, 0));
 		for (int i = 0; i < pages.length; i++) {
-			pagePanel.add(pages[i]);
+			pagePn.add(pages[i]);
 		}
 
-		mainPanel.setLayout(new FlowLayout(0, 0, 0));
-		mainPanel.add(menuPanel, BorderLayout.WEST);
-		mainPanel.add(pagePanel);
+		mainPn.setLayout(new FlowLayout(0, 0, 0));
+		mainPn.add(menuPn, BorderLayout.WEST);
+		mainPn.add(pagePn);
 
-		this.add(mainPanel);
-		this.setContentPane(mainPanel);
+		this.add(mainPn);
+		this.setContentPane(mainPn);
 
 		this.pack();
 		this.setVisible(true);
@@ -181,7 +193,7 @@ public class MainDrive extends JFrame {
 			});
 		}
 		
-		System.out.println("main default set done...");
+		System.out.println("main default set done!");
 
 	}
 	
@@ -192,14 +204,14 @@ public class MainDrive extends JFrame {
 			
 			boolean registFontSuccess = ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("./res/NanumSquareR.ttf")));
 			
-			System.out.println("font regist : " + registFontSuccess);
+//			System.out.println("font regist : " + registFontSuccess);
 			
 			fontIndex = 0;
 			
 			for(int i = 0 ; i < ge.getAvailableFontFamilyNames().length ; i++) {
 				if(ge.getAvailableFontFamilyNames()[i].equals("NanumSquare")||ge.getAvailableFontFamilyNames()[i].equals("나눔스퀘어 Regular")) {
 					fontIndex = i;
-					System.out.println("registed font index : " + fontIndex);
+//					System.out.println("registed font index : " + fontIndex);
 					break;
 				}
 			}
@@ -258,49 +270,105 @@ public class MainDrive extends JFrame {
 		}
 	}
 
+	public void getLocationFromXls() {
+//		엑셀로 불러온 위치 정보를 LocationPage의 list에 저장
+		System.out.println("getting location info...");
+
+		ArrayList<Location> locationList = new ArrayList<Location>();
+
+		FileInputStream fis = null;
+		
+		try {
+			fis = new FileInputStream(xlsFilePath);
+			
+			HSSFSheet sheet = new HSSFWorkbook(fis).getSheet("location");
+			
+			for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+				Location location = new Location();
+				HSSFRow row = sheet.getRow(rowIndex);
+				location.setFirstSep(row.getCell(0).getStringCellValue());
+				location.setSecondSep(row.getCell(1).getStringCellValue());
+				location.setThirdSep(row.getCell(2).getStringCellValue());
+				location.setNx((int)row.getCell(3).getNumericCellValue());
+				location.setNy((int)row.getCell(4).getNumericCellValue());
+				locationList.add(location);
+			}
+			
+			((LocationPage)pages[3]).setLocationList(locationList);
+			((LocationPage)pages[3]).setComboBox();
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if(fis != null) {
+				try {
+					fis.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	
+		System.out.println("get location info done!");
+	}
+	
 	public void runApi() {
 		
-//		ncstYesterdayApiThread = new Thread() {
-//			public void run() {
-//				String yesterdayNcstDate = Integer.toString(Integer.parseInt(searchNcstDate)-1);
-//				String yesterdayNcstTime = Integer.toString(Integer.parseInt(searchNcstTime)+200);
-//				
-//				if(yesterdayNcstTime == "2500")
-//					yesterdayNcstTime = "0000";
-//				
-//				ncstYesterdayApi = new GetApi("getUltraSrtNcst", "500", yesterdayNcstDate, yesterdayNcstTime, searchNx, searchNy);
-//				ncstYesterdayApi.connectData();
-//				ncstYesterdayApi.setWeatherMap();
+		ncstYesterdayApiThread = new Thread() {
+			public void run() {
+				String yesterdayNcstDate = Integer.toString(Integer.parseInt(searchNcstDate)-1);
+				String yesterdayNcstTime = Integer.toString(Integer.parseInt(searchNcstTime)+200);
+				
+				if(yesterdayNcstTime == "2500")
+					yesterdayNcstTime = "0000";
+				
+				ncstYesterdayApi = new GetApi("getUltraSrtNcst", "500", yesterdayNcstDate, yesterdayNcstTime, searchNx, searchNy);
+				ncstYesterdayApi.connectData();
+				ncstYesterdayApi.setWeatherMap();
 //				ncstYesterdayApi.printAllWeatherMapValue();				
-//			};
-//		};
+			};
+		};
 
-//		ncstTodayApiThread = new Thread() {
-//			public void run() {
+		ncstTodayApiThread = new Thread() {
+			public void run() {
 				ncstTodayApi = new GetApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
 				ncstTodayApi.connectData();
 				ncstTodayApi.setWeatherMap();
 //				ncstTodayApi.printAllWeatherMapValue();				
-//			};
-//		};
+			};
+		};
 
-//		fcstApiThread = new Thread() {
-//			public void run() {
+		fcstApiThread = new Thread() {
+			public void run() {
 				fcstApi = new GetApi("getVilageFcst", "500", searchFcstDate, searchFcstTime, searchNx, searchNy);
 				fcstApi.connectData();
 				fcstApi.setWeatherMap();
 //				fcstApi.printAllWeatherMapValue();
-				defaultSetting();
-//			};
-//		};
+			};
+		};
 		
-//		thread 나누니까 빨라도 데이터 안불러왔을때 default Setting 생성해서 데이터 null뜰때가있다
-//		스레드 합치던가, 모든 스레드가 종료된 후 를 알수있는 메소드 있는지 찾아보기
+		afterApiThread = new Thread() {
+			public void run() {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				for(int i = 1 ; i < pages.length ; i++) {
+					pages[i].afterConnectApi();
+				}
+				pages[0].afterConnectApi();	//homePage는 다른 페이지에서 데이터 불러오기때문에 마지막에 실행
 
-//		ncstYesterdayApiThread.start();
-//		ncstTodayApiThread.start();
-//		fcstApiThread.start();
+			};
+		};
 		
+		ncstYesterdayApiThread.start();
+		ncstTodayApiThread.start();
+		fcstApiThread.start();
+		afterApiThread.start();
 	}
 
 	public void changePage(int pageIndex) {
@@ -311,7 +379,7 @@ public class MainDrive extends JFrame {
 			pages[i].setVisible(pages[i].showFlag = (i == pageIndex ? true : false));
 		}
 		
-		mainPanel.repaint();
+		mainPn.repaint();
 		
 	}
 
@@ -320,12 +388,16 @@ public class MainDrive extends JFrame {
 		return pages;
 	}
 
-	public JPanel getMainPanel() {
-		return mainPanel;
+	public JPanel getMainPn() {
+		return mainPn;
 	}
 
-	public String[] getImageName() {
-		return imageName;
+	public String[] getweatherIconImgPathes() {
+		return weatherIconImgPathes;
+	}
+
+	public String getTransparentImgPath() {
+		return transparentImgPath;
 	}
 
 	public GetApi getFcstApi() {
@@ -367,6 +439,7 @@ public class MainDrive extends JFrame {
 	public void setLoginUserName(String loginUserName) {
 		this.loginUserName = loginUserName;
 	}
+	
 
 	public static void main(String[] args) {
 		new MainDrive();
