@@ -23,6 +23,7 @@ import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -121,7 +122,9 @@ public class MainDrive extends JFrame {
 		pages[2] = new CalendarPage(this, "CALENDAR", pageWidth, pageHeight, false);
 		pages[3] = new LocationPage(this, "LOCATION", pageWidth, pageHeight, false);
 		pages[4] = new RecommendPage(this, "RECOMMEND", pageWidth, pageHeight, false);
+		
 		pages[0] = new HomePage(this, "HOME", pageWidth, pageHeight, false);	//다른 페이지의 값을 받아오기때문에 실행 순서 변경
+		
 		pages[5] = new LogoutPage(this, "LOGOUT", pageWidth, pageHeight, false);
 		pages[6] = new LoginPage(this, "LOGIN", pageWidth, pageHeight, false);
 
@@ -134,7 +137,7 @@ public class MainDrive extends JFrame {
 		icons[4] = new MenuIcon(this, 50, 50, iconBgImgPath); // recommend
 		icons[5] = new MenuIcon(this, 50, 50, iconBgImgPath); // login/out
 
-		changePage(0); // 처음으로 보여줄 페이지 //#나중에 로그인페이지or홈페이지를 시작으로 변경
+		changePage(6); // 처음으로 보여줄 페이지 //#나중에 로그인페이지or홈페이지를 시작으로 변경
 
 //		속성
 		mainPn.setPreferredSize(new Dimension(pageWidth + 60, pageHeight));
@@ -181,7 +184,11 @@ public class MainDrive extends JFrame {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					if (index != 5) {
-						changePage(index);
+						if(loginFlag) {
+							changePage(index);
+						} else {
+							JOptionPane.showMessageDialog(MainDrive.this, "로그인이 필요한 서비스 입니다");
+						}
 					} else {
 						if (loginFlag) {
 							changePage(5);
