@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
@@ -19,9 +20,9 @@ public class RcmdPanel  extends JPanel {
 	MainDrive mainDrive;
 	Image storeImg;
 	JPanel imgPn;
-	JTextArea nameTa;
-	JTextArea addressTa;
-	JTextArea phoneTa;
+	JLabel nameLb;
+	JLabel addressLb;
+	JLabel phoneLb;
 	
 	int width;
 	int height;
@@ -67,42 +68,32 @@ public class RcmdPanel  extends JPanel {
 				g.drawImage(storeImg, 0, 0, height-10, height-10, mainDrive);
 			}
 		};
-		
-		this.nameTa = new JTextArea(name);
-		this.addressTa = new JTextArea(address);
-		this.phoneTa = new JTextArea(phone);
-		
-		this.nameTa.setEditable(false);
-		this.addressTa.setEditable(false);
-		this.phoneTa.setEditable(false);
 
-		this.nameTa.setFont(mainDrive.getFont(20));
-		this.addressTa.setFont(mainDrive.getFont(20));
-		this.phoneTa.setFont(mainDrive.getFont(20));
+		this.nameLb = new JLabel(name, JLabel.CENTER);
+		this.addressLb = new JLabel(address, JLabel.CENTER);
+		this.phoneLb = new JLabel(phone, JLabel.CENTER);
+
+		this.nameLb.setFont(mainDrive.getFont(20));
+		this.addressLb.setFont(mainDrive.getFont(20));
+		this.phoneLb.setFont(mainDrive.getFont(20));
 		
 		imgPn.setPreferredSize(new Dimension(width-20, width-20));
-		nameTa.setPreferredSize(new Dimension(width-20, (height-width-30)/3));
-		addressTa.setPreferredSize(new Dimension(width-20, (height-width-30)/3));
-		phoneTa.setPreferredSize(new Dimension(width-20, (height-width-30)/3));
+		nameLb.setPreferredSize(new Dimension(width-20, (height-width-30)/3));
+		addressLb.setPreferredSize(new Dimension(width-20, (height-width-30)/3));
+		phoneLb.setPreferredSize(new Dimension(width-20, (height-width-30)/3));
 	
-		this.nameTa.setBackground(new Color(0,0,0,0));
-		this.addressTa.setBackground(new Color(0,0,0,0));
-		this.phoneTa.setBackground(new Color(0,0,0,0));
-		
-		this.imgPn.setBackground(Color.red);
-//		this.nameTa.setBackground(Color.green);
-//		this.addressTa.setBackground(Color.cyan);
-//		this.phoneTa.setBackground(Color.orange);
+		this.nameLb.setBackground(new Color(0,0,0,0));
+		this.addressLb.setBackground(new Color(0,0,0,0));
+		this.phoneLb.setBackground(new Color(0,0,0,0));
 		
 		this.setBackground(new Color(255,255,255,120));
-//		this.setBackground(Color.white);
 		
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 		
 		this.add(imgPn);
-		this.add(nameTa);
-		this.add(addressTa);
-		this.add(phoneTa);
+		this.add(nameLb);
+		this.add(addressLb);
+		this.add(phoneLb);
 
 		this.setPreferredSize(new Dimension(width, height));
 				
