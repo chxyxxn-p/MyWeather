@@ -88,7 +88,7 @@ public class HomePage extends Page {
 		 nowInfoTa.setFont(mainDrive.getFont(18));
 		 
 //			nowPanel.setBackground(Color.cyan);
-			nowPanel.setBackground(new Color(0,0,0,0));
+			nowPanel.setBackground(new Color(255,255,255,120));
 			nowImgPn.setBackground(new Color(0,0,0,0));
 			nowInfoTa.setBackground(new Color(0,0,0,0));
 			nowInfoTa.setOpaque(true);
@@ -133,7 +133,7 @@ public class HomePage extends Page {
 			locationBt.setFont(mainDrive.getFont(10));
 			
 //			locationPanel.setBackground(Color.yellow);
-			locationPanel.setBackground(new Color(0,0,0,0));
+			locationPanel.setBackground(new Color(255,255,255,120));
 			firstSepCb.setBackground(Color.white);
 			secondSepCb.setBackground(Color.white);
 			thirdSepCb.setBackground(Color.white);
@@ -161,6 +161,7 @@ public class HomePage extends Page {
 			locationBt.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					((LocationPage)mainDrive.getPages()[3]).synchronizeSelectItems(firstSepCb, secondSepCb, thirdSepCb);
 //					user가 고른 위치에 해당하는 nx, ny가져와서 mainDrive의 searchNx, searchNy로 대입하고, 스레드로 새로 데이터 불러오기
 					mainDrive.runApi();
 				}
@@ -171,7 +172,7 @@ public class HomePage extends Page {
 			recommendPanel = new JPanel();
 			
 //			recommendPanel.setBackground(Color.magenta);
-			recommendPanel.setBackground(new Color(0,0,0,0));
+			recommendPanel.setBackground(new Color(255,255,255,120));
 
 			recommendPanel.addMouseListener(new MouseAdapter() {
 				@Override
@@ -185,7 +186,7 @@ public class HomePage extends Page {
 			diaryPanel = new JPanel();
 			
 //			diaryPanel.setBackground(Color.green);		
-			diaryPanel.setBackground(new Color(0,0,0,0));
+			diaryPanel.setBackground(new Color(255,255,255,120));
 			
 			diaryPanel.addMouseListener(new MouseAdapter() {
 				@Override
@@ -199,7 +200,7 @@ public class HomePage extends Page {
 			todoListPanel = new JPanel();
 			
 //			todoListPanel.setBackground(Color.blue);		
-			todoListPanel.setBackground(new Color(0,0,0,0));
+			todoListPanel.setBackground(new Color(255,255,255,120));
 
 			todoListPanel.addMouseListener(new MouseAdapter() {
 				@Override
@@ -244,4 +245,18 @@ public class HomePage extends Page {
 
 		this.updateUI();
 	}
+
+	public JComboBox<String> getFirstSepCb() {
+		return firstSepCb;
+	}
+
+	public JComboBox<String> getSecondSepCb() {
+		return secondSepCb;
+	}
+
+	public JComboBox<String> getThirdSepCb() {
+		return thirdSepCb;
+	}
+	
+	
 }

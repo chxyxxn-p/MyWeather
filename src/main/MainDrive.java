@@ -90,16 +90,93 @@ public class MainDrive extends JFrame {
 		setFont();
 
 //		현재시간 기준으로 검색할 base time 설정
-		searchTimeSetting();
+		setSearchTime();
 		
 //		api 연결
-		defaultSetting();
+		setDefaultGUI();
 		
 //		검색할 위치 고르는 ComboBox의 items -> xls로 불러오기
 		getLocationFromXls();
 	}
 	
-	public void defaultSetting() {
+
+	
+	public void setFont() {
+		ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		
+		try {
+			
+//			boolean registFontSuccess = ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("./res/NanumSquareR.ttf")));
+			boolean registFontSuccess = ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("./res/210 Gulim OTF 070.otf")));
+			
+//			System.out.println("font regist : " + registFontSuccess);
+			
+			fontIndex = 10;
+			
+			for(int i = 0 ; i < ge.getAvailableFontFamilyNames().length ; i++) {
+//				if(ge.getAvailableFontFamilyNames()[i].equals("NanumSquare")||ge.getAvailableFontFamilyNames()[i].equals("나눔스퀘어 Regular")) {
+				if(ge.getAvailableFontFamilyNames()[i].equals("210 굴림OTF 070")) {
+					fontIndex = i;
+					break;
+				}
+			}
+//			System.out.println("registed font index : " + fontIndex + "/" + ge.getAvailableFontFamilyNames()[fontIndex]);
+			
+			
+		} catch (FontFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Font getFont(int size) {
+		return new Font(ge.getAvailableFontFamilyNames()[fontIndex], Font.PLAIN, size);
+	}
+
+	public void setSearchTime() {
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		SimpleDateFormat timeformat = new SimpleDateFormat("HHmm");
+
+		searchNcstDate = searchFcstDate = dateFormat.format(new Date());
+
+		int time = Integer.parseInt(timeformat.format(new Date()));
+
+		int hour = time / 100;
+		int minute = time % 100;
+
+//		searchFcstTime
+		int startTime = 210;
+
+		for (int i = 0; i < 8; i++) {
+			startTime += 300;
+			
+			if (time < startTime) {
+				searchFcstTime = (startTime - 310 < 1000 ? "0" : "") + Integer.toString((startTime - 310));
+				
+				if (i == 0) {
+					searchFcstTime = "2300";
+					searchFcstDate = Integer.toString(Integer.parseInt(searchFcstDate) - 1);
+				}
+				break;
+			}
+		}
+		
+//		searchNcstTime
+		if (minute <= 40) {
+			if (hour == 00) {
+				searchNcstTime = "23" + "00";
+				searchNcstDate = Integer.toString(Integer.parseInt(searchNcstDate) - 1);
+			} else {
+				searchNcstTime = (hour - 1 < 10 ? "0" : "") + Integer.toString(hour - 1) + "00";
+			}
+		} else if (minute <= 59) {
+			searchNcstTime = (hour < 10 ? "0" : "") + Integer.toString(hour) + "00";
+		}
+	}
+
+	public void setDefaultGUI() {
 		
 		System.out.println("main default setting...");
 		
@@ -204,81 +281,6 @@ public class MainDrive extends JFrame {
 
 	}
 	
-	public void setFont() {
-		ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		
-		try {
-			
-//			boolean registFontSuccess = ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("./res/NanumSquareR.ttf")));
-			boolean registFontSuccess = ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("./res/210 Gulim OTF 070.otf")));
-			
-//			System.out.println("font regist : " + registFontSuccess);
-			
-			fontIndex = 10;
-			System.out.println("fontIndex-"+fontIndex);
-			for(int i = 0 ; i < ge.getAvailableFontFamilyNames().length ; i++) {
-//				if(ge.getAvailableFontFamilyNames()[i].equals("NanumSquare")||ge.getAvailableFontFamilyNames()[i].equals("나눔스퀘어 Regular")) {
-				if(ge.getAvailableFontFamilyNames()[i].equals("210 굴림OTF 070")) {
-					fontIndex = i;
-					break;
-				}
-			}
-//			System.out.println("registed font index : " + fontIndex + "/" + ge.getAvailableFontFamilyNames()[fontIndex]);
-			
-			
-		} catch (FontFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public Font getFont(int size) {
-		return new Font(ge.getAvailableFontFamilyNames()[fontIndex], Font.PLAIN, size);
-	}
-
-	public void searchTimeSetting() {
-
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-		SimpleDateFormat timeformat = new SimpleDateFormat("HHmm");
-
-		searchNcstDate = searchFcstDate = dateFormat.format(new Date());
-
-		int time = Integer.parseInt(timeformat.format(new Date()));
-
-		int hour = time / 100;
-		int minute = time % 100;
-
-//		searchFcstTime
-		int startTime = 210;
-
-		for (int i = 0; i < 8; i++) {
-			startTime += 300;
-			
-			if (time < startTime) {
-				searchFcstTime = (startTime - 310 < 1000 ? "0" : "") + Integer.toString((startTime - 310));
-				
-				if (i == 0) {
-					searchFcstTime = "2300";
-					searchFcstDate = Integer.toString(Integer.parseInt(searchFcstDate) - 1);
-				}
-				break;
-			}
-		}
-		
-//		searchNcstTime
-		if (minute <= 40) {
-			if (hour == 00) {
-				searchNcstTime = "23" + "00";
-				searchNcstDate = Integer.toString(Integer.parseInt(searchNcstDate) - 1);
-			} else {
-				searchNcstTime = (hour - 1 < 10 ? "0" : "") + Integer.toString(hour - 1) + "00";
-			}
-		} else if (minute <= 59) {
-			searchNcstTime = (hour < 10 ? "0" : "") + Integer.toString(hour) + "00";
-		}
-	}
-
 	public void getLocationFromXls() {
 //		엑셀로 불러온 위치 정보를 LocationPage의 list에 저장
 		System.out.println("getting location info...");
@@ -324,6 +326,8 @@ public class MainDrive extends JFrame {
 	}
 	
 	public void runApi() {
+		
+		((LocationPage)pages[3]).getSelectedLocationNxNy();
 		
 		ncstYesterdayApiThread = new Thread() {
 			public void run() {

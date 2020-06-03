@@ -72,6 +72,7 @@ public class LocationPage extends Page {
 		locationBt.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				synchronizeSelectItems(firstSepCb, secondSepCb, thirdSepCb);
 //				user가 고른 위치에 해당하는 nx, ny가져와서 mainDrive의 searchNx, searchNy로 대입하고, 스레드로 새로 데이터 불러오기
 				mainDrive.runApi();
 			}
@@ -95,9 +96,39 @@ public class LocationPage extends Page {
 		}
 		
 		this.updateUI();
-		
-		
 	}
+	
+	public void synchronizeSelectItems(JComboBox<String> f, JComboBox<String> s, JComboBox<String> t) {
+		
+		((LocationPage)mainDrive.getPages()[3]).getFirstSepCb().setSelectedIndex(f.getSelectedIndex());
+		((LocationPage)mainDrive.getPages()[3]).getSecondSepCb().setSelectedIndex(s.getSelectedIndex());
+		((LocationPage)mainDrive.getPages()[3]).getThirdSepCb().setSelectedIndex(t.getSelectedIndex());
+		
+		((HomePage)mainDrive.getPages()[0]).getFirstSepCb().setSelectedIndex(f.getSelectedIndex());
+		((HomePage)mainDrive.getPages()[0]).getSecondSepCb().setSelectedIndex(s.getSelectedIndex());
+		((HomePage)mainDrive.getPages()[0]).getThirdSepCb().setSelectedIndex(t.getSelectedIndex());	
+		
+		mainDrive.getPages()[0].updateUI();
+		mainDrive.getPages()[3].updateUI();
+	}
+	
+	public void getSelectedLocationNxNy() {
+		String f = (String)firstSepCb.getSelectedItem();
+		String s = (String)secondSepCb.getSelectedItem();
+		String t = (String)thirdSepCb.getSelectedItem();
+		
+		System.out.println("selected address : " + f +s + t);
+		
+		for(int i = 0 ; i < locationList.size() ; i++) {
+			Location l = locationList.get(i);
+			if(l.getFirstSep().equals(f) && l.getSecondSep().equals(s) && l.getThirdSep().equals(t)) {
+				mainDrive.setSearchNx(Integer.toString(l.getNx()));
+				mainDrive.setSearchNy(Integer.toString(l.getNy()));
+				System.out.println("search coordinate : " + mainDrive.getSearchNx() + "," + mainDrive.getSearchNy());
+			}
+		}
+	}
+	
 
 	public void setLocationList(ArrayList<Location> locationList) {
 		this.locationList = locationList;
