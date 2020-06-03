@@ -52,6 +52,8 @@ public class FcstPanel  extends JPanel {
 		this.add(imgPn);
 		this.add(infoTa);
 		
+		this.setPreferredSize(new Dimension(width, height));
+		
 		this.setVisible(true);
 	}
 	
