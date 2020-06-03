@@ -1,6 +1,7 @@
 package home;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -13,14 +14,17 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import location.LocationPage;
 import main.MainDrive;
 import main.Page;
-import weather.WeatherPage;
+import recommend.Recommend;
+import recommend.RecommendPage;
 import weather.Weather;
+import weather.WeatherPage;
 
 public class HomePage extends Page {
 	
@@ -43,6 +47,8 @@ public class HomePage extends Page {
 	JButton locationBt;
 	
 	JPanel recommendPanel;
+	JLabel recommendLabel;
+	String[] recommendMsg = {" ¾î¶°¼¼¿ä?", " ÃßÃµÇØ¿ä!"};
 	
 	JPanel diaryPanel;
 	
@@ -172,9 +178,16 @@ public class HomePage extends Page {
 			
 //			[recommend]
 			recommendPanel = new JPanel();
+			recommendLabel = new JLabel(mainDrive.getLoginUserName()+"´Ô ¾È³çÇÏ¼¼¿ä?", JLabel.CENTER);
 			
 //			recommendPanel.setBackground(Color.magenta);
 			recommendPanel.setBackground(new Color(255,255,255,120));
+			
+			recommendLabel.setFont(mainDrive.getFont(50));
+			
+			recommendLabel.setPreferredSize(new Dimension(recommendPanelWidth, recommendPanelHeight));
+			
+			recommendPanel.add(recommendLabel);
 
 			recommendPanel.addMouseListener(new MouseAdapter() {
 				@Override
@@ -235,9 +248,21 @@ public class HomePage extends Page {
 		
 		nowImg = wp.getNowImg();
 		nowInfoTa.setText(wp.getNowInfoTaText());
-
-		this.updateUI();
 		
+		changeRecommendMsg();
+	}
+	
+	public void changeRecommendMsg(){
+		ArrayList<Recommend> list = ((RecommendPage)mainDrive.getPages()[4]).getRecommendList();
+		
+		int listRandom = (int)(Math.random()*list.size());
+		int msgRandom = (int)(Math.random()*recommendMsg.length);
+		recommendLabel.setText(mainDrive.getLoginUserName()+"´Ô "
+				+list.get(listRandom).getName()
+				+recommendMsg[msgRandom]);
+		
+		System.out.println("listRandom : " + listRandom + " msgRandom : " + msgRandom);
+		this.updateUI();
 	}
 	
 	public void setComboBox(String f, String s, String t) {
@@ -259,6 +284,14 @@ public class HomePage extends Page {
 	public JComboBox<String> getThirdSepCb() {
 		return thirdSepCb;
 	}
+
+	public JLabel getRecommendLabel() {
+		return recommendLabel;
+	}
+
+	
+	
+	
 	
 	
 }

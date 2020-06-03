@@ -17,13 +17,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -33,7 +31,6 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import calendar.CalendarPage;
-import database.ConnectionManager;
 import home.HomePage;
 import location.Location;
 import location.LocationPage;
@@ -204,11 +201,11 @@ public class MainDrive extends JFrame {
 		pages[2] = new CalendarPage(this, "CALENDAR", pageWidth, pageHeight, false);
 		pages[3] = new LocationPage(this, "LOCATION", pageWidth, pageHeight, false);
 		pages[4] = new RecommendPage(this, "RECOMMEND", pageWidth, pageHeight, false);
+		pages[5] = new LogoutPage(this, "LOGOUT", pageWidth, pageHeight, false);
+		pages[6] = new LoginPage(this, "LOGIN", pageWidth, pageHeight, false);
 		
 		pages[0] = new HomePage(this, "HOME", pageWidth, pageHeight, false);	//다른 페이지의 값을 받아오기때문에 실행 순서 변경
 		
-		pages[5] = new LogoutPage(this, "LOGOUT", pageWidth, pageHeight, false);
-		pages[6] = new LoginPage(this, "LOGIN", pageWidth, pageHeight, false);
 
 		menuPn = new JPanel();
 
@@ -265,17 +262,24 @@ public class MainDrive extends JFrame {
 			icons[i].addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					if (index != 5) {
+					if (index == 0) {
 						if(loginFlag) {
+							((HomePage)pages[0]).changeRecommendMsg();
 							changePage(index);
 						} else {
 							JOptionPane.showMessageDialog(MainDrive.this, "로그인이 필요한 서비스 입니다");
 						}
-					} else {
+					} else if(index == 5) {
 						if (loginFlag) {
 							changePage(5);
 						} else {
 							changePage(6);
+						}
+					} else {
+						if(loginFlag) {
+							changePage(index);
+						} else {
+							JOptionPane.showMessageDialog(MainDrive.this, "로그인이 필요한 서비스 입니다");
 						}
 					}
 				}
@@ -368,7 +372,7 @@ public class MainDrive extends JFrame {
 		afterApiThread = new Thread() {
 			public void run() {
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
