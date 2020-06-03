@@ -73,7 +73,9 @@ public class LocationPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				synchronizeSelectItems(firstSepCb, secondSepCb, thirdSepCb);
-//				user가 고른 위치에 해당하는 nx, ny가져와서 mainDrive의 searchNx, searchNy로 대입하고, 스레드로 새로 데이터 불러오기
+//				user가 고른 위치에 해당하는 nx, ny가져와서 mainDrive의 searchNx, searchNy로 대입하고
+				getSelectedLocationNxNy();
+//				스레드로 새로 데이터 불러오기
 				mainDrive.runApi();
 			}
 		});

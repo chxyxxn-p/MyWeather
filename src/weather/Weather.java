@@ -1,6 +1,6 @@
 package weather;
 
-public class WeatherValue {
+public class Weather {
 	
 	private Object nx = null;
 	private Object ny = null;

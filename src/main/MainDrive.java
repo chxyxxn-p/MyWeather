@@ -17,21 +17,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import calendar.CalendarPage;
+import database.ConnectionManager;
 import home.HomePage;
 import location.Location;
 import location.LocationPage;
@@ -68,6 +70,9 @@ public class MainDrive extends JFrame {
 
 	String searchFcstTime;
 	String searchNcstTime;
+	
+	String[] weatherCase = {"맑음", "더움", "습함", "비/소나기", "바람", "흐림/안개", "눈"};
+	int nowWeatherCaseNum;
 
 	String searchNx = "60";
 	String searchNy = "127";
@@ -94,7 +99,7 @@ public class MainDrive extends JFrame {
 		
 //		api 연결
 		setDefaultGUI();
-		
+				
 //		검색할 위치 고르는 ComboBox의 items -> xls로 불러오기
 		getLocationFromXls();
 	}
@@ -326,9 +331,7 @@ public class MainDrive extends JFrame {
 	}
 	
 	public void runApi() {
-		
-		((LocationPage)pages[3]).getSelectedLocationNxNy();
-		
+				
 		ncstYesterdayApiThread = new Thread() {
 			public void run() {
 				String yesterdayNcstDate = Integer.toString(Integer.parseInt(searchNcstDate)-1);
@@ -396,7 +399,6 @@ public class MainDrive extends JFrame {
 		
 	}
 
-	
 	public Page[] getPages() {
 		return pages;
 	}
@@ -423,6 +425,19 @@ public class MainDrive extends JFrame {
 
 	public GetApi getNcstYesterdayApi() {
 		return ncstYesterdayApi;
+	}
+	
+
+	public int getNowWeatherCaseNum() {
+		return nowWeatherCaseNum;
+	}
+
+	public void setNowWeatherCaseNum(int nowWeatherCaseNum) {
+		this.nowWeatherCaseNum = nowWeatherCaseNum;
+	}
+
+	public String[] getWeatherCase() {
+		return weatherCase;
 	}
 
 	public String getSearchNx() {

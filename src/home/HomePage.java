@@ -20,11 +20,11 @@ import location.LocationPage;
 import main.MainDrive;
 import main.Page;
 import weather.WeatherPage;
-import weather.WeatherValue;
+import weather.Weather;
 
 public class HomePage extends Page {
 	
-	Map<Long, WeatherValue> ncstTodayWeatherMap;
+	Map<Long, Weather> ncstTodayWeatherMap;
 	ArrayList<Long> ncstTodayKeyList;
 	
 	
@@ -162,7 +162,9 @@ public class HomePage extends Page {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					((LocationPage)mainDrive.getPages()[3]).synchronizeSelectItems(firstSepCb, secondSepCb, thirdSepCb);
-//					user가 고른 위치에 해당하는 nx, ny가져와서 mainDrive의 searchNx, searchNy로 대입하고, 스레드로 새로 데이터 불러오기
+//					user가 고른 위치에 해당하는 nx, ny가져와서 mainDrive의 searchNx, searchNy로 대입하고
+					((LocationPage)mainDrive.getPages()[3]).getSelectedLocationNxNy();
+//					스레드로 새로 데이터 불러오기
 					mainDrive.runApi();
 				}
 			});

@@ -18,13 +18,14 @@ import javax.swing.JTextArea;
 
 import main.MainDrive;
 import main.Page;
+import recommend.RecommendPage;
 
 public class WeatherPage extends Page {
 	
-	Map<Long, WeatherValue> fcstWeatherMap;
+	Map<Long, Weather> fcstWeatherMap;
 	ArrayList<Long> fcstKeyList;
 	
-	Map<Long, WeatherValue> ncstTodayWeatherMap;
+	Map<Long, Weather> ncstTodayWeatherMap;
 	ArrayList<Long> ncstTodayKeyList;
 	
 	JPanel nowPanel;
@@ -36,7 +37,7 @@ public class WeatherPage extends Page {
 	JScrollPane fcstScroll;
 	ArrayList<FcstPanel> fcstPanels = new ArrayList<FcstPanel>();
 	
-	WeatherValue nwv;
+	Weather nwv;
 	int nImgNum;
 	
 	public WeatherPage(MainDrive mainDrive, String title, int width, int height, boolean showFlag) {
@@ -122,10 +123,12 @@ public class WeatherPage extends Page {
 		nowImg = new ImageIcon(mainDrive.getweatherIconImgPathes()[nImgNum]).getImage();
 
 		nowInfoTa.setText(mainDrive.getNcstTodayApi().weatherValueToString(nwv, "\n"));
+		
+		((RecommendPage)mainDrive.getPages()[4]).connectDatabase("맑음", mainDrive.getSearchNx(), mainDrive.getSearchNy());
 
 //		fcst
 		for(int i = 0 ; i < fcstWeatherMap.size() ; i++) {	//예측된 날짜-시간 키 갯수만큼 FcstPanel생성
-			WeatherValue fwv = fcstWeatherMap.get(fcstKeyList.get(i));
+			Weather fwv = fcstWeatherMap.get(fcstKeyList.get(i));
 
 			int fImgNum = mainDrive.getFcstApi().weatherImgNum(fwv);	//날씨 읽어와서 유형에 맞게 이미지 번호 설정
 		

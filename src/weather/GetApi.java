@@ -19,7 +19,7 @@ import org.json.simple.parser.ParseException;
 
 public class GetApi {
 
-	Map<Long, WeatherValue> weatherMap = new HashMap<Long, WeatherValue>();
+	Map<Long, Weather> weatherMap = new HashMap<Long, Weather>();
 	ArrayList<Long> keyList;
 	
 	String searchVersion;
@@ -157,7 +157,7 @@ public class GetApi {
 //					같은 키가 있으면 그 key에 해당하는 WeatherValue에 카테고리별로 측정값 대입하고
 //					같은 키가 없으면 그 key에 해당하는 WeatherValue 새로 생성 후에 카테고리별 측정값을 대입
 
-					WeatherValue wv = null;
+					Weather wv = null;
 
 					if (weatherMap.containsKey(mapKey)) {
 //							맵에 같은 키가 있을 경우 그 키에 해당하는 value를 불러와 대입
@@ -165,7 +165,7 @@ public class GetApi {
 
 					} else {
 //							맵에 같은 키가 없을 경우 그 키에 해당하는 value를 새로 생성
-						wv = new WeatherValue();
+						wv = new Weather();
 					}
 
 //					이미 구했던 baseDate, baseTime, fcstDate, fcstTime은 바로 대입 
@@ -252,7 +252,7 @@ public class GetApi {
 			category = category.toUpperCase();
 
 			if (weatherMap.containsKey(key)) {
-				WeatherValue wv = weatherMap.get(key);
+				Weather wv = weatherMap.get(key);
 
 				if (category.equals("TMN")) {
 					obj = wv.getTmn();
@@ -308,7 +308,7 @@ public class GetApi {
 			for (int i = 0; i < keyList.size(); i++) {
 //			map으로부터 가져온 key로 이루어진 list -> key 유효성 검사할 필요 없다
 
-				WeatherValue wv = weatherMap.get(keyList.get(i));
+				Weather wv = weatherMap.get(keyList.get(i));
 
 				
 				if(searchVersion.equals("getVilageFcst")) {
@@ -447,7 +447,7 @@ public class GetApi {
 		}
 	}
 
-	public String weatherValueToString(WeatherValue wv, String align) {
+	public String weatherValueToString(Weather wv, String align) {
 		
 		StringBuilder wsb = new StringBuilder();
 		
@@ -585,7 +585,7 @@ public class GetApi {
 		return wsb.toString();
 	}
 
-	public int weatherImgNum(WeatherValue wv) {
+	public int weatherImgNum(Weather wv) {
 		int imgNum = 0;
 		
 //		날씨 케이스에 맞게 조건 설정하기 임시로 랜덤 값 리턴
@@ -599,7 +599,7 @@ public class GetApi {
 	}
 
 	
-	public Map<Long, WeatherValue> getWeatherMap() {
+	public Map<Long, Weather> getWeatherMap() {
 		return weatherMap;
 	}
 
