@@ -10,8 +10,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import home.HomePage;
 import main.MainDrive;
 import main.Page;
+import recommend.RecommendPage;
 
 public class LoginPage extends Page {
 	
@@ -95,10 +97,24 @@ public class LoginPage extends Page {
 	}
 	
 	public void connectDatabase() {
+//		로그인 버튼 누르면 -> 로그인 데이터베이스 연동 메소드 호출
 		if(idTf.getText().equals("ID") && new String(pwTf.getPassword()).equals("PW")) {		//DB연결 전 임시로 ID, Pw 체크
 			loginCheckFlag = true;	//아이디, 비번이 DB에 있으면
 			mainDrive.setLoginUserName("초연");	//DB에서 이름 받아오기 전 임시로 이름 설정
 			
+			Thread t = new Thread() {
+				public void run() {
+//			로그인되면 -> 추천 데이터베이스 연동 메소드 호출
+					((RecommendPage)mainDrive.getPages()[4]).connectDatabase(null, null, null);
+					
+//			바뀐 이름으로 홈페이지에 recommnedLabel 내용 수정 
+					HomePage hp = ((HomePage)mainDrive.getPages()[0]);
+					hp.getRecommendLabel().setText(mainDrive.getLoginUserName()+"님 안녕하세요?");
+					hp.repaint();
+				}
+			};
+			
+			t.start();
 		} else {
 			loginCheckFlag = false;	//아이디, 비번이 DB에 없으면
 		}
