@@ -107,10 +107,10 @@ public class LoginPage extends Page {
 //			로그인되면 -> 추천 데이터베이스 연동 메소드 호출
 					((RecommendPage)mainDrive.getPages()[4]).connectDatabase(null, null, null);
 					
-//			바뀐 이름으로 홈페이지에 recommnedLabel 내용 수정 
-					HomePage hp = ((HomePage)mainDrive.getPages()[0]);
-					hp.getRecommendLabel().setText(mainDrive.getLoginUserName()+"님 안녕하세요?");
-					hp.repaint();
+////			바뀐 이름으로 홈페이지에 recommnedLabel 내용 수정 
+//					HomePage hp = ((HomePage)mainDrive.getPages()[0]);
+//					hp.getRecommendLabel().setText(mainDrive.getLoginUserName()+"님 안녕하세요?");
+//					hp.repaint();
 				}
 			};
 			

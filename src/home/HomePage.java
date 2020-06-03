@@ -178,7 +178,7 @@ public class HomePage extends Page {
 			
 //			[recommend]
 			recommendPanel = new JPanel();
-			recommendLabel = new JLabel(mainDrive.getLoginUserName()+"¥‘ æ»≥Á«œººø‰?", JLabel.CENTER);
+			recommendLabel = new JLabel("", JLabel.CENTER);
 			
 //			recommendPanel.setBackground(Color.magenta);
 			recommendPanel.setBackground(new Color(255,255,255,120));
@@ -248,8 +248,6 @@ public class HomePage extends Page {
 		
 		nowImg = wp.getNowImg();
 		nowInfoTa.setText(wp.getNowInfoTaText());
-		
-		changeRecommendMsg();
 	}
 	
 	public void changeRecommendMsg(){

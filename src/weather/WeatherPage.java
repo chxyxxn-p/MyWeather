@@ -124,7 +124,6 @@ public class WeatherPage extends Page {
 
 		nowInfoTa.setText(mainDrive.getNcstTodayApi().weatherValueToString(nwv, "\n"));
 		
-		((RecommendPage)mainDrive.getPages()[4]).connectDatabase("맑음", mainDrive.getSearchNx(), mainDrive.getSearchNy());
 
 //		fcst
 		for(int i = 0 ; i < fcstWeatherMap.size() ; i++) {	//예측된 날짜-시간 키 갯수만큼 FcstPanel생성
