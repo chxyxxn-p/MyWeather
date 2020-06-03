@@ -209,19 +209,21 @@ public class MainDrive extends JFrame {
 		
 		try {
 			
-			boolean registFontSuccess = ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("./res/NanumSquareR.ttf")));
+//			boolean registFontSuccess = ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("./res/NanumSquareR.ttf")));
+			boolean registFontSuccess = ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("./res/210 Gulim OTF 070.otf")));
 			
 //			System.out.println("font regist : " + registFontSuccess);
 			
-			fontIndex = 0;
-			
+			fontIndex = 10;
+			System.out.println("fontIndex-"+fontIndex);
 			for(int i = 0 ; i < ge.getAvailableFontFamilyNames().length ; i++) {
-				if(ge.getAvailableFontFamilyNames()[i].equals("NanumSquare")||ge.getAvailableFontFamilyNames()[i].equals("나눔스퀘어 Regular")) {
+//				if(ge.getAvailableFontFamilyNames()[i].equals("NanumSquare")||ge.getAvailableFontFamilyNames()[i].equals("나눔스퀘어 Regular")) {
+				if(ge.getAvailableFontFamilyNames()[i].equals("210 굴림OTF 070")) {
 					fontIndex = i;
-//					System.out.println("registed font index : " + fontIndex);
 					break;
 				}
 			}
+//			System.out.println("registed font index : " + fontIndex + "/" + ge.getAvailableFontFamilyNames()[fontIndex]);
 			
 			
 		} catch (FontFormatException e) {
