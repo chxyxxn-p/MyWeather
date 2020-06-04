@@ -120,6 +120,7 @@ public class WeatherPage extends Page {
 		nwv = ncstTodayWeatherMap.get(ncstTodayKeyList.get(0));
 		
 		nImgNum = mainDrive.getNcstTodayApi().getWeatherImgNum(nwv, "ncst");
+		mainDrive.setNowWeatherCaseNum(nImgNum);
 		nowImg = new ImageIcon(mainDrive.getweatherIconImgPathes()[nImgNum]).getImage();
 
 		nowInfoTa.setText(mainDrive.getNcstTodayApi().weatherValueToString(nwv, "\n"));
