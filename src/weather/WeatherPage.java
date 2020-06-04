@@ -119,7 +119,7 @@ public class WeatherPage extends Page {
 //		ncst
 		nwv = ncstTodayWeatherMap.get(ncstTodayKeyList.get(0));
 		
-		nImgNum = mainDrive.getNcstTodayApi().weatherImgNum(nwv);
+		nImgNum = mainDrive.getNcstTodayApi().getWeatherImgNum(nwv, "ncst");
 		nowImg = new ImageIcon(mainDrive.getweatherIconImgPathes()[nImgNum]).getImage();
 
 		nowInfoTa.setText(mainDrive.getNcstTodayApi().weatherValueToString(nwv, "\n"));
@@ -129,7 +129,7 @@ public class WeatherPage extends Page {
 		for(int i = 0 ; i < fcstWeatherMap.size() ; i++) {	//예측된 날짜-시간 키 갯수만큼 FcstPanel생성
 			Weather fwv = fcstWeatherMap.get(fcstKeyList.get(i));
 
-			int fImgNum = mainDrive.getFcstApi().weatherImgNum(fwv);	//날씨 읽어와서 유형에 맞게 이미지 번호 설정
+			int fImgNum = mainDrive.getFcstApi().getWeatherImgNum(fwv, "fcst");	//날씨 읽어와서 유형에 맞게 이미지 번호 설정
 		
 			String info = mainDrive.getFcstApi().weatherValueToString(fwv, "\t");
 			

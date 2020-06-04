@@ -585,16 +585,40 @@ public class GetApi {
 		return wsb.toString();
 	}
 
-	public int weatherImgNum(Weather wv) {
+	public int getWeatherImgNum(Weather wv, String version) {
 		int imgNum = 0;
 		
-//		날씨 케이스에 맞게 조건 설정하기 임시로 랜덤 값 리턴
-		
-//		if(wv.getSky()!= null && wv.getSky().toString().equals("1")) {	//맑음
-//			imgNum = 0;
-//		}
-		imgNum = (int) (Math.random()*6);
+		if (Integer.parseInt((String) wv.getPty()) == 0) {
+			if (Integer.parseInt((String) wv.getReh()) > 75) {
+				imgNum = 2; // 습함 : 강수형태 없음 + 습도 75%이상
+			} else {
+				if (Float.parseFloat((String) wv.getWsd()) > 10) {
+					imgNum = 4; // 바람 : 강수형태 없음 + 습도 75%미만 + 풍속 10m/s 이상
+				} else {
+					if (version.equals("ncst")) {
+						if (Float.parseFloat((String) wv.getT1h()) > 25)
+							imgNum = 1; // 더움 : 강수형태 없음 + 습도 75미만 + 풍속 10m/s 미만 + 기온 25도이상
+						else
+							imgNum = 0; // 맑음 : 강수형태 없음 + 습도 75미만 + 풍속 10m/s 미만 + 기온 25도미만
 
+					} else if (version.equals("fcst")) {
+						if (Float.parseFloat((String) wv.getT3h()) > 25)
+							imgNum = 1; // 더움 : 강수형태 없음 + 습도 75미만 + 풍속 10m/s 미만 + 기온 25도이상
+						else {
+							if(Integer.parseInt((String) wv.getSky()) != 1)	//3,4일때(2없음)
+								imgNum = 5; // 흐림/안개 : 강수형태 없음 + 습도 75미만 + 풍속 10m/s 미만 + 기온 25도미만 + 하늘 구름많음/흐림 		
+							else
+								imgNum = 0; // 맑음 : 강수형태 없음 + 습도 75미만 + 풍속 10m/s 미만 + 기온 25도미만 + 하늘 맑음
+						}
+					}
+				}
+			}
+		} else if (Integer.parseInt((String) wv.getPty()) == 3)
+			imgNum = 6; // 눈 : 강수형태 눈
+		else // pty : 1,2,4
+			imgNum = 3; // 비/소나기 : 강수형태 비/진눈개비/소나기
+
+		System.out.println(version + " weather Case : " + imgNum);
 		return imgNum;
 	}
 
