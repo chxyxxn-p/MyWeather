@@ -57,12 +57,11 @@ public class MainDrive extends JFrame {
   
 	String mainBgImgPath = "./res/catsky.gif";
 	String iconBgImgPath = "./res/ball_darkred.png";
-	String[] weatherIconImgPathes = {"./res/ball_yellow.png", "./res/ball_purple.png", "./res/ball_blue.png", "./res/ball_green.png", "./res/ball_orange.png", "./res/ball_red.png"};
+	String[] weatherIconImgPathes = {"./res/ball_darkred.png", "./res/ball_yellow.png", "./res/ball_purple.png", "./res/ball_blue.png", "./res/ball_green.png", "./res/ball_orange.png", "./res/ball_red.png"};
 	String transparentImgPath = "./res/transparent.png";
 	
 	GetApi fcstApi;
-	GetApi ncstTodayApi;
-	GetApi ncstYesterdayApi;
+	GetApi ncstApi;
 
 	String searchFcstDate;
 	String searchNcstDate;
@@ -88,8 +87,7 @@ public class MainDrive extends JFrame {
 
 	String xlsFilePath = "./res/location.xls";
 	
-//	Thread ncstYesterdayApiThread;
-	Thread ncstTodayApiThread;
+	Thread ncstApiThread;
 	Thread fcstApiThread;
 	Thread afterApiThread;
 	
@@ -343,31 +341,13 @@ public class MainDrive extends JFrame {
 	}
 	
 	public void runApi() {
-				
-//		ncstYesterdayApiThread = new Thread() {
-//			public void run() {
-//				String yesterdayNcstDate = Integer.toString(Integer.parseInt(searchNcstDate)-1);
-//				String yesterdayNcstTime = Integer.toString(Integer.parseInt(searchNcstTime)+200);
-//				
-//				if(yesterdayNcstTime == "2500")
-//					yesterdayNcstTime = "0000";
-//				
-//				ncstYesterdayApi = new GetApi("getUltraSrtNcst", "500", yesterdayNcstDate, yesterdayNcstTime, searchNx, searchNy);
-//				ncstYesterdayApi.connectData();
-//				ncstYesterdayApi.setWeatherMap();
-////				ncstYesterdayApi.printAllWeatherMapValue();				
-//			};
-//		};
 
-		ncstTodayApiThread = new Thread() {
+		ncstApiThread = new Thread() {
 			public void run() {
-				ncstTodayApi = new GetApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
-				ncstTodayApi.connectData();
-				ncstTodayApi.setWeatherMap();
+				ncstApi = new GetApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
+				ncstApi.connectData();
+				ncstApi.setWeatherMap();
 //				ncstTodayApi.printAllWeatherMapValue();
-				Weather w = ncstTodayApi.getWeatherMap().get(ncstTodayApi.getWeatherMap().keySet().iterator().next());
-				nowWeatherCaseNum = ncstTodayApi.getWeatherImgNum(w);
-				
 			};
 		};
 
@@ -383,7 +363,7 @@ public class MainDrive extends JFrame {
 		afterApiThread = new Thread() {
 			public void run() {
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -396,8 +376,7 @@ public class MainDrive extends JFrame {
 			};
 		};
 		
-//		ncstYesterdayApiThread.start();
-		ncstTodayApiThread.start();
+		ncstApiThread.start();
 		fcstApiThread.start();
 		
 		afterApiThread.start();
@@ -436,13 +415,8 @@ public class MainDrive extends JFrame {
 	}
 
 	public GetApi getNcstTodayApi() {
-		return ncstTodayApi;
+		return ncstApi;
 	}
-
-	public GetApi getNcstYesterdayApi() {
-		return ncstYesterdayApi;
-	}
-	
 
 	public int getNowWeatherCaseNum() {
 		return nowWeatherCaseNum;
