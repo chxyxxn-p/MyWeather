@@ -38,6 +38,7 @@ import login.LoginPage;
 import login.LogoutPage;
 import recommend.RecommendPage;
 import weather.GetApi;
+import weather.Weather;
 import weather.WeatherPage;
 
 public class MainDrive extends JFrame {
@@ -71,6 +72,10 @@ public class MainDrive extends JFrame {
 	String[] weatherCase = {"맑음", "더움", "습함", "비/소나기", "바람", "흐림/안개", "눈"};
 	int nowWeatherCaseNum;
 
+	String searchFirstSep = "서울특별시";
+	String searchSecondSep = "종로구";
+	String searchThirdSep = "종로1.2.3.4가동";
+	
 	String searchNx = "60";
 	String searchNy = "127";
 	
@@ -82,7 +87,7 @@ public class MainDrive extends JFrame {
 
 	String xlsFilePath = "./res/location.xls";
 	
-	Thread ncstYesterdayApiThread;
+//	Thread ncstYesterdayApiThread;
 	Thread ncstTodayApiThread;
 	Thread fcstApiThread;
 	Thread afterApiThread;
@@ -108,21 +113,19 @@ public class MainDrive extends JFrame {
 		
 		try {
 			
-//			boolean registFontSuccess = ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("./res/NanumSquareR.ttf")));
 			boolean registFontSuccess = ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("./res/210 Gulim OTF 070.otf")));
 			
-//			System.out.println("font regist : " + registFontSuccess);
 			
 			fontIndex = 10;
 			
 			for(int i = 0 ; i < ge.getAvailableFontFamilyNames().length ; i++) {
-//				if(ge.getAvailableFontFamilyNames()[i].equals("NanumSquare")||ge.getAvailableFontFamilyNames()[i].equals("나눔스퀘어 Regular")) {
-				if(ge.getAvailableFontFamilyNames()[i].equals("210 굴림OTF 070")) {
+
+				if(ge.getAvailableFontFamilyNames()[i].equals("210 굴림OTF 070")
+						|| ge.getAvailableFontFamilyNames()[i].equals("210 GulimOTF 070")) {
 					fontIndex = i;
 					break;
 				}
 			}
-//			System.out.println("registed font index : " + fontIndex + "/" + ge.getAvailableFontFamilyNames()[fontIndex]);
 			
 			
 		} catch (FontFormatException e) {
@@ -336,27 +339,30 @@ public class MainDrive extends JFrame {
 	
 	public void runApi() {
 				
-		ncstYesterdayApiThread = new Thread() {
-			public void run() {
-				String yesterdayNcstDate = Integer.toString(Integer.parseInt(searchNcstDate)-1);
-				String yesterdayNcstTime = Integer.toString(Integer.parseInt(searchNcstTime)+200);
-				
-				if(yesterdayNcstTime == "2500")
-					yesterdayNcstTime = "0000";
-				
-				ncstYesterdayApi = new GetApi("getUltraSrtNcst", "500", yesterdayNcstDate, yesterdayNcstTime, searchNx, searchNy);
-				ncstYesterdayApi.connectData();
-				ncstYesterdayApi.setWeatherMap();
-//				ncstYesterdayApi.printAllWeatherMapValue();				
-			};
-		};
+//		ncstYesterdayApiThread = new Thread() {
+//			public void run() {
+//				String yesterdayNcstDate = Integer.toString(Integer.parseInt(searchNcstDate)-1);
+//				String yesterdayNcstTime = Integer.toString(Integer.parseInt(searchNcstTime)+200);
+//				
+//				if(yesterdayNcstTime == "2500")
+//					yesterdayNcstTime = "0000";
+//				
+//				ncstYesterdayApi = new GetApi("getUltraSrtNcst", "500", yesterdayNcstDate, yesterdayNcstTime, searchNx, searchNy);
+//				ncstYesterdayApi.connectData();
+//				ncstYesterdayApi.setWeatherMap();
+////				ncstYesterdayApi.printAllWeatherMapValue();				
+//			};
+//		};
 
 		ncstTodayApiThread = new Thread() {
 			public void run() {
 				ncstTodayApi = new GetApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
 				ncstTodayApi.connectData();
 				ncstTodayApi.setWeatherMap();
-//				ncstTodayApi.printAllWeatherMapValue();				
+//				ncstTodayApi.printAllWeatherMapValue();
+				Weather w = ncstTodayApi.getWeatherMap().get(ncstTodayApi.getWeatherMap().keySet().iterator().next());
+				nowWeatherCaseNum = ncstTodayApi.getWeatherImgNum(w);
+				
 			};
 		};
 
@@ -385,9 +391,10 @@ public class MainDrive extends JFrame {
 			};
 		};
 		
-		ncstYesterdayApiThread.start();
+//		ncstYesterdayApiThread.start();
 		ncstTodayApiThread.start();
 		fcstApiThread.start();
+		
 		afterApiThread.start();
 	}
 
@@ -442,6 +449,31 @@ public class MainDrive extends JFrame {
 
 	public String[] getWeatherCase() {
 		return weatherCase;
+	}
+
+	
+	public String getSearchFirstSep() {
+		return searchFirstSep;
+	}
+
+	public void setSearchFirstSep(String searchFirstSep) {
+		this.searchFirstSep = searchFirstSep;
+	}
+
+	public String getSearchSecondSep() {
+		return searchSecondSep;
+	}
+
+	public void setSearchSecondSep(String searchSecondSep) {
+		this.searchSecondSep = searchSecondSep;
+	}
+
+	public String getSearchThirdSep() {
+		return searchThirdSep;
+	}
+
+	public void setSearchThirdSep(String searchThirdSep) {
+		this.searchThirdSep = searchThirdSep;
 	}
 
 	public String getSearchNx() {
