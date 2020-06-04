@@ -2,6 +2,7 @@ package recommend;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -14,7 +15,6 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import database.ConnectionManager;
 import home.HomePage;
 import main.MainDrive;
 import main.Page;
@@ -64,35 +64,25 @@ public class RecommendPage extends Page {
 	}
 	
 	public void connectDatabase(String weatherName, String f, String s, String t) {
+//		기존 패널에 있던 패널 , 리스트 지우기
+		Component[] childList = rcmdPanel.getComponents();
 
-//		임시로 데이터베이스 연동 전 list에 item 추가
-//		for(int i = 0 ; i < 4 ; i++) {
-//		
-//		Recommend r1 = new Recommend();
-//		r1.setId(1);
-//		r1.setName("빽다방 종로관철점");
-//		r1.setAddress("관철동 42-4");
-//		r1.setImage("https://search.pstatic.net/common/?src=http%3A%2F%2Fldb.phinf.naver.net%2F20191019_212%2F1571471269167BYgmN_JPEG%2F0ATu8sY4aIcu1FcfHT1RJJih.jpg");
-//		
-//		Recommend r2 = new Recommend();
-//		r2.setId(1);
-//		r2.setName("영풍문고 종로본점");
-//		r2.setAddress("서린동 33");
-//		r2.setPhone("1522-2776");
-//		r2.setImage("https://search.pstatic.net/common/?src=http%3A%2F%2Fldb.phinf.naver.net%2F20160421_31%2F14612224873355dxkh_JPEG%2F176371563826414_1.jpeg");
-//		
-//		recommendList.add(r1);
-//		recommendList.add(r2);
-//		}
+		int listSize = recommendList.size();
+			for (int i = 0; i < listSize ; i++) {
+				recommendList.remove(0);
+			}
+			
+			for (int i = 0; i < childList.length; i++) {
+				rcmdPanel.remove(childList[i]);
+			}
 		
-		
-		ConnectionManager connectionManager = null;
+//		데이터베이스 연결
+		System.out.println(weatherName);
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
-		connectionManager = new ConnectionManager();
-		con = connectionManager.getConnection();
+		con = mainDrive.getConnectionManager().getConnection();
 		
 		String sql = "select id, name, address, phone, image from store where id IN "
 				+ "(select store_id from recommend"
@@ -123,28 +113,29 @@ public class RecommendPage extends Page {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			connectionManager.closeDB(rs);
-			connectionManager.closeDB(pstmt);
-			connectionManager.closeDB(con);
+			mainDrive.getConnectionManager().closeDB(rs);
+			mainDrive.getConnectionManager().closeDB(pstmt);
+			mainDrive.getConnectionManager().closeDB(con);
 		}
-				
-		for(int i = 0 ; i < recommendList.size() ; i++) {
+
+
+//		새로 불러온 리스트만큼 rcmdPanel에 추가
+		for (int i = 0; i < recommendList.size(); i++) {
 			Recommend rcmd = recommendList.get(i);
 			String name = rcmd.getName();
 			String address = rcmd.getAddress();
 			String phone = rcmd.getPhone();
 			String image = rcmd.getImage();
-			
-			RcmdPanel r = new RcmdPanel(mainDrive, width/3, height-30, name, address, phone, image);
+
+			RcmdPanel r = new RcmdPanel(mainDrive, width / 3, height - 30, name, address, phone, image);
 			rcmdPanel.add(r);
 		}
-		
+
 		rcmdPanel.setLayout(new GridLayout(1, recommendList.size(), 10, 0));
 		
 		((HomePage)mainDrive.getPages()[0]).changeRecommendMsg();
 		((HomePage)mainDrive.getPages()[0]).updateUI();
 		this.updateUI();
-		
 	}
 
 	public ArrayList<Recommend> getRecommendList() {
