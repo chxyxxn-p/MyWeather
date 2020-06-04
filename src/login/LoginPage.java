@@ -3,6 +3,10 @@ package login;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -13,6 +17,7 @@ import javax.swing.JTextField;
 import home.HomePage;
 import main.MainDrive;
 import main.Page;
+import recommend.Recommend;
 import recommend.RecommendPage;
 
 public class LoginPage extends Page {
@@ -98,25 +103,40 @@ public class LoginPage extends Page {
 	
 	public void connectDatabase() {
 //		로그인 버튼 누르면 -> 로그인 데이터베이스 연동 메소드 호출
-		if(idTf.getText().equals("ID") && new String(pwTf.getPassword()).equals("PW")) {		//DB연결 전 임시로 ID, Pw 체크
-			loginCheckFlag = true;	//아이디, 비번이 DB에 있으면
-			mainDrive.setLoginUserName("초연");	//DB에서 이름 받아오기 전 임시로 이름 설정
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
 			
-			Thread t = new Thread() {
-				public void run() {
-//			로그인되면 -> 추천 데이터베이스 연동 메소드 호출 => API 호출 후로 수정(현재 날씨에 맞게 출력하기때문에 현재 날씨를 알아야 함)
-//					((RecommendPage)mainDrive.getPages()[4]).connectDatabase(null, null, null);
+			con = mainDrive.getConnectionManager().getConnection();
+			
+			String sql = "select * from member";
+			
+			try {
+				pstmt = con.prepareStatement(sql);
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
 					
-////			바뀐 이름으로 홈페이지에 recommnedLabel 내용 수정 
-//					HomePage hp = ((HomePage)mainDrive.getPages()[0]);
-//					hp.getRecommendLabel().setText(mainDrive.getLoginUserName()+"님 안녕하세요?");
-//					hp.repaint();
+					if(idTf.getText().equals(rs.getString("member_id")) && new String(pwTf.getPassword()).equals(rs.getString("member_passwd"))) {		//DB연결 전 임시로 ID, Pw 체크
+						mainDrive.setLoginUserName(rs.getString("member_name"));	//DB에서 이름 받아오기 전 임시로 이름 설정
+						
+						loginCheckFlag = true;	//아이디, 비번이 DB에 있으면
+						break;
+						
+					} else {
+						loginCheckFlag = false;	//아이디, 비번이 DB에 없으면
+					}
 				}
-			};
+				
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				mainDrive.getConnectionManager().closeDB(rs);
+				mainDrive.getConnectionManager().closeDB(pstmt);
+				mainDrive.getConnectionManager().closeDB(con);
+			}
 			
-			t.start();
-		} else {
-			loginCheckFlag = false;	//아이디, 비번이 DB에 없으면
-		}
 	}
 }

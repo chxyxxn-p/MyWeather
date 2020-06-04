@@ -31,6 +31,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import calendar.CalendarPage;
+import database.ConnectionManager;
 import home.HomePage;
 import location.Location;
 import location.LocationPage;
@@ -91,6 +92,8 @@ public class MainDrive extends JFrame {
 	Thread ncstTodayApiThread;
 	Thread fcstApiThread;
 	Thread afterApiThread;
+	
+	ConnectionManager connectionManager = null;
 
 	public MainDrive() {
 //		폰트 설정
@@ -104,6 +107,8 @@ public class MainDrive extends JFrame {
 				
 //		검색할 위치 고르는 ComboBox의 items -> xls로 불러오기
 		getLocationFromXls();
+		
+		connectionManager = new ConnectionManager();
 	}
 	
 
@@ -503,7 +508,12 @@ public class MainDrive extends JFrame {
 	public void setLoginUserName(String loginUserName) {
 		this.loginUserName = loginUserName;
 	}
-	
+
+	public ConnectionManager getConnectionManager() {
+		return connectionManager;
+	}
+
+
 
 	public static void main(String[] args) {
 		new MainDrive();
