@@ -74,7 +74,7 @@ public class LocationPage extends Page {
 			public void actionPerformed(ActionEvent e) {
 				synchronizeSelectItems(firstSepCb, secondSepCb, thirdSepCb);
 //				user가 고른 위치에 해당하는 nx, ny가져와서 mainDrive의 searchNx, searchNy로 대입하고
-				getSelectedLocationNxNy();
+				getSelectedLocationInfo();
 //				스레드로 새로 데이터 불러오기
 				mainDrive.runApi();
 			}
@@ -114,12 +114,16 @@ public class LocationPage extends Page {
 		mainDrive.getPages()[3].updateUI();
 	}
 	
-	public void getSelectedLocationNxNy() {
+	public void getSelectedLocationInfo() {
 		String f = (String)firstSepCb.getSelectedItem();
 		String s = (String)secondSepCb.getSelectedItem();
 		String t = (String)thirdSepCb.getSelectedItem();
 		
-		System.out.println("selected address : " + f +s + t);
+		mainDrive.setSearchFirstSep(f);
+		mainDrive.setSearchSecondSep(s);
+		mainDrive.setSearchThirdSep(t);
+		
+		System.out.println("selected address : " +mainDrive.getSearchFirstSep() + " " + mainDrive.getSearchSecondSep() + " " + mainDrive.getSearchThirdSep());
 		
 		for(int i = 0 ; i < locationList.size() ; i++) {
 			Location l = locationList.get(i);

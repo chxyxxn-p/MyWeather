@@ -169,7 +169,7 @@ public class HomePage extends Page {
 				public void actionPerformed(ActionEvent e) {
 					((LocationPage)mainDrive.getPages()[3]).synchronizeSelectItems(firstSepCb, secondSepCb, thirdSepCb);
 //					user가 고른 위치에 해당하는 nx, ny가져와서 mainDrive의 searchNx, searchNy로 대입하고
-					((LocationPage)mainDrive.getPages()[3]).getSelectedLocationNxNy();
+					((LocationPage)mainDrive.getPages()[3]).getSelectedLocationInfo();
 //					스레드로 새로 데이터 불러오기
 					mainDrive.runApi();
 				}
@@ -253,13 +253,17 @@ public class HomePage extends Page {
 	public void changeRecommendMsg(){
 		ArrayList<Recommend> list = ((RecommendPage)mainDrive.getPages()[4]).getRecommendList();
 		
-		int listRandom = (int)(Math.random()*list.size());
-		int msgRandom = (int)(Math.random()*recommendMsg.length);
-		recommendLabel.setText(mainDrive.getLoginUserName()+"님 "
-				+list.get(listRandom).getName()
-				+recommendMsg[msgRandom]);
-		
-		System.out.println("listRandom : " + listRandom + " msgRandom : " + msgRandom);
+		if(list.size() > 0) {
+			int listRandom = (int)(Math.random()*list.size());
+			int msgRandom = (int)(Math.random()*recommendMsg.length);
+			recommendLabel.setText(mainDrive.getLoginUserName()+"님 "
+					+list.get(listRandom).getName()
+					+recommendMsg[msgRandom]);
+			
+			System.out.println("listRandom : " + listRandom + " msgRandom : " + msgRandom);
+		} else {
+			recommendLabel.setText(mainDrive.getLoginUserName()+"님 안녕하세요?");
+		}
 		this.updateUI();
 	}
 	
