@@ -104,8 +104,8 @@ public class LoginPage extends Page {
 			
 			Thread t = new Thread() {
 				public void run() {
-//			로그인되면 -> 추천 데이터베이스 연동 메소드 호출
-					((RecommendPage)mainDrive.getPages()[4]).connectDatabase(null, null, null);
+//			로그인되면 -> 추천 데이터베이스 연동 메소드 호출 => API 호출 후로 수정(현재 날씨에 맞게 출력하기때문에 현재 날씨를 알아야 함)
+//					((RecommendPage)mainDrive.getPages()[4]).connectDatabase(null, null, null);
 					
 ////			바뀐 이름으로 홈페이지에 recommnedLabel 내용 수정 
 //					HomePage hp = ((HomePage)mainDrive.getPages()[0]);
