@@ -72,7 +72,7 @@ public class LocationPage extends Page {
 		locationBt.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				synchronizeSelectItems(firstSepCb, secondSepCb, thirdSepCb);
+				synchronizeSelectedItems(firstSepCb, secondSepCb, thirdSepCb);
 //				user가 고른 위치에 해당하는 nx, ny가져와서 mainDrive의 searchNx, searchNy로 대입하고
 				getSelectedLocationInfo();
 //				스레드로 새로 데이터 불러오기
@@ -100,7 +100,7 @@ public class LocationPage extends Page {
 		this.updateUI();
 	}
 	
-	public void synchronizeSelectItems(JComboBox<String> f, JComboBox<String> s, JComboBox<String> t) {
+	public void synchronizeSelectedItems(JComboBox<String> f, JComboBox<String> s, JComboBox<String> t) {
 		
 		((LocationPage)mainDrive.getPages()[3]).getFirstSepCb().setSelectedIndex(f.getSelectedIndex());
 		((LocationPage)mainDrive.getPages()[3]).getSecondSepCb().setSelectedIndex(s.getSelectedIndex());
