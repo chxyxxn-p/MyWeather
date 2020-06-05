@@ -1,6 +1,7 @@
 package weather;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -109,6 +110,13 @@ public class WeatherPage extends Page {
 	@Override
 	public void afterConnectApi() {
 		super.afterConnectApi();
+		
+//		기존 패널에 있던 패널 , 리스트 지우기
+		Component[] childList = fcstPanel.getComponents();
+		
+		for (int i = 0; i < childList.length; i++) {
+			fcstPanel.remove(childList[i]);
+		}
 		
 		this.fcstWeatherMap = mainDrive.getFcstApi().getWeatherMap();
 		this.fcstKeyList = mainDrive.getFcstApi().getKeyList();

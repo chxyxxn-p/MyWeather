@@ -20,7 +20,8 @@ import org.json.simple.parser.ParseException;
 public class GetApi {
 
 	Map<Long, Weather> weatherMap = new HashMap<Long, Weather>();
-	ArrayList<Long> keyList;
+	ArrayList<Long> keyList = new ArrayList<Long>();
+	Iterator<Long> it;
 	
 	String searchVersion;
 	String searchResult;
@@ -112,6 +113,10 @@ public class GetApi {
 			System.out.println("please\tconnect\t" + searchVersion + "\tapi");
 
 		} else {
+			
+			weatherMap.clear();
+			keyList.clear();
+			
 			System.out.println(searchVersion + "\tapi\tdata\tloading...");
 
 			JSONParser parser = new JSONParser();
@@ -221,8 +226,7 @@ public class GetApi {
 				}
 				System.out.println(searchVersion + "\tapi\tdata\tloaded");
 				
-				keyList = new ArrayList<Long>();
-				Iterator<Long> it = weatherMap.keySet().iterator();
+				it = weatherMap.keySet().iterator();
 
 				while (it.hasNext()) {
 
