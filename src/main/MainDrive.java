@@ -55,9 +55,9 @@ public class MainDrive extends JFrame {
 	JPanel menuPn;
 	MenuIcon[] icons = new MenuIcon[6];
   
-	String mainBgImgPath = "./res/catsky.gif";
-	String iconBgImgPath = "./res/ball_darkred.png";
-	String[] weatherIconImgPathes = {"./res/ball_darkred.png", "./res/ball_yellow.png", "./res/ball_purple.png", "./res/ball_blue.png", "./res/ball_green.png", "./res/ball_orange.png", "./res/ball_red.png"};
+	String mainBgImgPath = "./res/animationsky.gif";
+	String[] iconBgImgPathes = {"./res/i_home.png", "./res/i_weather.png", "./res/i_calendar.png", "./res/i_location.png", "./res/i_recommend.png", "./res/i_login.png"};
+	String[] weatherIconImgPathes = {"./res/w_sunny.png", "./res/w_hot.png", "./res/w_hidr.png", "./res/w_rainy.png", "./res/w_windy.png", "./res/w_cloudy.png", "./res/w_snow.png"};
 	String transparentImgPath = "./res/transparent.png";
 	
 	GetApi fcstApi;
@@ -215,12 +215,12 @@ public class MainDrive extends JFrame {
 
 		menuPn = new JPanel();
 
-		icons[0] = new MenuIcon(this, 50, 50, iconBgImgPath); // home
-		icons[1] = new MenuIcon(this, 50, 50, iconBgImgPath); // weather
-		icons[2] = new MenuIcon(this, 50, 50, iconBgImgPath); // calendar
-		icons[3] = new MenuIcon(this, 50, 50, iconBgImgPath); // location
-		icons[4] = new MenuIcon(this, 50, 50, iconBgImgPath); // recommend
-		icons[5] = new MenuIcon(this, 50, 50, iconBgImgPath); // login/out
+		icons[0] = new MenuIcon(this, 50, 50, iconBgImgPathes[0]); // home
+		icons[1] = new MenuIcon(this, 50, 50, iconBgImgPathes[1]); // weather
+		icons[2] = new MenuIcon(this, 50, 50, iconBgImgPathes[2]); // calendar
+		icons[3] = new MenuIcon(this, 50, 50, iconBgImgPathes[3]); // location
+		icons[4] = new MenuIcon(this, 50, 50, iconBgImgPathes[4]); // recommend
+		icons[5] = new MenuIcon(this, 50, 50, iconBgImgPathes[5]); // login/out
 
 		changePage(6); // 처음으로 보여줄 페이지 //#나중에 로그인페이지or홈페이지를 시작으로 변경
 
