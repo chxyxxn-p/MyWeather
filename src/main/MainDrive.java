@@ -345,7 +345,7 @@ public class MainDrive extends JFrame {
 		
 		Thread integratedThread = new Thread() {
 			public void run() {
-				System.out.println(searchNx+"/"+searchNy);
+				System.out.println("search location\t"+searchFirstSep+" "+searchSecondSep+" "+searchThirdSep+" / "+searchNx+" "+searchNy);
 				ncstApi = new GetApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
 				ncstApi.connectData();
 				ncstApi.setWeatherMap();
