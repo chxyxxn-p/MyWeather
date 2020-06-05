@@ -64,78 +64,85 @@ public class RecommendPage extends Page {
 	}
 	
 	public void connectDatabase(String weatherName, String f, String s, String t) {
+		Thread thread = new Thread() {
+			public void run() {
 //		기존 패널에 있던 패널 , 리스트 지우기
-		Component[] childList = rcmdPanel.getComponents();
-
-		int listSize = recommendList.size();
-			for (int i = 0; i < listSize ; i++) {
-				recommendList.remove(0);
-			}
-			
-			for (int i = 0; i < childList.length; i++) {
-				rcmdPanel.remove(childList[i]);
-			}
-		
+				Component[] childList = rcmdPanel.getComponents();
+				
+				int listSize = recommendList.size();
+				for (int i = 0; i < listSize ; i++) {
+					recommendList.remove(0);
+				}
+				
+				for (int i = 0; i < childList.length; i++) {
+					rcmdPanel.remove(childList[i]);
+				}
+				
 //		데이터베이스 연결
-		System.out.println(weatherName);
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		
-		con = mainDrive.getConnectionManager().getConnection();
-		
-		String sql = "select id, name, address, phone, image from store where id IN "
-				+ "(select store_id from recommend"
-				+ " where weather_id = (select id from weather where name = ?)"
-				+ " and location_id = (select id from location where FIRST_SEP =? AND SECOND_SEP =? AND THIRD_SEP =?))";
-		
-		try {
-			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, weatherName);
-			pstmt.setString(2, f);
-			pstmt.setString(3, s);
-			pstmt.setString(4, t);
-			
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				Recommend r = new Recommend();
+				System.out.println(weatherName);
+				Connection con = null;
+				PreparedStatement pstmt = null;
+				ResultSet rs = null;
 				
-				r.setId(rs.getInt("id"));
-				r.setName(rs.getString("name"));
-				r.setAddress(rs.getString("address"));
-				r.setPhone(rs.getString("phone"));
-				r.setImage(rs.getString("image"));
+				con = mainDrive.getConnectionManager().getConnection();
 				
-				recommendList.add(r);
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			mainDrive.getConnectionManager().closeDB(rs);
-			mainDrive.getConnectionManager().closeDB(pstmt);
-			mainDrive.getConnectionManager().closeDB(con);
-		}
-
-
+				String sql = "select id, name, address, phone, image from store where id IN "
+						+ "(select store_id from recommend"
+						+ " where weather_id = (select id from weather where name = ?)"
+						+ " and location_id = (select id from location where FIRST_SEP =? AND SECOND_SEP =? AND THIRD_SEP =?))";
+				
+				try {
+					pstmt = con.prepareStatement(sql);
+					pstmt.setString(1, weatherName);
+					pstmt.setString(2, f);
+					pstmt.setString(3, s);
+					pstmt.setString(4, t);
+					
+					rs = pstmt.executeQuery();
+					
+					while(rs.next()) {
+						Recommend r = new Recommend();
+						
+						r.setId(rs.getInt("id"));
+						r.setName(rs.getString("name"));
+						r.setAddress(rs.getString("address"));
+						r.setPhone(rs.getString("phone"));
+						r.setImage(rs.getString("image"));
+						
+						recommendList.add(r);
+					}
+					
+				} catch (SQLException e) {
+					e.printStackTrace();
+				} finally {
+					mainDrive.getConnectionManager().closeDB(rs);
+					mainDrive.getConnectionManager().closeDB(pstmt);
+					mainDrive.getConnectionManager().closeDB(con);
+				}
+				
+				
 //		새로 불러온 리스트만큼 rcmdPanel에 추가
-		for (int i = 0; i < recommendList.size(); i++) {
-			Recommend rcmd = recommendList.get(i);
-			String name = rcmd.getName();
-			String address = rcmd.getAddress();
-			String phone = rcmd.getPhone();
-			String image = rcmd.getImage();
-
-			RcmdPanel r = new RcmdPanel(mainDrive, width / 3, height - 30, name, address, phone, image);
-			rcmdPanel.add(r);
-		}
-
-		rcmdPanel.setLayout(new GridLayout(1, recommendList.size(), 10, 0));
-		
-		((HomePage)mainDrive.getPages()[0]).changeRecommendMsg();
-		((HomePage)mainDrive.getPages()[0]).updateUI();
-		this.updateUI();
+				for (int i = 0; i < recommendList.size(); i++) {
+					Recommend rcmd = recommendList.get(i);
+					String name = rcmd.getName();
+					String address = rcmd.getAddress();
+					String phone = rcmd.getPhone();
+					String image = rcmd.getImage();
+					
+					RcmdPanel r = new RcmdPanel(mainDrive, width / 3, height - 30, name, address, phone, image);
+					rcmdPanel.add(r);
+				}
+				
+				rcmdPanel.setLayout(new GridLayout(1, recommendList.size(), 10, 0));
+				
+				((HomePage)mainDrive.getPages()[0]).changeRecommendMsg();
+				((HomePage)mainDrive.getPages()[0]).updateUI();
+				
+				RecommendPage.this.updateUI();
+				
+			};
+		};
+		thread.start();
 	}
 
 	public ArrayList<Recommend> getRecommendList() {
