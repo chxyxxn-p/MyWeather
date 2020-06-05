@@ -3,6 +3,12 @@ package location;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -72,66 +78,179 @@ public class LocationPage extends Page {
 		locationBt.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				synchronizeSelectedItems(firstSepCb, secondSepCb, thirdSepCb);
-//				user가 고른 위치에 해당하는 nx, ny가져와서 mainDrive의 searchNx, searchNy로 대입하고
-				getSelectedLocationInfo();
+//				유저가 고른 아이템들로 mainDrive의 변수값 변경				
+				mainDrive.setSearchFirstSep((String)firstSepCb.getSelectedItem());
+				mainDrive.setSearchSecondSep((String)secondSepCb.getSelectedItem());
+				mainDrive.setSearchThirdSep((String)thirdSepCb.getSelectedItem());
+
+//				바뀐 mainDrive의 변수로 homePage, locationPage의 combobox 내용 맞추기
+				synchronizeSelectedLocation();
+				
+//				mainDrive의 변수(user가 고른 위치)에 해당하는 nx, ny가져와서 mainDrive의 searchNx, searchNy로 대입
+				getSelectedLocationNxNy();
+				
 //				스레드로 새로 데이터 불러오기
 				mainDrive.runApi();
 			}
 		});
 		
+		firstSepCb.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				connectDatabaseSecondSep(firstSepCb, secondSepCb, thirdSepCb);
+			}
+		});
+		
+		secondSepCb.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				connectDatabaseThirdSep(firstSepCb, secondSepCb, thirdSepCb);
+			}
+		});
 	}
 	
-	public void setComboBox() {
-		for(int i = 0 ; i < locationList.size() ; i++) {
-			Location location = locationList.get(i);
+	public void connectDatabaseFirstSep(JComboBox<String> f) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		con = mainDrive.getConnectionManager().getConnection();
+		
+		String sql = "select distinct first_sep from location order by first_sep asc";
+		
+		try {
+			pstmt = con.prepareStatement(sql);
+			rs = pstmt.executeQuery();
 			
-			String f = location.getFirstSep();
-			String s = location.getSecondSep();
-			String t = location.getThirdSep();
+			while(rs.next()) {
+				String value = rs.getString("first_sep");
+				f.addItem(value);
+			}
 			
-			firstSepCb.addItem(f);
-			secondSepCb.addItem(s);
-			thirdSepCb.addItem(t);
+			this.updateUI();
 			
-			((HomePage)mainDrive.getPages()[0]).setComboBox(f, s, t);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			mainDrive.getConnectionManager().closeDB(rs);
+			mainDrive.getConnectionManager().closeDB(pstmt);
+			mainDrive.getConnectionManager().closeDB(con);
 		}
-		
-		this.updateUI();
 	}
 	
-	public void synchronizeSelectedItems(JComboBox<String> f, JComboBox<String> s, JComboBox<String> t) {
+	public void connectDatabaseSecondSep(JComboBox<String> f, JComboBox<String> s, JComboBox<String>t) {
+
+		s.removeAllItems();
+		t.removeAllItems();
 		
-		((LocationPage)mainDrive.getPages()[3]).getFirstSepCb().setSelectedIndex(f.getSelectedIndex());
-		((LocationPage)mainDrive.getPages()[3]).getSecondSepCb().setSelectedIndex(s.getSelectedIndex());
-		((LocationPage)mainDrive.getPages()[3]).getThirdSepCb().setSelectedIndex(t.getSelectedIndex());
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 		
-		((HomePage)mainDrive.getPages()[0]).getFirstSepCb().setSelectedIndex(f.getSelectedIndex());
-		((HomePage)mainDrive.getPages()[0]).getSecondSepCb().setSelectedIndex(s.getSelectedIndex());
-		((HomePage)mainDrive.getPages()[0]).getThirdSepCb().setSelectedIndex(t.getSelectedIndex());	
+		con = mainDrive.getConnectionManager().getConnection();
+		
+		String sql = "select distinct second_sep from location where first_sep=? order by second_sep asc";
+		
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, (String)f.getSelectedItem());
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				String value = rs.getString("second_sep");
+				s.addItem(value);
+			}
+			
+			this.updateUI();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			mainDrive.getConnectionManager().closeDB(rs);
+			mainDrive.getConnectionManager().closeDB(pstmt);
+			mainDrive.getConnectionManager().closeDB(con);
+		}
+	}
+	
+	public void connectDatabaseThirdSep(JComboBox<String> f, JComboBox<String> s, JComboBox<String>t) {
+
+		t.removeAllItems();
+
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		con = mainDrive.getConnectionManager().getConnection();
+		
+		String sql = "select distinct third_sep from location where first_sep=? and second_sep=? order by third_sep asc";
+		
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, (String)f.getSelectedItem());
+			pstmt.setString(2, (String)s.getSelectedItem());
+			rs = pstmt.executeQuery();
+						
+			while(rs.next()) {
+				String value = rs.getString("third_sep");
+				t.addItem(value);
+			}
+			
+			this.updateUI();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			mainDrive.getConnectionManager().closeDB(rs);
+			mainDrive.getConnectionManager().closeDB(pstmt);
+			mainDrive.getConnectionManager().closeDB(con);
+		}
+	}
+
+public void synchronizeSelectedLocation() {
+		
+	((LocationPage)mainDrive.getPages()[3]).getFirstSepCb().setSelectedItem(mainDrive.getSearchFirstSep());
+	((LocationPage)mainDrive.getPages()[3]).getSecondSepCb().setSelectedItem(mainDrive.getSearchSecondSep());
+	((LocationPage)mainDrive.getPages()[3]).getThirdSepCb().setSelectedItem(mainDrive.getSearchThirdSep());
+	
+	((HomePage)mainDrive.getPages()[0]).getFirstSepCb().setSelectedItem(mainDrive.getSearchFirstSep());
+	((HomePage)mainDrive.getPages()[0]).getSecondSepCb().setSelectedItem(mainDrive.getSearchSecondSep());
+	((HomePage)mainDrive.getPages()[0]).getThirdSepCb().setSelectedItem(mainDrive.getSearchThirdSep());
 		
 		mainDrive.getPages()[0].updateUI();
 		mainDrive.getPages()[3].updateUI();
 	}
 	
-	public void getSelectedLocationInfo() {
-		String f = (String)firstSepCb.getSelectedItem();
-		String s = (String)secondSepCb.getSelectedItem();
-		String t = (String)thirdSepCb.getSelectedItem();
+	public void getSelectedLocationNxNy() {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 		
-		mainDrive.setSearchFirstSep(f);
-		mainDrive.setSearchSecondSep(s);
-		mainDrive.setSearchThirdSep(t);
+		con = mainDrive.getConnectionManager().getConnection();
 		
-		System.out.println("selected address : " +mainDrive.getSearchFirstSep() + " " + mainDrive.getSearchSecondSep() + " " + mainDrive.getSearchThirdSep());
+		String sql = "select nx, ny from location where first_sep=? and second_sep=? and third_sep=?";
 		
-		for(int i = 0 ; i < locationList.size() ; i++) {
-			Location l = locationList.get(i);
-			if(l.getFirstSep().equals(f) && l.getSecondSep().equals(s) && l.getThirdSep().equals(t)) {
-				mainDrive.setSearchNx(Integer.toString(l.getNx()));
-				mainDrive.setSearchNy(Integer.toString(l.getNy()));
-				System.out.println("search coordinate : " + mainDrive.getSearchNx() + "," + mainDrive.getSearchNy());
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, mainDrive.getSearchFirstSep());
+			pstmt.setString(2, mainDrive.getSearchSecondSep());
+			pstmt.setString(3, mainDrive.getSearchThirdSep());
+			rs = pstmt.executeQuery();
+						
+			while(rs.next()) {
+				mainDrive.setSearchNx(rs.getString("nx"));
+				mainDrive.setSearchNy(rs.getString("ny"));
 			}
+			
+			this.updateUI();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			mainDrive.getConnectionManager().closeDB(rs);
+			mainDrive.getConnectionManager().closeDB(pstmt);
+			mainDrive.getConnectionManager().closeDB(con);
 		}
 	}
 	

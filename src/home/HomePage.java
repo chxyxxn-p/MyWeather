@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -93,7 +95,6 @@ public class HomePage extends Page {
 		 nowInfoTa.setEditable(false);
 		 nowInfoTa.setFont(mainDrive.getFont(18));
 		 
-//			nowPanel.setBackground(Color.cyan);
 			nowPanel.setBackground(new Color(255,255,255,120));
 			nowImgPn.setBackground(new Color(0,0,0,0));
 			nowInfoTa.setBackground(new Color(0,0,0,0));
@@ -138,7 +139,6 @@ public class HomePage extends Page {
 			thirdSepCb.setFont(mainDrive.getFont(12));
 			locationBt.setFont(mainDrive.getFont(10));
 			
-//			locationPanel.setBackground(Color.yellow);
 			locationPanel.setBackground(new Color(255,255,255,120));
 			firstSepCb.setBackground(Color.white);
 			secondSepCb.setBackground(Color.white);
@@ -167,20 +167,43 @@ public class HomePage extends Page {
 			locationBt.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					((LocationPage)mainDrive.getPages()[3]).synchronizeSelectedItems(firstSepCb, secondSepCb, thirdSepCb);
-//					user가 고른 위치에 해당하는 nx, ny가져와서 mainDrive의 searchNx, searchNy로 대입하고
-					((LocationPage)mainDrive.getPages()[3]).getSelectedLocationInfo();
+					
+//					유저가 고른 아이템들로 mainDrive의 변수값 변경
+					mainDrive.setSearchFirstSep((String)firstSepCb.getSelectedItem());
+					mainDrive.setSearchSecondSep((String)secondSepCb.getSelectedItem());
+					mainDrive.setSearchThirdSep((String)thirdSepCb.getSelectedItem());
+					
+//					바뀐 mainDrive의 변수로 homePage, locationPage의 combobox 내용 맞추기
+					lp.synchronizeSelectedLocation();
+					
+//					mainDrive의 변수(user가 고른 위치)에 해당하는 nx, ny가져와서 mainDrive의 searchNx, searchNy로 대입
+					lp.getSelectedLocationNxNy();
+					
 //					스레드로 새로 데이터 불러오기
 					mainDrive.runApi();
 				}
 			});
 			
+			firstSepCb.addItemListener(new ItemListener() {
+				
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					lp.connectDatabaseSecondSep(firstSepCb, secondSepCb, thirdSepCb);
+				}
+			});
+			
+			secondSepCb.addItemListener(new ItemListener() {
+				
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					lp.connectDatabaseThirdSep(firstSepCb, secondSepCb, thirdSepCb);
+				}
+			});
 			
 //			[recommend]
 			recommendPanel = new JPanel();
 			recommendLabel = new JLabel("", JLabel.CENTER);
 			
-//			recommendPanel.setBackground(Color.magenta);
 			recommendPanel.setBackground(new Color(255,255,255,120));
 			
 			recommendLabel.setFont(mainDrive.getFont(50));
@@ -200,7 +223,6 @@ public class HomePage extends Page {
 //			[diary]
 			diaryPanel = new JPanel();
 			
-//			diaryPanel.setBackground(Color.green);		
 			diaryPanel.setBackground(new Color(255,255,255,120));
 			
 			diaryPanel.addMouseListener(new MouseAdapter() {
@@ -214,7 +236,6 @@ public class HomePage extends Page {
 //			[toDoList]
 			todoListPanel = new JPanel();
 			
-//			todoListPanel.setBackground(Color.blue);		
 			todoListPanel.setBackground(new Color(255,255,255,120));
 
 			todoListPanel.addMouseListener(new MouseAdapter() {
@@ -260,18 +281,9 @@ public class HomePage extends Page {
 					+list.get(listRandom).getName()
 					+recommendMsg[msgRandom]);
 			
-			System.out.println("listRandom : " + listRandom + " msgRandom : " + msgRandom);
 		} else {
 			recommendLabel.setText(mainDrive.getLoginUserName()+"님 안녕하세요?");
 		}
-		this.updateUI();
-	}
-	
-	public void setComboBox(String f, String s, String t) {
-		firstSepCb.addItem(f);
-		secondSepCb.addItem(s);
-		thirdSepCb.addItem(t);
-
 		this.updateUI();
 	}
 

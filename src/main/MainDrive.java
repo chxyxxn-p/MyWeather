@@ -100,16 +100,27 @@ public class MainDrive extends JFrame {
 //		현재시간 기준으로 검색할 base time 설정
 		setSearchTime();
 		
-//		api 연결
+//		기본 GUI 그리기
 		setDefaultGUI();
-				
-//		검색할 위치 고르는 ComboBox의 items -> xls로 불러오기
-		getLocationFromXls();
 		
 		connectionManager = new ConnectionManager();
-	}
-	
+		
+//		데이터베이스 연결해서 comboBox items 채우기
+		LocationPage lp = (LocationPage)pages[3];
+		lp.connectDatabaseFirstSep(lp.getFirstSepCb());	//first->second , second->third 연쇄적으로 실행
+		
+		HomePage hp = (HomePage)pages[0];
+		lp.connectDatabaseFirstSep(hp.getFirstSepCb());	//first->second , second->third 연쇄적으로 실행
+		
+//		멤버변수의 초기 위치 값을 두 페이지의 combo box의 선택 아이템으로 설정
+		lp.synchronizeSelectedLocation();
+		
+//		mainDrive의 searchFirstSep, searchSecondSep, searchThirdSep의 값으로 searchNx, searchNy를 구한다
+		lp.getSelectedLocationNxNy();
 
+//		searchNx, searchNy 값으로 기본위치 api 불러오기
+		runApi();
+	}
 	
 	public void setFont() {
 		ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -186,7 +197,7 @@ public class MainDrive extends JFrame {
 
 	public void setDefaultGUI() {
 		
-		System.out.println("main default setting...");
+		System.out.println("defaultGUI\tsetting...");
 		
 //		메모리 적재
 		Image img = new ImageIcon(mainBgImgPath).getImage();
@@ -292,54 +303,10 @@ public class MainDrive extends JFrame {
 			});
 		}
 		
-		System.out.println("main default set done!");
+		System.out.println("defaultGUI\tsetted");
 
 	}
-	
-	public void getLocationFromXls() {
-//		엑셀로 불러온 위치 정보를 LocationPage의 list에 저장
-		System.out.println("getting location info...");
 
-		ArrayList<Location> locationList = new ArrayList<Location>();
-
-		FileInputStream fis = null;
-		
-		try {
-			fis = new FileInputStream(xlsFilePath);
-			
-			HSSFSheet sheet = new HSSFWorkbook(fis).getSheet("location");
-			
-			for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
-				Location location = new Location();
-				HSSFRow row = sheet.getRow(rowIndex);
-				location.setFirstSep(row.getCell(0).getStringCellValue());
-				location.setSecondSep(row.getCell(1).getStringCellValue());
-				location.setThirdSep(row.getCell(2).getStringCellValue());
-				location.setNx((int)row.getCell(3).getNumericCellValue());
-				location.setNy((int)row.getCell(4).getNumericCellValue());
-				locationList.add(location);
-			}
-			
-			((LocationPage)pages[3]).setLocationList(locationList);
-			((LocationPage)pages[3]).setComboBox();
-			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if(fis != null) {
-				try {
-					fis.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	
-		System.out.println("get location info done!");
-	}
-	
 	public void runApi() {
 
 		ncstApiThread = new Thread() {
@@ -376,10 +343,31 @@ public class MainDrive extends JFrame {
 			};
 		};
 		
-		ncstApiThread.start();
-		fcstApiThread.start();
+		Thread integratedThread = new Thread() {
+			public void run() {
+				System.out.println(searchNx+"/"+searchNy);
+				ncstApi = new GetApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
+				ncstApi.connectData();
+				ncstApi.setWeatherMap();
+				fcstApi = new GetApi("getVilageFcst", "500", searchFcstDate, searchFcstTime, searchNx, searchNy);
+				fcstApi.connectData();
+				fcstApi.setWeatherMap();
+				for(int i = 1 ; i < pages.length ; i++) {	
+					System.out.print("pages["+i+"]\t");
+					pages[i].afterConnectApi();
+				}
+				
+				System.out.print("pages[0]\t");
+				pages[0].afterConnectApi();	//homePage(index:0) 는 다른 페이지에서 데이터 불러오기때문에 마지막에 실행
+			};
+		};
 		
-		afterApiThread.start();
+		
+//		ncstApiThread.start();
+//		fcstApiThread.start();
+//		afterApiThread.start();
+		
+		integratedThread.start();
 	}
 
 	public void changePage(int pageIndex) {
@@ -430,7 +418,6 @@ public class MainDrive extends JFrame {
 		return weatherCase;
 	}
 
-	
 	public String getSearchFirstSep() {
 		return searchFirstSep;
 	}

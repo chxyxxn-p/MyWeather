@@ -41,12 +41,12 @@ public class GetApi {
 		this.searchNx = snx;
 		this.searchNy = sny;
 		
-		System.out.println(this.searchVersion + "  : " + this.searchBaseDate + " " + this.searchBaseTime);
+		System.out.println(this.searchVersion + "\t" + this.searchBaseDate + " " + this.searchBaseTime);
 	}
 
 	public void connectData() {
 
-		System.out.println(searchVersion + " api connecting...");
+		System.out.println(searchVersion + "\tapi\tconnecting...");
 
 		HttpURLConnection connection = null;
 		BufferedReader reader = null;
@@ -103,16 +103,16 @@ public class GetApi {
 			}
 		}
 
-		System.out.println(searchVersion + " api connect done");
+		System.out.println(searchVersion + "\tapi\tconnected");
 	}
 
 	public void setWeatherMap() {
 
 		if (connectResult == null) {
-			System.out.println("please connect" + searchVersion + " api");
+			System.out.println("please\tconnect\t" + searchVersion + "\tapi");
 
 		} else {
-			System.out.println(searchVersion + " api data loading...");
+			System.out.println(searchVersion + "\tapi\tdata\tloading...");
 
 			JSONParser parser = new JSONParser();
 			JSONObject obj;
@@ -219,7 +219,7 @@ public class GetApi {
 //					map으로부터 받아온 뒤  or 새로 생성하여 값 설정한 wv를 다시 같은 키로 map에 put -> 기존 WeatherValue대신 wv로 덮어씌워지게 됨
 					weatherMap.put(mapKey, wv);
 				}
-				System.out.println(searchVersion + " api data load done");
+				System.out.println(searchVersion + "\tapi\tdata\tloaded");
 				
 				keyList = new ArrayList<Long>();
 				Iterator<Long> it = weatherMap.keySet().iterator();
@@ -233,216 +233,10 @@ public class GetApi {
 //			iterator로 순서없이 keyList에 add했기 때문에 오름차순 정렬
 				Collections.sort(keyList);
 				
-				System.out.println(searchVersion + " api key sort done");
+				System.out.println(searchVersion + "\tapi\tkey\tsorted");
 
 			} catch (ParseException e) {
 				e.printStackTrace();
-			}
-		}
-	}
-
-	public Object getValueByCategory(String date, String time, String category) {
-		Object obj = null;
-
-		if (connectResult == null) {
-			System.out.println("please connect" + searchVersion + " api");
-
-		} else {
-			long key = Long.parseLong(date + time);
-			category = category.toUpperCase();
-
-			if (weatherMap.containsKey(key)) {
-				Weather wv = weatherMap.get(key);
-
-				if (category.equals("TMN")) {
-					obj = wv.getTmn();
-
-				} else if (category.equals("TMX")) {
-					obj = wv.getTmx();
-
-				} else if (category.equals("T3H")) {
-					obj = wv.getT3h();
-
-				} else if (category.equals("T1H")) {
-					obj = wv.getT3h();
-
-				} else if (category.equals("POP")) {
-					obj = wv.getPop();
-
-				} else if (category.equals("RN1")) {
-					obj = wv.getPop();
-
-				} else if (category.equals("PTY")) {
-					obj = wv.getPty();
-
-				} else if (category.equals("REH")) {
-					obj = wv.getReh();
-
-				} else if (category.equals("SKY")) {
-					obj = wv.getSky();
-
-				} else if (category.equals("VEC")) {
-					obj = wv.getVec();
-
-				} else if (category.equals("WSD")) {
-					obj = wv.getWsd();
-				}
-
-				if (obj == null) {
-					System.out.println(searchVersion + " 유효하지 않은 category");
-				}
-
-			} else {
-				System.out.println(searchVersion + " 유효하지 않은 date, time");
-			}
-		}
-		return obj;
-	}
-
-	public void printAllWeatherMapValue() {
-		if (connectResult == null) {
-			System.out.println("please connect" + searchVersion + " api");
-
-		} else {
-
-			for (int i = 0; i < keyList.size(); i++) {
-//			map으로부터 가져온 key로 이루어진 list -> key 유효성 검사할 필요 없다
-
-				Weather wv = weatherMap.get(keyList.get(i));
-
-				
-				if(searchVersion.equals("getVilageFcst")) {
-					System.out.println("\n예측 날짜 : " + wv.getFcstDate());
-					System.out.println("예측 시간 : " + wv.getFcstTime());
-
-				}
-				else if(searchVersion.equals("getUltraSrtNcst")) {
-					System.out.println("\n현재 날짜 : " + wv.getFcstDate());
-					System.out.println("측정 시간 : " + wv.getFcstTime());
-				}
-
-				if (wv.getTmn() != null)
-					System.out.println("아침 최저기온 : " + wv.getTmn() + "℃");
-
-				if (wv.getTmx() != null)
-					System.out.println("낮 최고기온 : " + wv.getTmx() + "℃");
-
-				if (wv.getT3h() != null)
-					System.out.println("3시간 기온 : " + wv.getT3h() + "℃");
-
-				if (wv.getT1h() != null)
-					System.out.println("1시간 기온 : " + wv.getT1h() + "℃");
-
-				if (wv.getPop() != null)
-					System.out.println("강수 확률 : " + wv.getPop() + "%");
-
-				if (wv.getRn1() != null)
-					System.out.println("1시간 강수량 : " + wv.getRn1() + "mm");
-
-				if (wv.getPty() != null) {
-					System.out.print("강수 형태 : ");
-					switch (wv.getPty().toString()) {
-
-					case "0":
-						System.out.println("없음");
-						break;
-					case "1":
-						System.out.println("비");
-						break;
-					case "2":
-						System.out.println("진눈개비");
-						break;
-					case "3":
-						System.out.println("눈");
-						break;
-					case "4":
-						System.out.println("소나기");
-						break;
-					}
-				}
-
-				if (wv.getReh() != null)
-					System.out.println("습도 : " + wv.getReh() + "%");
-
-				if (wv.getSky() != null) {
-					System.out.print("하늘상태 : ");
-					switch (wv.getSky().toString()) {
-
-					case "1":
-						System.out.println("맑음");
-						break;
-					case "3":
-						System.out.println("구름 많음");
-						break;
-					case "4":
-						System.out.println("흐림");
-						break;
-					}
-				}
-
-				if (wv.getVec() != null) {
-					System.out.print("풍향 : ");
-
-//				불러온 Object형을 String으로 받아 Double형으로 변환 -> 풍향 계산과정을 거친 후 Math함수를 통해 소수점을 버린 뒤 int형으로 변환
-					int vecCode = (int) Math.floor((Double.parseDouble((String) wv.getVec()) + 22.5 * 0.5) / 22.5);
-
-					switch (vecCode) {
-
-					case 0:
-					case 16:
-						System.out.println("북");
-						break;
-					case 1:
-						System.out.println("북북동");
-						break;
-					case 2:
-						System.out.println("북동");
-						break;
-					case 3:
-						System.out.println("동북동");
-						break;
-					case 4:
-						System.out.println("동");
-						break;
-					case 5:
-						System.out.println("동남동");
-						break;
-					case 6:
-						System.out.println("남동");
-						break;
-					case 7:
-						System.out.println("남남동");
-						break;
-					case 8:
-						System.out.println("남");
-						break;
-					case 9:
-						System.out.println("남남서");
-						break;
-					case 10:
-						System.out.println("남서");
-						break;
-					case 11:
-						System.out.println("서남서");
-						break;
-					case 12:
-						System.out.println("서");
-						break;
-					case 13:
-						System.out.println("서북서");
-						break;
-					case 14:
-						System.out.println("북서");
-						break;
-					case 15:
-						System.out.println("북북서");
-						break;
-					}
-
-					if (wv.getWsd() != null) {
-						System.out.println("풍속 : " + wv.getWsd() + "m/s");
-					}
-				}
 			}
 		}
 	}
@@ -618,10 +412,214 @@ public class GetApi {
 		else // pty : 1,2,4
 			imgNum = 3; // 비/소나기 : 강수형태 비/진눈개비/소나기
 
-		System.out.println(version + " weather Case : " + imgNum);
 		return imgNum;
 	}
 
+//	public Object getValueByCategory(String date, String time, String category) {
+//	Object obj = null;
+//
+//	if (connectResult == null) {
+//		System.out.println("please\tconnect\t" + searchVersion + "\tapi");
+//
+//	} else {
+//		long key = Long.parseLong(date + time);
+//		category = category.toUpperCase();
+//
+//		if (weatherMap.containsKey(key)) {
+//			Weather wv = weatherMap.get(key);
+//
+//			if (category.equals("TMN")) {
+//				obj = wv.getTmn();
+//
+//			} else if (category.equals("TMX")) {
+//				obj = wv.getTmx();
+//
+//			} else if (category.equals("T3H")) {
+//				obj = wv.getT3h();
+//
+//			} else if (category.equals("T1H")) {
+//				obj = wv.getT3h();
+//
+//			} else if (category.equals("POP")) {
+//				obj = wv.getPop();
+//
+//			} else if (category.equals("RN1")) {
+//				obj = wv.getPop();
+//
+//			} else if (category.equals("PTY")) {
+//				obj = wv.getPty();
+//
+//			} else if (category.equals("REH")) {
+//				obj = wv.getReh();
+//
+//			} else if (category.equals("SKY")) {
+//				obj = wv.getSky();
+//
+//			} else if (category.equals("VEC")) {
+//				obj = wv.getVec();
+//
+//			} else if (category.equals("WSD")) {
+//				obj = wv.getWsd();
+//			}
+//
+//			if (obj == null) {
+//				System.out.println(searchVersion + "\t유효하지 않은 category");
+//			}
+//
+//		} else {
+//			System.out.println(searchVersion + "\t유효하지 않은 date, time");
+//		}
+//	}
+//	return obj;
+//}
+//
+//public void printAllWeatherMapValue() {
+//	if (connectResult == null) {
+//		System.out.println("please\tconnect\t" + searchVersion + "\tapi");
+//
+//	} else {
+//
+//		for (int i = 0; i < keyList.size(); i++) {
+////		map으로부터 가져온 key로 이루어진 list -> key 유효성 검사할 필요 없다
+//
+//			Weather wv = weatherMap.get(keyList.get(i));
+//
+//			
+//			if(searchVersion.equals("getVilageFcst")) {
+//				System.out.println("\n예측 날짜 : " + wv.getFcstDate());
+//				System.out.println("예측 시간 : " + wv.getFcstTime());
+//
+//			}
+//			else if(searchVersion.equals("getUltraSrtNcst")) {
+//				System.out.println("\n현재 날짜 : " + wv.getFcstDate());
+//				System.out.println("측정 시간 : " + wv.getFcstTime());
+//			}
+//
+//			if (wv.getTmn() != null)
+//				System.out.println("아침 최저기온 : " + wv.getTmn() + "℃");
+//
+//			if (wv.getTmx() != null)
+//				System.out.println("낮 최고기온 : " + wv.getTmx() + "℃");
+//
+//			if (wv.getT3h() != null)
+//				System.out.println("3시간 기온 : " + wv.getT3h() + "℃");
+//
+//			if (wv.getT1h() != null)
+//				System.out.println("1시간 기온 : " + wv.getT1h() + "℃");
+//
+//			if (wv.getPop() != null)
+//				System.out.println("강수 확률 : " + wv.getPop() + "%");
+//
+//			if (wv.getRn1() != null)
+//				System.out.println("1시간 강수량 : " + wv.getRn1() + "mm");
+//
+//			if (wv.getPty() != null) {
+//				System.out.print("강수 형태 : ");
+//				switch (wv.getPty().toString()) {
+//
+//				case "0":
+//					System.out.println("없음");
+//					break;
+//				case "1":
+//					System.out.println("비");
+//					break;
+//				case "2":
+//					System.out.println("진눈개비");
+//					break;
+//				case "3":
+//					System.out.println("눈");
+//					break;
+//				case "4":
+//					System.out.println("소나기");
+//					break;
+//				}
+//			}
+//
+//			if (wv.getReh() != null)
+//				System.out.println("습도 : " + wv.getReh() + "%");
+//
+//			if (wv.getSky() != null) {
+//				System.out.print("하늘상태 : ");
+//				switch (wv.getSky().toString()) {
+//
+//				case "1":
+//					System.out.println("맑음");
+//					break;
+//				case "3":
+//					System.out.println("구름 많음");
+//					break;
+//				case "4":
+//					System.out.println("흐림");
+//					break;
+//				}
+//			}
+//
+//			if (wv.getVec() != null) {
+//				System.out.print("풍향 : ");
+//
+////			불러온 Object형을 String으로 받아 Double형으로 변환 -> 풍향 계산과정을 거친 후 Math함수를 통해 소수점을 버린 뒤 int형으로 변환
+//				int vecCode = (int) Math.floor((Double.parseDouble((String) wv.getVec()) + 22.5 * 0.5) / 22.5);
+//
+//				switch (vecCode) {
+//
+//				case 0:
+//				case 16:
+//					System.out.println("북");
+//					break;
+//				case 1:
+//					System.out.println("북북동");
+//					break;
+//				case 2:
+//					System.out.println("북동");
+//					break;
+//				case 3:
+//					System.out.println("동북동");
+//					break;
+//				case 4:
+//					System.out.println("동");
+//					break;
+//				case 5:
+//					System.out.println("동남동");
+//					break;
+//				case 6:
+//					System.out.println("남동");
+//					break;
+//				case 7:
+//					System.out.println("남남동");
+//					break;
+//				case 8:
+//					System.out.println("남");
+//					break;
+//				case 9:
+//					System.out.println("남남서");
+//					break;
+//				case 10:
+//					System.out.println("남서");
+//					break;
+//				case 11:
+//					System.out.println("서남서");
+//					break;
+//				case 12:
+//					System.out.println("서");
+//					break;
+//				case 13:
+//					System.out.println("서북서");
+//					break;
+//				case 14:
+//					System.out.println("북서");
+//					break;
+//				case 15:
+//					System.out.println("북북서");
+//					break;
+//				}
+//
+//				if (wv.getWsd() != null) {
+//					System.out.println("풍속 : " + wv.getWsd() + "m/s");
+//				}
+//			}
+//		}
+//	}
+//}
 	
 	public Map<Long, Weather> getWeatherMap() {
 		return weatherMap;

@@ -79,7 +79,6 @@ public class RecommendPage extends Page {
 				}
 				
 //		데이터베이스 연결
-				System.out.println(weatherName);
 				Connection con = null;
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
