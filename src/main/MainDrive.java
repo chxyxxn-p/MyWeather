@@ -38,7 +38,7 @@ import location.LocationPage;
 import login.LoginPage;
 import login.LogoutPage;
 import recommend.RecommendPage;
-import weather.GetApi;
+import weather.GetWeatherApi;
 import weather.Weather;
 import weather.WeatherPage;
 
@@ -60,8 +60,8 @@ public class MainDrive extends JFrame {
 	String[] weatherIconImgPathes = {"./res/w_sunny.png", "./res/w_hot.png", "./res/w_hidr.png", "./res/w_rainy.png", "./res/w_windy.png", "./res/w_cloudy.png", "./res/w_snow.png"};
 	String transparentImgPath = "./res/transparent.png";
 	
-	GetApi fcstApi;
-	GetApi ncstApi;
+	GetWeatherApi fcstApi;
+	GetWeatherApi ncstApi;
 
 	String searchFcstDate;
 	String searchNcstDate;
@@ -311,7 +311,7 @@ public class MainDrive extends JFrame {
 
 		ncstApiThread = new Thread() {
 			public void run() {
-				ncstApi = new GetApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
+				ncstApi = new GetWeatherApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
 				ncstApi.connectData();
 				ncstApi.setWeatherMap();
 //				ncstTodayApi.printAllWeatherMapValue();
@@ -320,7 +320,7 @@ public class MainDrive extends JFrame {
 
 		fcstApiThread = new Thread() {
 			public void run() {
-				fcstApi = new GetApi("getVilageFcst", "500", searchFcstDate, searchFcstTime, searchNx, searchNy);
+				fcstApi = new GetWeatherApi("getVilageFcst", "500", searchFcstDate, searchFcstTime, searchNx, searchNy);
 				fcstApi.connectData();
 				fcstApi.setWeatherMap();
 //				fcstApi.printAllWeatherMapValue();
@@ -346,10 +346,10 @@ public class MainDrive extends JFrame {
 		Thread integratedThread = new Thread() {
 			public void run() {
 				System.out.println("search location\t"+searchFirstSep+" "+searchSecondSep+" "+searchThirdSep+" / "+searchNx+" "+searchNy);
-				ncstApi = new GetApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
+				ncstApi = new GetWeatherApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
 				ncstApi.connectData();
 				ncstApi.setWeatherMap();
-				fcstApi = new GetApi("getVilageFcst", "500", searchFcstDate, searchFcstTime, searchNx, searchNy);
+				fcstApi = new GetWeatherApi("getVilageFcst", "500", searchFcstDate, searchFcstTime, searchNx, searchNy);
 				fcstApi.connectData();
 				fcstApi.setWeatherMap();
 				for(int i = 1 ; i < pages.length ; i++) {	
@@ -398,11 +398,11 @@ public class MainDrive extends JFrame {
 		return transparentImgPath;
 	}
 
-	public GetApi getFcstApi() {
+	public GetWeatherApi getFcstApi() {
 		return fcstApi;
 	}
 
-	public GetApi getNcstTodayApi() {
+	public GetWeatherApi getNcstTodayApi() {
 		return ncstApi;
 	}
 

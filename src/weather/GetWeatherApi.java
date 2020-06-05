@@ -17,7 +17,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class GetApi {
+public class GetWeatherApi {
 
 	Map<Long, Weather> weatherMap = new HashMap<Long, Weather>();
 	ArrayList<Long> keyList = new ArrayList<Long>();
@@ -33,7 +33,7 @@ public class GetApi {
 
 	String connectResult = null;
 
-	public GetApi(String version, String result, String sbd, String sbt, String snx, String sny) {
+	public GetWeatherApi(String version, String result, String sbd, String sbt, String snx, String sny) {
 
 		this.searchVersion = version;
 		this.searchResult = result;
