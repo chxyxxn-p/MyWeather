@@ -33,6 +33,7 @@ public class WeatherPage extends Page {
 	Image nowImg = new ImageIcon(mainDrive.getTransparentImgPath()).getImage();
 	JPanel nowImgPn;
 	JTextArea nowInfoTa;
+	JTextArea finedustTa;
 
 	JPanel fcstPanel;
 	JScrollPane fcstScroll;
@@ -55,25 +56,35 @@ public class WeatherPage extends Page {
 		nowInfoTa = new JTextArea();
 		nowInfoTa.setEditable(false);
 		
+		finedustTa = new JTextArea("*미세먼지\t좋음");
+		finedustTa.setEditable(false);
+		
 		fcstPanel = new JPanel();
 		fcstScroll = new JScrollPane(fcstPanel);
 		
 		nowInfoTa.setFont(mainDrive.getFont(25));
+		finedustTa.setFont(mainDrive.getFont(25));
 		
 		nowImgPn.setBackground(new Color(0,0,0,0));
 		nowInfoTa.setBackground(new Color(0,0,0,0));
-		nowInfoTa.setOpaque(true);
+		finedustTa.setBackground(new Color(0,0,0,0));
 		nowPanel.setBackground(new Color(0,0,0,0));
+		
 		fcstPanel.setBackground(new Color(0,0,0,0));
 		fcstScroll.setBackground(new Color(0,0,0,0));
+		
+		nowInfoTa.setOpaque(true);
+		finedustTa.setOpaque(true);
 		
 		nowPanel.setLayout(null);
 		
 		nowImgPn.setBounds(20, 10, width/3-40, width/3-40);
-		nowInfoTa.setBounds(10, 10+width/3-40+10, width/3-20, height - width/3 +40 - 30);
+		nowInfoTa.setBounds(10, width/3-40+20, width/3-20, (height - (width/3-40) - 30)/20*17);
+		finedustTa.setBounds(10, height - 10 - (((height - (width/3-40) - 30)/20*3)), width/3-20, (height - (width/3-40) - 30)/20*3);
 		
 		nowPanel.add(nowImgPn);
 		nowPanel.add(nowInfoTa);
+		nowPanel.add(finedustTa);
 		
 		
 		nowPanel.setBounds(0, 0, width/3, height);

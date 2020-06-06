@@ -41,6 +41,7 @@ public class HomePage extends Page {
 	Image nowImg = new ImageIcon(mainDrive.getTransparentImgPath()).getImage();
 	JPanel nowImgPn;
 	JTextArea nowInfoTa;
+	JTextArea finedustTa;
 	
 	JPanel locationPanel;
 	JComboBox<String> firstSepCb;
@@ -87,26 +88,35 @@ public class HomePage extends Page {
 		 nowImgPn = new JPanel() {
 			 @Override
 			 public void paint(Graphics g) {
-				 g.drawImage(nowImg, 0, 0, width/4-40, width/4-40, mainDrive);
+				 g.drawImage(nowImg, 0, 0, nowPanelWidth-70, nowPanelWidth-70, mainDrive);
 			 }
 		 };
 		 nowInfoTa = new JTextArea();
+		 finedustTa = new JTextArea("*미세먼지\t좋음");
 		 
 		 nowInfoTa.setEditable(false);
+		 finedustTa.setEditable(false);
+		 
 		 nowInfoTa.setFont(mainDrive.getFont(18));
+		 finedustTa.setFont(mainDrive.getFont(18));
 		 
 			nowPanel.setBackground(new Color(255,255,255,120));
 			nowImgPn.setBackground(new Color(0,0,0,0));
 			nowInfoTa.setBackground(new Color(0,0,0,0));
+			finedustTa.setBackground(new Color(0,0,0,0));
+
 			nowInfoTa.setOpaque(true);
+			finedustTa.setOpaque(true);
 			
 			nowPanel.setLayout(null);
 			
-			nowImgPn.setBounds(20, 10, width/4-40, width/4-40);
-			nowInfoTa.setBounds(10, 10+width/4-40+10, width/4-20, height - width/4 +40 - 30);
+			nowImgPn.setBounds(35, 10, nowPanelWidth-70, nowPanelWidth-70);
+			nowInfoTa.setBounds(10, nowPanelWidth-70+20, nowPanelWidth-20, (nowPanelHeight - (nowPanelWidth-70) - 30)/20*17);
+			finedustTa.setBounds(10, nowPanelHeight - 10 - (((nowPanelHeight - (nowPanelWidth-70) - 30)/20*3)), nowPanelWidth-20, (nowPanelHeight - (nowPanelWidth-70) - 30)/20*3);
 			
 			nowPanel.add(nowImgPn);
 			nowPanel.add(nowInfoTa);
+			nowPanel.add(finedustTa);
 				
 			nowPanel.addMouseListener(new MouseAdapter() {
 				@Override
