@@ -92,38 +92,40 @@ public class HomePage extends Page {
 			 }
 		 };
 		 nowInfoTa = new JTextArea();
-		 finedustTa = new JTextArea("*미세먼지\t좋음");
+		 finedustTa = new JTextArea();
 		 
 		 nowInfoTa.setEditable(false);
 		 finedustTa.setEditable(false);
 		 
-		 nowInfoTa.setFont(mainDrive.getFont(18));
-		 finedustTa.setFont(mainDrive.getFont(18));
-		 
-			nowPanel.setBackground(new Color(255,255,255,120));
-			nowImgPn.setBackground(new Color(0,0,0,0));
-			nowInfoTa.setBackground(new Color(0,0,0,0));
-			finedustTa.setBackground(new Color(0,0,0,0));
+		nowInfoTa.setFont(mainDrive.getFont(18));
+		finedustTa.setFont(mainDrive.getFont(18));
 
-			nowInfoTa.setOpaque(true);
-			finedustTa.setOpaque(true);
-			
-			nowPanel.setLayout(null);
-			
-			nowImgPn.setBounds(35, 10, nowPanelWidth-70, nowPanelWidth-70);
-			nowInfoTa.setBounds(10, nowPanelWidth-70+20, nowPanelWidth-20, (nowPanelHeight - (nowPanelWidth-70) - 30)/20*17);
-			finedustTa.setBounds(10, nowPanelHeight - 10 - (((nowPanelHeight - (nowPanelWidth-70) - 30)/20*3)), nowPanelWidth-20, (nowPanelHeight - (nowPanelWidth-70) - 30)/20*3);
-			
-			nowPanel.add(nowImgPn);
-			nowPanel.add(nowInfoTa);
-			nowPanel.add(finedustTa);
-				
-			nowPanel.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					mainDrive.changePage(1);
-				}
-			});
+		nowPanel.setBackground(new Color(255, 255, 255, 120));
+		nowImgPn.setBackground(new Color(0, 0, 0, 0));
+		nowInfoTa.setBackground(new Color(0, 0, 0, 0));
+		finedustTa.setBackground(new Color(0, 0, 0, 0));
+
+		nowInfoTa.setOpaque(true);
+		finedustTa.setOpaque(true);
+
+		nowPanel.setLayout(null);
+
+		nowImgPn.setBounds(35, 10, nowPanelWidth - 70, nowPanelWidth - 70);
+		nowInfoTa.setBounds(10, nowPanelWidth - 70 + 20, nowPanelWidth - 20,
+				(nowPanelHeight - (nowPanelWidth - 70) - 30) / 20 * 17);
+		finedustTa.setBounds(10, nowPanelHeight - 10 - (((nowPanelHeight - (nowPanelWidth - 70) - 30) / 20 * 3)),
+				nowPanelWidth - 20, (nowPanelHeight - (nowPanelWidth - 70) - 30) / 20 * 3);
+
+		nowPanel.add(nowImgPn);
+		nowPanel.add(nowInfoTa);
+		nowPanel.add(finedustTa);
+
+		nowPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				mainDrive.changePage(1);
+			}
+		});
 			
 //			nowInfoLb 건드릴 때마다 새로 그리기
 			nowInfoTa.addMouseListener(new MouseAdapter() {
@@ -278,7 +280,10 @@ public class HomePage extends Page {
 		super.afterConnectApi();
 		
 		nowImg = wp.getNowImg();
-		nowInfoTa.setText(wp.getNowInfoTaText());
+		nowInfoTa.setText(wp.getNowInfoTa().getText());
+		
+		finedustTa.setText(wp.getFinedustTa().getText());
+
 	}
 	
 	public void changeRecommendMsg(){

@@ -14,11 +14,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.ImageIcon;
@@ -26,20 +23,15 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-
 import calendar.CalendarPage;
 import database.ConnectionManager;
 import home.HomePage;
-import location.Location;
 import location.LocationPage;
 import login.LoginPage;
 import login.LogoutPage;
 import recommend.RecommendPage;
+import weather.GetFinedustApi;
 import weather.GetWeatherApi;
-import weather.Weather;
 import weather.WeatherPage;
 
 public class MainDrive extends JFrame {
@@ -62,6 +54,8 @@ public class MainDrive extends JFrame {
 	
 	GetWeatherApi fcstApi;
 	GetWeatherApi ncstApi;
+	
+	GetFinedustApi finedustApi;
 
 	String searchFcstDate;
 	String searchNcstDate;
@@ -309,49 +303,57 @@ public class MainDrive extends JFrame {
 
 	public void runApi() {
 
-		ncstApiThread = new Thread() {
-			public void run() {
-				ncstApi = new GetWeatherApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
-				ncstApi.connectData();
-				ncstApi.setWeatherMap();
-//				ncstTodayApi.printAllWeatherMapValue();
-			};
-		};
-
-		fcstApiThread = new Thread() {
-			public void run() {
-				fcstApi = new GetWeatherApi("getVilageFcst", "500", searchFcstDate, searchFcstTime, searchNx, searchNy);
-				fcstApi.connectData();
-				fcstApi.setWeatherMap();
-//				fcstApi.printAllWeatherMapValue();
-			};
-		};
-		
-		afterApiThread = new Thread() {
-			public void run() {
-				try {
-					Thread.sleep(3000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				
-				for(int i = 1 ; i < pages.length ; i++) {
-					pages[i].afterConnectApi();
-				}
-				pages[0].afterConnectApi();	//homePage는 다른 페이지에서 데이터 불러오기때문에 마지막에 실행
-
-			};
-		};
+//		ncstApiThread = new Thread() {
+//			public void run() {
+//				ncstApi = new GetWeatherApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
+//				ncstApi.connectData();
+//				ncstApi.setWeatherMap();
+////				ncstTodayApi.printAllWeatherMapValue();
+//			};
+//		};
+//
+//		fcstApiThread = new Thread() {
+//			public void run() {
+//				fcstApi = new GetWeatherApi("getVilageFcst", "500", searchFcstDate, searchFcstTime, searchNx, searchNy);
+//				fcstApi.connectData();
+//				fcstApi.setWeatherMap();
+////				fcstApi.printAllWeatherMapValue();
+//			};
+//		};
+//		
+//		afterApiThread = new Thread() {
+//			public void run() {
+//				try {
+//					Thread.sleep(3000);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//				
+//				for(int i = 1 ; i < pages.length ; i++) {
+//					pages[i].afterConnectApi();
+//				}
+//				pages[0].afterConnectApi();	//homePage는 다른 페이지에서 데이터 불러오기때문에 마지막에 실행
+//
+//			};
+//		};
 		
 		Thread integratedThread = new Thread() {
 			public void run() {
 				System.out.println("search location\t"+searchFirstSep+" "+searchSecondSep+" "+searchThirdSep+" / "+searchNx+" "+searchNy);
+				
 				ncstApi = new GetWeatherApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
 				ncstApi.connectData();
 				ncstApi.setWeatherMap();
+				
+				finedustApi = new GetFinedustApi(searchFirstSep);
+				finedustApi.transformSearchLocationString();
+				finedustApi.connectData();
+				finedustApi.setFinedustString();
+				
 				fcstApi = new GetWeatherApi("getVilageFcst", "500", searchFcstDate, searchFcstTime, searchNx, searchNy);
 				fcstApi.connectData();
 				fcstApi.setWeatherMap();
+				
 				for(int i = 1 ; i < pages.length ; i++) {	
 					System.out.print("pages["+i+"]\t");
 					pages[i].afterConnectApi();
@@ -402,8 +404,12 @@ public class MainDrive extends JFrame {
 		return fcstApi;
 	}
 
-	public GetWeatherApi getNcstTodayApi() {
+	public GetWeatherApi getNcstApi() {
 		return ncstApi;
+	}
+
+	public GetFinedustApi getFinedustApi() {
+		return finedustApi;
 	}
 
 	public int getNowWeatherCaseNum() {

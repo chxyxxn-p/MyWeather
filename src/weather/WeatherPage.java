@@ -56,7 +56,7 @@ public class WeatherPage extends Page {
 		nowInfoTa = new JTextArea();
 		nowInfoTa.setEditable(false);
 		
-		finedustTa = new JTextArea("*미세먼지\t좋음");
+		finedustTa = new JTextArea();
 		finedustTa.setEditable(false);
 		
 		fcstPanel = new JPanel();
@@ -132,17 +132,17 @@ public class WeatherPage extends Page {
 		this.fcstWeatherMap = mainDrive.getFcstApi().getWeatherMap();
 		this.fcstKeyList = mainDrive.getFcstApi().getKeyList();
 		
-		this.ncstTodayWeatherMap = mainDrive.getNcstTodayApi().getWeatherMap();
-		this.ncstTodayKeyList = mainDrive.getNcstTodayApi().getKeyList();
+		this.ncstTodayWeatherMap = mainDrive.getNcstApi().getWeatherMap();
+		this.ncstTodayKeyList = mainDrive.getNcstApi().getKeyList();
 		
 //		ncst
 		nwv = ncstTodayWeatherMap.get(ncstTodayKeyList.get(0));
 		
-		nImgNum = mainDrive.getNcstTodayApi().getWeatherImgNum(nwv, "ncst");
+		nImgNum = mainDrive.getNcstApi().getWeatherImgNum(nwv, "ncst");
 		mainDrive.setNowWeatherCaseNum(nImgNum);
 		nowImg = new ImageIcon(mainDrive.getweatherIconImgPathes()[nImgNum]).getImage();
 
-		nowInfoTa.setText(mainDrive.getNcstTodayApi().weatherValueToString(nwv, "\n"));
+		nowInfoTa.setText(mainDrive.getNcstApi().weatherValueToString(nwv, "\n"));
 		
 
 //		fcst
@@ -158,14 +158,21 @@ public class WeatherPage extends Page {
 		}
 		
 		fcstPanel.setLayout(new GridLayout(fcstWeatherMap.size(), 1, 0, 10));
+		
+//		finedust
+		finedustTa.setText("*미세먼지\t" + mainDrive.getFinedustApi().getFinedustCase());
 
 		this.updateUI();
 	}
 	
-	public String getNowInfoTaText() {
-		return nowInfoTa.getText();
+	public JTextArea getNowInfoTa() {
+		return nowInfoTa;
 	}
-	
+
+	public JTextArea getFinedustTa() {
+		return finedustTa;
+	}
+
 	public Image getNowImg() {
 		return nowImg;
 	}
