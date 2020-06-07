@@ -20,6 +20,7 @@ import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -81,11 +82,7 @@ public class MainDrive extends JFrame {
 
 	String xlsFilePath = "./res/location.xls";
 	
-	Thread ncstApiThread;
-	Thread fcstApiThread;
-	Thread afterApiThread;
-	
-	ConnectionManager connectionManager = null;
+	ConnectionManager connectionManager;
 
 	public MainDrive() {
 //		폰트 설정
@@ -208,14 +205,14 @@ public class MainDrive extends JFrame {
 
 		pagePn = new JPanel();
 
-		pages[1] = new WeatherPage(this, "WEATHER", pageWidth, pageHeight, false);
-		pages[2] = new CalendarPage(this, "CALENDAR", pageWidth, pageHeight, false);
-		pages[3] = new LocationPage(this, "LOCATION", pageWidth, pageHeight, false);
-		pages[4] = new RecommendPage(this, "RECOMMEND", pageWidth, pageHeight, false);
-		pages[5] = new LogoutPage(this, "LOGOUT", pageWidth, pageHeight, false);
-		pages[6] = new LoginPage(this, "LOGIN", pageWidth, pageHeight, false);
+		pages[1] = new WeatherPage(this, "My Weather :: WEATHER", pageWidth, pageHeight, false);
+		pages[2] = new CalendarPage(this, "My Weather :: CALENDAR", pageWidth, pageHeight, false);
+		pages[3] = new LocationPage(this, "My Weather :: LOCATION", pageWidth, pageHeight, false);
+		pages[4] = new RecommendPage(this, "My Weather :: RECOMMEND", pageWidth, pageHeight, false);
+		pages[5] = new LogoutPage(this, "My Weather :: LOGOUT", pageWidth, pageHeight, false);
+		pages[6] = new LoginPage(this, "My Weather :: LOGIN", pageWidth, pageHeight, false);
 		
-		pages[0] = new HomePage(this, "HOME", pageWidth, pageHeight, false);	//다른 페이지의 값을 받아오기때문에 실행 순서 변경
+		pages[0] = new HomePage(this, "My Weather :: HOME", pageWidth, pageHeight, false);	//다른 페이지의 값을 받아오기때문에 실행 순서 변경
 		
 
 		menuPn = new JPanel();
@@ -278,7 +275,9 @@ public class MainDrive extends JFrame {
 							((HomePage)pages[0]).changeRecommendMsg();
 							changePage(index);
 						} else {
-							JOptionPane.showMessageDialog(MainDrive.this, "로그인이 필요한 서비스 입니다");
+							JLabel opLb = new JLabel("로그인이 필요한 서비스 입니다");
+							opLb.setFont(getFont(13));
+							JOptionPane.showMessageDialog(MainDrive.this, opLb);
 						}
 					} else if(index == 5) {
 						if (loginFlag) {
@@ -290,7 +289,9 @@ public class MainDrive extends JFrame {
 						if(loginFlag) {
 							changePage(index);
 						} else {
-							JOptionPane.showMessageDialog(MainDrive.this, "로그인이 필요한 서비스 입니다");
+							JLabel opLb = new JLabel("로그인이 필요한 서비스 입니다");
+							opLb.setFont(getFont(13));
+							JOptionPane.showMessageDialog(MainDrive.this, opLb);
 						}
 					}
 				}
@@ -303,57 +304,27 @@ public class MainDrive extends JFrame {
 
 	public void runApi() {
 
-//		ncstApiThread = new Thread() {
-//			public void run() {
-//				ncstApi = new GetWeatherApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
-//				ncstApi.connectData();
-//				ncstApi.setWeatherMap();
-////				ncstTodayApi.printAllWeatherMapValue();
-//			};
-//		};
-//
-//		fcstApiThread = new Thread() {
-//			public void run() {
-//				fcstApi = new GetWeatherApi("getVilageFcst", "500", searchFcstDate, searchFcstTime, searchNx, searchNy);
-//				fcstApi.connectData();
-//				fcstApi.setWeatherMap();
-////				fcstApi.printAllWeatherMapValue();
-//			};
-//		};
-//		
-//		afterApiThread = new Thread() {
-//			public void run() {
-//				try {
-//					Thread.sleep(3000);
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
-//				
-//				for(int i = 1 ; i < pages.length ; i++) {
-//					pages[i].afterConnectApi();
-//				}
-//				pages[0].afterConnectApi();	//homePage는 다른 페이지에서 데이터 불러오기때문에 마지막에 실행
-//
-//			};
-//		};
-		
-		Thread integratedThread = new Thread() {
+Thread integratedThread = new Thread() {
 			public void run() {
 				System.out.println("search location\t"+searchFirstSep+" "+searchSecondSep+" "+searchThirdSep+" / "+searchNx+" "+searchNy);
 				
+//				ncst
 				ncstApi = new GetWeatherApi("getUltraSrtNcst", "500", searchNcstDate, searchNcstTime, searchNx, searchNy);
 				ncstApi.connectData();
 				ncstApi.setWeatherMap();
 				
+//				finedust
 				finedustApi = new GetFinedustApi(searchFirstSep);
 				finedustApi.transformSearchLocationString();
 				finedustApi.connectData();
 				finedustApi.setFinedustString();
 				
+//				fcst
 				fcstApi = new GetWeatherApi("getVilageFcst", "500", searchFcstDate, searchFcstTime, searchNx, searchNy);
 				fcstApi.connectData();
 				fcstApi.setWeatherMap();
 				
+//				after
 				for(int i = 1 ; i < pages.length ; i++) {	
 					System.out.print("pages["+i+"]\t");
 					pages[i].afterConnectApi();
@@ -364,11 +335,7 @@ public class MainDrive extends JFrame {
 			};
 		};
 		
-		
-//		ncstApiThread.start();
-//		fcstApiThread.start();
-//		afterApiThread.start();
-		
+
 		integratedThread.start();
 	}
 

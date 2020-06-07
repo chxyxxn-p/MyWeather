@@ -1,7 +1,5 @@
 package calendar;
 
-import java.awt.Color;
-
 import main.MainDrive;
 import main.Page;
 

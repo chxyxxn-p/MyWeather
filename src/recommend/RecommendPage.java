@@ -36,8 +36,6 @@ public class RecommendPage extends Page {
 		
 		rcmdPanel.setBackground(new Color(0,0,0,0));
 		rcmdScroll.setBackground(new Color(0,0,0,0));
-//		rcmdPanel.setBackground(Color.yellow);
-//		rcmdScroll.setBackground(Color.pink);
 		
 		this.setLayout(new BorderLayout());
 		this.add(rcmdScroll);

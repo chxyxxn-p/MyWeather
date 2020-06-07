@@ -19,7 +19,6 @@ import javax.swing.JTextArea;
 
 import main.MainDrive;
 import main.Page;
-import recommend.RecommendPage;
 
 public class WeatherPage extends Page {
 	

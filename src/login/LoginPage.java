@@ -14,11 +14,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import home.HomePage;
 import main.MainDrive;
 import main.Page;
-import recommend.Recommend;
-import recommend.RecommendPage;
 
 public class LoginPage extends Page {
 	
@@ -85,16 +82,18 @@ public class LoginPage extends Page {
 //		login 실패 하면 다시 입력하세요 뜨고 idTf, pwTf setText("");
 		
 		if(loginCheckFlag) {
-			JLabel tempLb = new JLabel("로그인 되었습니다");
-			tempLb.setFont(mainDrive.getFont(10));
-			JOptionPane.showMessageDialog(mainDrive, tempLb);
+			JLabel opLb = new JLabel("로그인 되었습니다");
+			opLb.setFont(mainDrive.getFont(13));
+			JOptionPane.showMessageDialog(mainDrive, opLb);
 			mainDrive.setLoginFlag(true);	//로그인 성공 표시
 			((LogoutPage)mainDrive.getPages()[5]).greetingMsg(mainDrive.getLoginUserName());	//로그아웃 페이지 라벨 텍스트 설정
 
 			mainDrive.changePage(5);	//로그아웃페이지로 이동
 			
 		} else {
-			JOptionPane.showMessageDialog(mainDrive, "아이디, 비밀번호가 올바르지 않습니다");
+			JLabel opLb = new JLabel("아이디, 비밀번호가 올바르지 않습니다");
+			opLb.setFont(mainDrive.getFont(13));
+			JOptionPane.showMessageDialog(mainDrive, opLb);
 		}
 		
 		idTf.setText("");

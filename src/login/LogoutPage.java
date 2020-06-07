@@ -46,9 +46,13 @@ public class LogoutPage extends Page {
 	}
 	
 	public void logout() {
-		int result = JOptionPane.showConfirmDialog(mainDrive, "로그아웃 하시겠습니까?");
+		JLabel opLb = new JLabel("로그아웃 하시겠습니까?");
+		opLb.setFont(mainDrive.getFont(13));
+		int result = JOptionPane.showConfirmDialog(mainDrive, opLb);
 		if(result == JOptionPane.OK_OPTION) {
-			JOptionPane.showMessageDialog(mainDrive, "로그아웃 되었습니다");
+			JLabel op2Lb = new JLabel("로그아웃 되었습니다");
+			op2Lb.setFont(mainDrive.getFont(13));
+			JOptionPane.showMessageDialog(mainDrive, op2Lb);
 			this.mainDrive.setLoginFlag(false);
 			mainDrive.changePage(6);
 		}
