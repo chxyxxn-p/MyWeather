@@ -15,8 +15,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -146,16 +147,14 @@ public class MainDrive extends JFrame {
 
 	public void setSearchTime() {
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-		SimpleDateFormat timeformat = new SimpleDateFormat("HHmm");
-
-		searchNcstDate = searchFcstDate = dateFormat.format(new Date());
-
-		int time = Integer.parseInt(timeformat.format(new Date()));
-
-		int hour = time / 100;
-		int minute = time % 100;
-
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyyMMdd");
+		searchNcstDate = searchFcstDate = dateFormat.format(LocalDate.now());
+		
+		int hour = LocalTime.now().getHour();
+		int minute = LocalTime.now().getMinute();
+		
+		int time = hour*100 + minute;
+		
 //		searchFcstTime
 		int startTime = 210;
 
@@ -224,7 +223,7 @@ public class MainDrive extends JFrame {
 		icons[4] = new MenuIcon(this, 50, 50, iconBgImgPathes[4]); // recommend
 		icons[5] = new MenuIcon(this, 50, 50, iconBgImgPathes[5]); // login/out
 
-		changePage(6); // 처음으로 보여줄 페이지 //#나중에 로그인페이지or홈페이지를 시작으로 변경
+		changePage(6);
 
 //		속성
 		mainPn.setPreferredSize(new Dimension(pageWidth + 60, pageHeight));
@@ -232,7 +231,6 @@ public class MainDrive extends JFrame {
 		menuPn.setPreferredSize(new Dimension(60, pageHeight));
 		menuPn.setBackground(new Color(0, 0, 0, 0));
 
-//		System.out.println(menuPanel.getWidth()); -> 60출력 예상.. 0 출력됨
 		pagePn.setPreferredSize(new Dimension(pageWidth, pageHeight));
 		pagePn.setBackground(new Color(0, 0, 0, 0));
 
@@ -304,7 +302,7 @@ public class MainDrive extends JFrame {
 
 	public void runApi() {
 
-Thread integratedThread = new Thread() {
+		Thread integratedThread = new Thread() {
 			public void run() {
 				System.out.println("search location\t"+searchFirstSep+" "+searchSecondSep+" "+searchThirdSep+" / "+searchNx+" "+searchNy);
 				
