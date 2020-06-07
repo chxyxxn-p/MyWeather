@@ -80,7 +80,8 @@ public class MainDrive extends JFrame {
 
 	boolean loginFlag;
 	String loginUserName; // LoginPage에서 login되면 설정
-
+	int loginUserNo;
+	
 	String xlsFilePath = "./res/location.xls";
 	
 	ConnectionManager connectionManager;
@@ -92,25 +93,11 @@ public class MainDrive extends JFrame {
 //		현재시간 기준으로 검색할 base time 설정
 		setSearchTime();
 		
+		connectionManager = new ConnectionManager();
+
 //		기본 GUI 그리기
 		setDefaultGUI();
-		
-		connectionManager = new ConnectionManager();
-		
-//		데이터베이스 연결해서 comboBox items 채우기
-		LocationPage lp = (LocationPage)pages[3];
-		lp.connectDatabaseFirstSep(lp.getFirstSepCb());	//first->second , second->third 연쇄적으로 실행
-		
-		HomePage hp = (HomePage)pages[0];
-		lp.connectDatabaseFirstSep(hp.getFirstSepCb());	//first->second , second->third 연쇄적으로 실행
-		
-//		멤버변수의 초기 위치 값을 두 페이지의 combo box의 선택 아이템으로 설정
-		lp.synchronizeSelectedLocation();
-		
-//		mainDrive의 searchFirstSep, searchSecondSep, searchThirdSep의 값으로 searchNx, searchNy를 구한다
-		lp.getSelectedLocationNxNy();
 
-//		searchNx, searchNy 값으로 기본위치 api 불러오기
 		runApi();
 	}
 	
@@ -205,7 +192,6 @@ public class MainDrive extends JFrame {
 		pagePn = new JPanel();
 
 		pages[1] = new WeatherPage(this, "My Weather :: WEATHER", pageWidth, pageHeight, false);
-		pages[2] = new CalendarPage(this, "My Weather :: CALENDAR", pageWidth, pageHeight, false);
 		pages[3] = new LocationPage(this, "My Weather :: LOCATION", pageWidth, pageHeight, false);
 		pages[4] = new RecommendPage(this, "My Weather :: RECOMMEND", pageWidth, pageHeight, false);
 		pages[5] = new LogoutPage(this, "My Weather :: LOGOUT", pageWidth, pageHeight, false);
@@ -213,6 +199,7 @@ public class MainDrive extends JFrame {
 		
 		pages[0] = new HomePage(this, "My Weather :: HOME", pageWidth, pageHeight, false);	//다른 페이지의 값을 받아오기때문에 실행 순서 변경
 		
+		pages[2] = new CalendarPage(this, "My Weather :: CALENDAR", pageWidth, pageHeight, false);	//calendarPage에서 homePage접근해야해서 순서 변경
 
 		menuPn = new JPanel();
 
@@ -304,6 +291,20 @@ public class MainDrive extends JFrame {
 
 		Thread integratedThread = new Thread() {
 			public void run() {
+//				데이터베이스 연결해서 comboBox items 채우기
+				LocationPage lp = (LocationPage)pages[3];
+				lp.connectDatabaseFirstSep(lp.getFirstSepCb());	//first->second , second->third 연쇄적으로 실행
+				
+				HomePage hp = (HomePage)pages[0];
+				lp.connectDatabaseFirstSep(hp.getFirstSepCb());	//first->second , second->third 연쇄적으로 실행
+				
+//				멤버변수의 초기 위치 값을 두 페이지의 combo box의 선택 아이템으로 설정
+				lp.synchronizeSelectedLocation();
+				
+//				mainDrive의 searchFirstSep, searchSecondSep, searchThirdSep의 값으로 searchNx, searchNy를 구한다
+				lp.getSelectedLocationNxNy();
+
+//				searchNx, searchNy 값으로 기본위치 api 불러오기
 				System.out.println("search location\t"+searchFirstSep+" "+searchSecondSep+" "+searchThirdSep+" / "+searchNx+" "+searchNy);
 				
 //				ncst
@@ -439,6 +440,14 @@ public class MainDrive extends JFrame {
 
 	public void setLoginUserName(String loginUserName) {
 		this.loginUserName = loginUserName;
+	}
+
+	public int getLoginUserNo() {
+		return loginUserNo;
+	}
+
+	public void setLoginUserNo(int loginUserNo) {
+		this.loginUserNo = loginUserNo;
 	}
 
 	public ConnectionManager getConnectionManager() {

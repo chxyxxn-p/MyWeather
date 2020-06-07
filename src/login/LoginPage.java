@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import calendar.CalendarPage;
 import main.MainDrive;
 import main.Page;
 
@@ -118,9 +119,11 @@ public class LoginPage extends Page {
 				while(rs.next()) {
 					
 					if(idTf.getText().equals(rs.getString("member_id")) && new String(pwTf.getPassword()).equals(rs.getString("member_passwd"))) {		//DB연결 전 임시로 ID, Pw 체크
+						mainDrive.setLoginUserNo(rs.getInt("member_no"));
 						mainDrive.setLoginUserName(rs.getString("member_name"));	//DB에서 이름 받아오기 전 임시로 이름 설정
-						
 						loginCheckFlag = true;	//아이디, 비번이 DB에 있으면
+						((CalendarPage)mainDrive.getPages()[2]).setTodolistPanel();
+
 						break;
 						
 					} else {

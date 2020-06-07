@@ -1,5 +1,6 @@
 package home;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -18,8 +19,13 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 
+import calendar.CalendarPage;
+import calendar.todolist.TodolistModel;
+import calendar.todolist.TodolistPanel;
 import location.LocationPage;
 import main.MainDrive;
 import main.Page;
@@ -55,7 +61,10 @@ public class HomePage extends Page {
 	
 	JPanel diaryPanel;
 	
-	JPanel todoListPanel;
+	JPanel todolistPanel;
+	JTable table;
+	JScrollPane scroll;
+	TodolistModel model;
 	
 	int nowPanelWidth;
 	int nowPanelHeight;
@@ -74,11 +83,11 @@ public class HomePage extends Page {
 		
 		 nowPanelWidth = width/4;
 		 nowPanelHeight = height/3*2-5;
-		 locationPanelWidth = width - (nowPanelWidth + 10);
+		 locationPanelWidth = width - (nowPanelWidth + 10) - 10;
 		 locationPanelHeight = nowPanelHeight/7;
-		 todoListPanelWidth = diaryPanelWidth = (width-nowPanelWidth-10)/2;
+		 todoListPanelWidth = diaryPanelWidth = (width-nowPanelWidth-30)/2;
 		 todoListPanelHeight = diaryPanelHeight = nowPanelHeight - locationPanelHeight - 10;
-		 recommendPanelWidth = width;
+		 recommendPanelWidth = width -10;
 		 recommendPanelHeight = height/3-5;
 		 
 //		[nowWeather]
@@ -246,16 +255,31 @@ public class HomePage extends Page {
 
 			
 //			[toDoList]
-			todoListPanel = new JPanel();
+			todolistPanel = new JPanel();
 			
-			todoListPanel.setBackground(new Color(255,255,255,120));
+			todolistPanel.setBackground(new Color(255,255,255,120));
 
-			todoListPanel.addMouseListener(new MouseAdapter() {
+			todolistPanel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					mainDrive.changePage(2);
 				}
 			});
+			
+			table = new JTable(model = new TodolistModel() {
+				@Override
+				public boolean isCellEditable(int row, int col) {
+					return false;
+				}
+			});
+			scroll = new JScrollPane(table);
+			
+			table.setPreferredSize(new Dimension(todoListPanelWidth, todoListPanelHeight/3*2));
+			scroll.setPreferredSize(new Dimension(todoListPanelWidth, todoListPanelHeight/3*2));
+			
+			todolistPanel.setLayout(new BorderLayout());
+			todolistPanel.add(scroll);
+			
 			
 			
 //			[HomePage]
@@ -264,13 +288,13 @@ public class HomePage extends Page {
 			nowPanel.setBounds(0, 0, nowPanelWidth, nowPanelHeight);
 			locationPanel.setBounds(nowPanelWidth + 10, 0, locationPanelWidth, locationPanelHeight);
 			diaryPanel.setBounds(nowPanelWidth + 10, locationPanelHeight + 10, diaryPanelWidth, diaryPanelHeight);
-			todoListPanel.setBounds((nowPanelWidth + 10) + (diaryPanelWidth + 10), locationPanelHeight + 10, todoListPanelWidth, todoListPanelHeight);
+			todolistPanel.setBounds((nowPanelWidth + 10) + (diaryPanelWidth + 10), locationPanelHeight + 10, todoListPanelWidth, todoListPanelHeight);
 			recommendPanel.setBounds(0, nowPanelHeight + 10, recommendPanelWidth, recommendPanelHeight);
 			
 			this.add(nowPanel);
 			this.add(locationPanel);
 			this.add(diaryPanel);
-			this.add(todoListPanel);
+			this.add(todolistPanel);
 			this.add(recommendPanel);
 		 
 	}
@@ -317,6 +341,16 @@ public class HomePage extends Page {
 	public JLabel getRecommendLabel() {
 		return recommendLabel;
 	}
+
+	public TodolistModel getModel() {
+		return model;
+	}
+
+	public JTable getTable() {
+		return table;
+	}
+	
+	
 
 	
 	
