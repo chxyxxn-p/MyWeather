@@ -3,6 +3,7 @@ package recommend;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -130,7 +131,7 @@ public class RecommendPage extends Page {
 					rcmdPanel.add(r);
 				}
 				
-				rcmdPanel.setLayout(new GridLayout(1, recommendList.size(), 10, 0));
+				rcmdPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
 				
 				((HomePage)mainDrive.getPages()[0]).changeRecommendMsg();
 				((HomePage)mainDrive.getPages()[0]).updateUI();

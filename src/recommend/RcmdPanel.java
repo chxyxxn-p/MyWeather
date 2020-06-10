@@ -5,10 +5,12 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.ImageIcon;
+import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -58,13 +60,17 @@ public class RcmdPanel  extends JPanel {
 			e.printStackTrace();
 		}
 		
-		this.storeImg = new ImageIcon(imageUrl).getImage();
+		try {
+			this.storeImg = ImageIO.read(imageUrl).getScaledInstance(width-10, width-10, Image.SCALE_SMOOTH);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		this.imgPn = new JPanel() {
 			@Override
 			public void paint(Graphics g) {
 //				super.paint(g);
-				g.drawImage(storeImg, 0, 0, height-10, height-10, mainDrive);
+				g.drawImage(storeImg, 0, 0, width-10, width-10, this);
 			}
 		};
 
